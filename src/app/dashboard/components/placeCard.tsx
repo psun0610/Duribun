@@ -166,12 +166,25 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                                 자세히 보기
                             </button>
                         </div>
-                    ) : reviewStatus === 'mine-only' ? (
-                        <div className="text-center py-2">
-                            <EyeOff className="w-5 h-5 text-muted-foreground mx-auto mb-1" />
-                            <p className="text-sm text-muted-foreground">
-                                상대방이 리뷰 작성 중...
-                            </p>
+                    ) : reviewStatus === 'mine-only' && myReview ? (
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">
+                                    내 평점
+                                </span>
+                                <div className="flex items-center gap-1">
+                                    <Star className="w-4 h-4 text-primary fill-primary" />
+                                    <span className="text-sm font-medium">
+                                        {String(myReview.rating)}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-1.5 text-muted-foreground pt-1">
+                                <Clock className="w-4 h-4 shrink-0" />
+                                <p className="text-xs">
+                                    상대방이 작성하기 기다리는 중...
+                                </p>
+                            </div>
                         </div>
                     ) : reviewStatus === 'partner-only' ? (
                         <div className="text-center py-2">
