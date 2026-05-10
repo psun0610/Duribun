@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Heart, Star, Eye, Clock, Trash2 } from 'lucide-react'
+import { Heart, Star, Clock, Trash2 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Place } from '../types'
@@ -200,10 +200,12 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                             </div>
                         </div>
                     ) : reviewStatus === 'partner-only' ? (
-                        <div className="text-center py-2">
-                            <Eye className="w-5 h-5 text-primary mx-auto mb-1" />
-                            <p className="text-sm text-primary font-medium">
-                                리뷰를 작성해주세요!
+                        <div className="text-center py-2 px-1 space-y-1">
+                            <p className="text-sm font-medium text-foreground">
+                                상대방이 기다리고 있어요 💌
+                            </p>
+                            <p className="text-xs text-muted-foreground leading-snug">
+                                리뷰를 작성하면 상대방의 리뷰를 볼 수 있어요
                             </p>
                         </div>
                     ) : (

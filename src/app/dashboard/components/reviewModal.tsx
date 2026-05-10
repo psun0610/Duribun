@@ -63,18 +63,24 @@ export const ReviewModal = ({
                 exit={{ opacity: 0, scale: 0.9 }}
                 className="bg-card rounded-3xl shadow-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
             >
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-2xl font-bold text-foreground">
+                <div className="mb-6 flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 pr-2">
+                        <h2 className="text-2xl font-bold leading-tight text-foreground break-words">
                             {place.name}
                         </h2>
-                        <p className="text-sm text-muted-foreground">
-                            {place.category} 리뷰
+                        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+                            <span className="inline-flex shrink-0 items-center rounded-full bg-secondary px-3 py-0.5 text-xs font-medium text-secondary-foreground">
+                                {place.category}
+                            </span>
+                            <span className="shrink-0">리뷰</span>
                             {isEditing && (
-                                <span className="ml-2 text-primary font-medium">
+                                <span className="text-primary font-medium">
                                     · 수정 중
                                 </span>
                             )}
+                        </div>
+                        <p className="mt-1.5 text-sm leading-snug text-muted-foreground break-words">
+                            {place.address}
                         </p>
                     </div>
                     <button
@@ -119,7 +125,9 @@ export const ReviewModal = ({
                         onRemoveExistingPlaceImage={removeExistingPlaceImage}
                         onRemoveNewImage={removeNewImage}
                         onSubmit={handleSubmit}
-                        onCancel={isEditing ? () => setIsEditing(false) : onClose}
+                        onCancel={
+                            isEditing ? () => setIsEditing(false) : onClose
+                        }
                     />
                 )}
             </motion.div>
