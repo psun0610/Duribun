@@ -3,11 +3,12 @@
 import { useState, useRef } from 'react'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
-import { useClickOutside } from '@/app/_hooks/useClickOutside'
 import { ReviewModalProps } from '../types'
 import { useReviewForm } from '../hooks/useReviewForm'
 import { ReviewViewMode } from './reviewViewMode'
 import { ReviewWriteForm } from './reviewWriteForm'
+import { PlaceImageCarousel } from './placeImageCarousel'
+import { useClickOutside } from '@/app/_hooks/useClickOutside'
 
 export const ReviewModal = ({
     place,
@@ -21,7 +22,6 @@ export const ReviewModal = ({
     const isViewMode = !!(place.myReview && place.bothCompleted)
     const showViewMode = isViewMode && !isEditing
 
-    // 수정 완료 시: 뷰 모드로 복귀. 첫 작성 완료 시: 모달 닫기
     const handleReviewComplete = () => {
         if (isEditing) {
             setIsEditing(false)
@@ -44,12 +44,10 @@ export const ReviewModal = ({
         handleRatingChange,
         getAverageRating,
         handleSubmit,
-        savedImageUrls,
         newImagePreviews,
         totalImageCount,
         maxImages,
         addImages,
-        removeSavedImage,
         removeNewImage,
     } = useReviewForm(place, handleReviewComplete)
 
@@ -84,6 +82,9 @@ export const ReviewModal = ({
                     </button>
                 </div>
 
+                {/* 장소 사진 캐러셀 (상단 공통 표시) */}
+                <PlaceImageCarousel images={place.images} />
+
                 {showViewMode && myReview && partnerReview ? (
                     <ReviewViewMode
                         myReview={myReview}
@@ -103,7 +104,6 @@ export const ReviewModal = ({
                         isEditing={isEditing}
                         hasPartnerReview={!!partnerReview && !myReview}
                         averageRating={getAverageRating()}
-                        savedImageUrls={savedImageUrls}
                         newImagePreviews={newImagePreviews}
                         totalImageCount={totalImageCount}
                         maxImages={maxImages}
@@ -111,7 +111,6 @@ export const ReviewModal = ({
                         onRevisitChange={setRevisit}
                         onCommentChange={setComment}
                         onAddImages={addImages}
-                        onRemoveSavedImage={removeSavedImage}
                         onRemoveNewImage={removeNewImage}
                         onSubmit={handleSubmit}
                         onCancel={isEditing ? () => setIsEditing(false) : onClose}

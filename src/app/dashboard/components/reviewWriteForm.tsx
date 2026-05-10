@@ -12,7 +12,6 @@ interface ReviewWriteFormProps {
     isEditing?: boolean
     hasPartnerReview: boolean
     averageRating: string | number
-    savedImageUrls: string[]
     newImagePreviews: string[]
     totalImageCount: number
     maxImages: number
@@ -20,7 +19,6 @@ interface ReviewWriteFormProps {
     onRevisitChange: (value: boolean) => void
     onCommentChange: (value: string) => void
     onAddImages: (files: FileList) => void
-    onRemoveSavedImage: (index: number) => void
     onRemoveNewImage: (index: number) => void
     onSubmit: (e: React.FormEvent) => void
     onCancel: () => void
@@ -36,7 +34,6 @@ export const ReviewWriteForm = ({
     isEditing = false,
     hasPartnerReview,
     averageRating,
-    savedImageUrls,
     newImagePreviews,
     totalImageCount,
     maxImages,
@@ -44,7 +41,6 @@ export const ReviewWriteForm = ({
     onRevisitChange,
     onCommentChange,
     onAddImages,
-    onRemoveSavedImage,
     onRemoveNewImage,
     onSubmit,
     onCancel,
@@ -136,23 +132,6 @@ export const ReviewWriteForm = ({
                     </span>
                 </label>
                 <div className="flex flex-wrap gap-2">
-                    {/* 저장된 이미지 */}
-                    {savedImageUrls.map((url, i) => (
-                        <div key={`saved-${i}`} className="relative w-20 h-20">
-                            <img
-                                src={url}
-                                alt=""
-                                className="w-20 h-20 object-cover rounded-2xl"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => onRemoveSavedImage(i)}
-                                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-foreground text-background rounded-full flex items-center justify-center"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        </div>
-                    ))}
                     {/* 새로 선택한 이미지 미리보기 */}
                     {newImagePreviews.map((url, i) => (
                         <div key={`new-${i}`} className="relative w-20 h-20">

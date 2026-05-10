@@ -1,5 +1,11 @@
 export type PlaceCategory = '식당' | '카페' | '액티비티'
 
+export interface PlaceImage {
+    url: string
+    userId: string
+    isMine: boolean
+}
+
 export interface Place {
     id: string
     name: string
@@ -7,6 +13,7 @@ export interface Place {
     category: PlaceCategory
     lat?: number
     lng?: number
+    images: PlaceImage[]
     myReview?: Record<string, unknown>
     partnerReview?: Record<string, unknown>
     bothCompleted: boolean

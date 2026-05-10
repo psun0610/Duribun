@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -16,6 +16,13 @@ export const Dashboard = () => {
     const { places, loading } = usePlaces()
     const [showPlaceModal, setShowPlaceModal] = useState(false)
     const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
+
+    // 쿼리 재요청 후 selectedPlace를 최신 데이터로 동기화
+    useEffect(() => {
+        if (!selectedPlace) return
+        const fresh = places.find((p) => p.id === selectedPlace.id)
+        if (fresh) setSelectedPlace(fresh)
+    }, [places])
 
     const handleLogout = async () => {
         await supabase.auth.signOut()
