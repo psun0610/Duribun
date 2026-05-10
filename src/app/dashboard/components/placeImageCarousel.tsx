@@ -183,15 +183,16 @@ export const PlaceImageCarousel = ({ images }: PlaceImageCarouselProps) => {
 
             {/* 썸네일 스트립 */}
             {images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-1 mb-6 scrollbar-none">
+                <div className="mb-6 flex gap-2 overflow-x-auto pb-1 scrollbar-none">
                     {images.map((img, i) => (
                         <button
                             key={i}
+                            type="button"
                             onClick={() => setCurrentIndex(i)}
-                            className={`relative shrink-0 w-14 h-14 rounded-xl overflow-hidden transition-all ${
+                            className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border-2 transition-all outline-none focus-visible:border-primary ${
                                 i === currentIndex
-                                    ? 'ring-2 ring-primary ring-offset-1'
-                                    : 'opacity-60 hover:opacity-100'
+                                    ? 'border-primary opacity-100'
+                                    : 'border-transparent opacity-60 hover:opacity-100'
                             }`}
                         >
                             <img
