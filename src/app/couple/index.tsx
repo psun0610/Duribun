@@ -7,6 +7,9 @@ import { CreateStep } from './components/createStep'
 import { JoinStep } from './components/joinStep'
 import { NicknameStep } from './components/nicknameStep'
 
+/**
+ * 커플 매칭 페이지
+ */
 export const CoupleMatchPage = ({
     onMatchSuccess,
     initialMode = 'select',
@@ -34,9 +37,7 @@ export const CoupleMatchPage = ({
     )
 
     if (mode === 'select')
-        return fullScreenWrapper(
-            <SelectStep onSelect={setMode} />,
-        )
+        return fullScreenWrapper(<SelectStep onSelect={setMode} />)
 
     if (mode === 'create')
         return fullScreenWrapper(

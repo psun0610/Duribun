@@ -1,35 +1,26 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { addPlace } from '../api'
 import { PlaceModalProps, PlaceCategory } from '../types'
+import { usePlaceForm } from '../hooks/usePlaceForm'
 
 const CATEGORIES: PlaceCategory[] = ['식당', '카페', '액티비티']
 
 export const PlaceModal = ({ onClose, onPlaceAdded }: PlaceModalProps) => {
-    const [name, setName] = useState('')
-    const [address, setAddress] = useState('')
-    const [category, setCategory] = useState<PlaceCategory>('식당')
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
-        setLoading(true)
-        try {
-            await addPlace({ name, address, category })
-            onPlaceAdded()
-        } catch (err: unknown) {
-            setError((err as Error).message || '장소 추가에 실패했습니다')
-        } finally {
-            setLoading(false)
-        }
-    }
+    const {
+        name,
+        setName,
+        address,
+        setAddress,
+        category,
+        setCategory,
+        loading,
+        error,
+        handleSubmit,
+    } = usePlaceForm(onPlaceAdded)
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
