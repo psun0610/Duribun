@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
 import { ReviewModalProps } from '../types'
@@ -12,7 +13,19 @@ export const ReviewModal = ({
     onClose,
     onReviewAdded,
 }: ReviewModalProps) => {
+    const [isEditing, setIsEditing] = useState(false)
+
     const isViewMode = !!(place.myReview && place.bothCompleted)
+    const showViewMode = isViewMode && !isEditing
+
+    // 수정 완료 시: 뷰 모드로 복귀. 첫 작성 완료 시: 모달 닫기
+    const handleReviewComplete = () => {
+        if (isEditing) {
+            setIsEditing(false)
+        } else {
+            onReviewAdded()
+        }
+    }
 
     const {
         ratings,
@@ -28,7 +41,7 @@ export const ReviewModal = ({
         handleRatingChange,
         getAverageRating,
         handleSubmit,
-    } = useReviewForm(place, onReviewAdded)
+    } = useReviewForm(place, handleReviewComplete)
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -45,6 +58,11 @@ export const ReviewModal = ({
                         </h2>
                         <p className="text-sm text-muted-foreground">
                             {place.category} 리뷰
+                            {isEditing && (
+                                <span className="ml-2 text-primary font-medium">
+                                    · 수정 중
+                                </span>
+                            )}
                         </p>
                     </div>
                     <button
@@ -55,12 +73,13 @@ export const ReviewModal = ({
                     </button>
                 </div>
 
-                {isViewMode && myReview && partnerReview ? (
+                {showViewMode && myReview && partnerReview ? (
                     <ReviewViewMode
                         myReview={myReview}
                         partnerReview={partnerReview}
                         fields={fields}
                         onClose={onClose}
+                        onEdit={() => setIsEditing(true)}
                     />
                 ) : (
                     <ReviewWriteForm
@@ -70,13 +89,14 @@ export const ReviewModal = ({
                         comment={comment}
                         loading={loading}
                         error={error}
+                        isEditing={isEditing}
                         hasPartnerReview={!!partnerReview && !myReview}
                         averageRating={getAverageRating()}
                         onRatingChange={handleRatingChange}
                         onRevisitChange={setRevisit}
                         onCommentChange={setComment}
                         onSubmit={handleSubmit}
-                        onClose={onClose}
+                        onCancel={isEditing ? () => setIsEditing(false) : onClose}
                     />
                 )}
             </motion.div>

@@ -48,6 +48,9 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         return (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1)
     }
 
+    // 첫 제출 여부: myReview가 없었을 때만 true
+    const isFirstSubmission = !myReview
+
     const { mutate, isPending } = useMutation({
         mutationFn: () =>
             addReview({
@@ -59,7 +62,8 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
             }),
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: PLACES_QUERY_KEY })
-            if (partnerReview) {
+            // 수정 시에는 콘피티 없이 바로 콜백 호출
+            if (partnerReview && isFirstSubmission) {
                 confetti({
                     particleCount: 150,
                     spread: 100,

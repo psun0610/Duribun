@@ -68,6 +68,7 @@ interface ReviewViewModeProps {
     partnerReview: Record<string, unknown>
     fields: string[]
     onClose: () => void
+    onEdit: () => void
 }
 
 export const ReviewViewMode = ({
@@ -75,6 +76,7 @@ export const ReviewViewMode = ({
     partnerReview,
     fields,
     onClose,
+    onEdit,
 }: ReviewViewModeProps) => {
     const partnerNickname = usePartnerNickname()
 
@@ -92,9 +94,22 @@ export const ReviewViewMode = ({
                     fields={fields}
                 />
             </div>
-            <Button variant="default" onClick={onClose} className="w-full">
-                닫기
-            </Button>
+            <div className="flex gap-3">
+                <Button
+                    variant="outline"
+                    onClick={onEdit}
+                    className="flex-1"
+                >
+                    내 리뷰 수정
+                </Button>
+                <Button
+                    variant="default"
+                    onClick={onClose}
+                    className="flex-1"
+                >
+                    닫기
+                </Button>
+            </div>
         </div>
     )
 }

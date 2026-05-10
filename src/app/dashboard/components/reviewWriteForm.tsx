@@ -8,13 +8,14 @@ interface ReviewWriteFormProps {
     comment: string
     loading: boolean
     error: string
+    isEditing?: boolean
     hasPartnerReview: boolean
     averageRating: string | number
     onRatingChange: (field: string, value: number) => void
     onRevisitChange: (value: boolean) => void
     onCommentChange: (value: string) => void
     onSubmit: (e: React.FormEvent) => void
-    onClose: () => void
+    onCancel: () => void
 }
 
 export const ReviewWriteForm = ({
@@ -24,13 +25,14 @@ export const ReviewWriteForm = ({
     comment,
     loading,
     error,
+    isEditing = false,
     hasPartnerReview,
     averageRating,
     onRatingChange,
     onRevisitChange,
     onCommentChange,
     onSubmit,
-    onClose,
+    onCancel,
 }: ReviewWriteFormProps) => (
     <form onSubmit={onSubmit} className="space-y-6">
         <div className="space-y-4">
@@ -126,7 +128,7 @@ export const ReviewWriteForm = ({
             <Button
                 type="button"
                 variant="outline"
-                onClick={onClose}
+                onClick={onCancel}
                 className="flex-1"
             >
                 취소
@@ -139,7 +141,7 @@ export const ReviewWriteForm = ({
                 }
                 className="flex-1"
             >
-                {loading ? '저장 중...' : '리뷰 저장'}
+                {loading ? '저장 중...' : isEditing ? '수정 완료' : '리뷰 저장'}
             </Button>
         </div>
     </form>
