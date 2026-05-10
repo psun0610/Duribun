@@ -26,6 +26,7 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   display_name text,
   couple_id uuid references public.couples (id) on delete set null,
+  partner_nickname text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -69,16 +70,12 @@ create table if not exists public.reviews (
   place_id uuid not null references public.places (id) on delete cascade,
   user_id uuid not null references auth.users (id) on delete cascade,
   ratings jsonb not null default '{}'::jsonb,
-  weather text not null default '맑음',
-  mood text not null default '좋음',
+  rating numeric(4, 2) not null,
   revisit boolean not null default true,
   comment text,
-  rating numeric(4, 2) not null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint reviews_place_user_unique unique (place_id, user_id),
-  constraint reviews_weather_check check (weather in ('맑음', '흐림', '비')),
-  constraint reviews_mood_check check (mood in ('좋음', '보통', '나쁨'))
+  constraint reviews_place_user_unique unique (place_id, user_id)
 );
 
 create index if not exists reviews_place_id_idx on public.reviews (place_id);
@@ -273,7 +270,8 @@ create policy reviews_update_own on public.reviews
 -- Service role은 RLS 우회. authenticated만 위 정책 적용.
 
 comment on table public.couples is '커플 매칭 (user_a: 코드 생성자, user_b: 코드 입력자)';
-comment on table public.profiles is '사용자 확장 프로필 및 현재 couple_id';
+comment on table public.profiles is '사용자 확장 프로필 및 현재 couple_id (partner_nickname: 상대방 호칭)';
+comment on column public.profiles.partner_nickname is '상대방을 지칭하는 호칭. 커플 매칭 직후 설정하며, 리뷰/대시보드 등에서 표시됨';
 comment on table public.couple_invite_codes is '24시간 유효 6자리 매칭 코드';
 comment on table public.places is '커플이 등록한 방문 장소';
 comment on table public.reviews is '장소별 유저 리뷰 (세부 점수는 ratings jsonb)';

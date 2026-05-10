@@ -1,70 +1,21 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { supabase, apiCall } from '@/lib/supabase/client'
+import { motion } from 'motion/react'
+import { Heart } from 'lucide-react'
 import { AuthPage } from '@/app/auth'
 import { CoupleMatchPage } from '@/app/couple'
 import { Dashboard } from '@/app/dashboard'
-import { motion } from 'motion/react'
-import { Heart } from 'lucide-react'
+import { useAppInit } from './_hooks/useAppInit'
 
 const HomePage = () => {
-    const [loading, setLoading] = useState(true)
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [isCoupleMatched, setIsCoupleMatched] = useState(false)
-
-    const checkCoupleStatus = useCallback(async () => {
-        try {
-            const response = (await apiCall('/couple/status')) as {
-                matched?: boolean
-            }
-            setIsCoupleMatched(!!response.matched)
-        } catch (err) {
-            console.error('Failed to check couple status:', err)
-            setIsCoupleMatched(false)
-        } finally {
-            setLoading(false)
-        }
-    }, [])
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            const {
-                data: { session },
-            } = await supabase.auth.getSession()
-            setIsAuthenticated(!!session)
-            if (session) {
-                await checkCoupleStatus()
-            } else {
-                setLoading(false)
-            }
-        }
-
-        void checkAuth()
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setIsAuthenticated(!!session)
-            if (session) {
-                void checkCoupleStatus()
-            } else {
-                setIsCoupleMatched(false)
-                setLoading(false)
-            }
-        })
-
-        return () => subscription.unsubscribe()
-    }, [checkCoupleStatus])
-
-    const handleAuthSuccess = () => {
-        setIsAuthenticated(true)
-        void checkCoupleStatus()
-    }
-
-    const handleMatchSuccess = () => {
-        setIsCoupleMatched(true)
-    }
+    const {
+        loading,
+        isAuthenticated,
+        setIsAuthenticated,
+        isCoupleMatched,
+        hasNickname,
+        refetchCoupleStatus,
+    } = useAppInit()
 
     if (loading) {
         return (
@@ -84,11 +35,26 @@ const HomePage = () => {
     }
 
     if (!isAuthenticated) {
-        return <AuthPage onAuthSuccess={handleAuthSuccess} />
+        return <AuthPage onAuthSuccess={() => setIsAuthenticated(true)} />
     }
 
+    // 미매칭: 코드 생성/입력 화면
     if (!isCoupleMatched) {
-        return <CoupleMatchPage onMatchSuccess={handleMatchSuccess} />
+        return (
+            <CoupleMatchPage
+                onMatchSuccess={() => void refetchCoupleStatus()}
+            />
+        )
+    }
+
+    // 매칭됨 + 별명 미설정: User B 성공 직후 또는 User A가 앱에 복귀했을 때
+    if (!hasNickname) {
+        return (
+            <CoupleMatchPage
+                initialMode="nickname"
+                onMatchSuccess={() => void refetchCoupleStatus()}
+            />
+        )
     }
 
     return <Dashboard />
