@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Heart, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { usePartnerNickname } from '@/app/_hooks/usePartnerNickname'
+import { ImageViewer } from './imageViewer'
 
 interface ReviewPanelProps {
     label: string
@@ -9,6 +11,8 @@ interface ReviewPanelProps {
 }
 
 const ReviewPanel = ({ label, review, fields }: ReviewPanelProps) => {
+    const [viewerIndex, setViewerIndex] = useState<number | null>(null)
+
     const commentText =
         typeof review.comment === 'string' ? review.comment : ''
     const images = Array.isArray(review.images) ? (review.images as string[]) : []
@@ -63,20 +67,30 @@ const ReviewPanel = ({ label, review, fields }: ReviewPanelProps) => {
             {images.length > 0 && (
                 <div className="grid grid-cols-3 gap-1.5">
                     {images.map((url, i) => (
-                        <a
+                        <button
                             key={i}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            type="button"
+                            onClick={() => setViewerIndex(i)}
+                            className="focus:outline-none"
                         >
                             <img
                                 src={url}
                                 alt=""
-                                className="w-full aspect-square object-cover rounded-xl hover:opacity-90 transition-opacity"
+                                className="w-full aspect-square object-cover rounded-xl hover:opacity-80 transition-opacity"
                             />
-                        </a>
+                        </button>
                     ))}
                 </div>
+            )}
+
+            {viewerIndex !== null && (
+                <ImageViewer
+                    images={images}
+                    initialIndex={viewerIndex}
+                    currentIndex={viewerIndex}
+                    onChangeIndex={setViewerIndex}
+                    onClose={() => setViewerIndex(null)}
+                />
             )}
         </div>
     )

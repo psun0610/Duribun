@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Place } from '../types'
 import { useDeletePlace } from '../hooks/useDeletePlace'
+import { usePartnerNickname } from '@/app/_hooks/usePartnerNickname'
 
 type HeartFill = 'none' | 'half' | 'full'
 
@@ -33,7 +34,7 @@ interface PlaceCardProps {
 export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
     const [isConfirming, setIsConfirming] = useState(false)
     const { mutate: deletePlace, isPending: isDeleting } = useDeletePlace()
-
+    const partnerNickname = usePartnerNickname()
     const myReview = place.myReview as Record<string, unknown> | undefined
     const partnerReview = place.partnerReview as
         | Record<string, unknown>
@@ -155,9 +156,9 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                         <div className="space-y-2">
                             <div className="grid grid-cols-2 gap-2">
                                 {[
-                                    { label: '내 평점', review: myReview },
+                                    { label: '나', review: myReview },
                                     {
-                                        label: '상대 평점',
+                                        label: partnerNickname,
                                         review: partnerReview,
                                     },
                                 ].map(({ label, review }) => (
