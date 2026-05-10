@@ -4,17 +4,7 @@ import { useState, useEffect } from 'react'
 import { apiCall } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { motion } from 'motion/react'
-import {
-    X,
-    Star,
-    Heart,
-    Sun,
-    Cloud,
-    CloudRain,
-    Smile,
-    Meh,
-    Frown,
-} from 'lucide-react'
+import { X, Star, Heart } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface Place {
@@ -38,8 +28,6 @@ export const ReviewModal = ({
     onReviewAdded,
 }: ReviewModalProps) => {
     const [ratings, setRatings] = useState<Record<string, number>>({})
-    const [weather, setWeather] = useState<'맑음' | '흐림' | '비'>('맑음')
-    const [mood, setMood] = useState<'좋음' | '보통' | '나쁨'>('좋음')
     const [revisit, setRevisit] = useState(true)
     const [comment, setComment] = useState('')
     const [loading, setLoading] = useState(false)
@@ -50,10 +38,6 @@ export const ReviewModal = ({
     useEffect(() => {
         if (place.myReview) {
             setRatings((place.myReview.ratings as Record<string, number>) || {})
-            setWeather(
-                (place.myReview.weather as '맑음' | '흐림' | '비') || '맑음',
-            )
-            setMood((place.myReview.mood as '좋음' | '보통' | '나쁨') || '좋음')
             setRevisit((place.myReview.revisit as boolean) ?? true)
             setComment((place.myReview.comment as string) || '')
         }
@@ -61,10 +45,11 @@ export const ReviewModal = ({
 
     const getCategoryFields = () => {
         if (place.category === '식당')
-            return ['맛', '분위기', '가성비', '청결도']
+            return ['맛', '분위기', '가성비', '청결도', '만족도']
         if (place.category === '카페')
-            return ['커피맛', '디저트', '좌석', '감성']
-        if (place.category === '액티비티') return ['재미', '활동량', '소요시간']
+            return ['커피맛', '디저트', '좌석', '감성', '만족도']
+        if (place.category === '액티비티')
+            return ['재미', '활동량', '소요시간', '만족도']
         return ['평가']
     }
 
@@ -90,8 +75,6 @@ export const ReviewModal = ({
                 body: JSON.stringify({
                     placeId: place.id,
                     ratings,
-                    weather,
-                    mood,
                     revisit,
                     comment,
                     rating: parseFloat(String(getAverageRating())),
@@ -116,18 +99,6 @@ export const ReviewModal = ({
         } finally {
             setLoading(false)
         }
-    }
-
-    const weatherIcons = {
-        맑음: <Sun className="w-5 h-5" />,
-        흐림: <Cloud className="w-5 h-5" />,
-        비: <CloudRain className="w-5 h-5" />,
-    }
-
-    const moodIcons = {
-        좋음: <Smile className="w-5 h-5" />,
-        보통: <Meh className="w-5 h-5" />,
-        나쁨: <Frown className="w-5 h-5" />,
     }
 
     const myReview = place.myReview as Record<string, unknown> | undefined
@@ -173,61 +144,61 @@ export const ReviewModal = ({
                                         : ''
 
                                 return (
-                                <div key={label} className="space-y-4">
-                                    <h3 className="font-bold text-lg flex items-center gap-2">
-                                        <Heart className="w-5 h-5 text-primary fill-primary" />
-                                        {label}
-                                    </h3>
-                                    <div className="space-y-2">
-                                        {fields.map((field) => (
-                                            <div
-                                                key={field}
-                                                className="flex justify-between items-center"
-                                            >
-                                                <span className="text-sm text-muted-foreground">
-                                                    {field}
-                                                </span>
-                                                <div className="flex gap-1">
-                                                    {[1, 2, 3, 4, 5].map(
-                                                        (star) => (
-                                                            <Star
-                                                                key={star}
-                                                                className={`w-4 h-4 ${
-                                                                    star <=
-                                                                    ((
-                                                                        review?.ratings as Record<
-                                                                            string,
-                                                                            number
-                                                                        >
-                                                                    )?.[
-                                                                        field
-                                                                    ] || 0)
-                                                                        ? 'text-primary fill-primary'
-                                                                        : 'text-muted-foreground'
-                                                                }`}
-                                                            />
-                                                        ),
-                                                    )}
+                                    <div key={label} className="space-y-4">
+                                        <h3 className="font-bold text-lg flex items-center gap-2">
+                                            <Heart className="w-5 h-5 text-primary fill-primary" />
+                                            {label}
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {fields.map((field) => (
+                                                <div
+                                                    key={field}
+                                                    className="flex justify-between items-center"
+                                                >
+                                                    <span className="text-sm text-muted-foreground">
+                                                        {field}
+                                                    </span>
+                                                    <div className="flex gap-1">
+                                                        {[1, 2, 3, 4, 5].map(
+                                                            (star) => (
+                                                                <Star
+                                                                    key={star}
+                                                                    className={`w-4 h-4 ${
+                                                                        star <=
+                                                                        ((
+                                                                            review?.ratings as Record<
+                                                                                string,
+                                                                                number
+                                                                            >
+                                                                        )?.[
+                                                                            field
+                                                                        ] || 0)
+                                                                            ? 'text-primary fill-primary'
+                                                                            : 'text-muted-foreground'
+                                                                    }`}
+                                                                />
+                                                            ),
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="pt-3 border-t border-border">
-                                        <p className="text-sm text-muted-foreground mb-1">
-                                            총점
-                                        </p>
-                                        <p className="text-2xl font-bold text-primary">
-                                            {String(review?.rating)} / 5.0
-                                        </p>
-                                    </div>
-                                    {commentText && (
-                                        <div className="bg-muted/30 rounded-2xl p-4">
-                                            <p className="text-sm">
-                                                {commentText}
+                                            ))}
+                                        </div>
+                                        <div className="pt-3 border-t border-border">
+                                            <p className="text-sm text-muted-foreground mb-1">
+                                                총점
+                                            </p>
+                                            <p className="text-2xl font-bold text-primary">
+                                                {String(review?.rating)} / 5.0
                                             </p>
                                         </div>
-                                    )}
-                                </div>
+                                        {commentText && (
+                                            <div className="bg-muted/30 rounded-2xl p-4">
+                                                <p className="text-sm">
+                                                    {commentText}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
                                 )
                             })}
                         </div>
@@ -275,63 +246,6 @@ export const ReviewModal = ({
                                     </div>
                                 </div>
                             ))}
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block mb-2 text-sm text-foreground/80">
-                                    날씨
-                                </label>
-                                <div className="flex gap-2">
-                                    {(['맑음', '흐림', '비'] as const).map(
-                                        (w) => (
-                                            <button
-                                                key={w}
-                                                type="button"
-                                                onClick={() => setWeather(w)}
-                                                disabled={isViewMode}
-                                                className={`flex-1 py-3 rounded-2xl transition-all flex items-center justify-center gap-1 ${
-                                                    weather === w
-                                                        ? 'bg-primary text-primary-foreground'
-                                                        : 'bg-secondary text-secondary-foreground'
-                                                }`}
-                                            >
-                                                {weatherIcons[w]}
-                                                <span className="text-sm">
-                                                    {w}
-                                                </span>
-                                            </button>
-                                        ),
-                                    )}
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm text-foreground/80">
-                                    기분
-                                </label>
-                                <div className="flex gap-2">
-                                    {(['좋음', '보통', '나쁨'] as const).map(
-                                        (m) => (
-                                            <button
-                                                key={m}
-                                                type="button"
-                                                onClick={() => setMood(m)}
-                                                disabled={isViewMode}
-                                                className={`flex-1 py-3 rounded-2xl transition-all flex items-center justify-center gap-1 ${
-                                                    mood === m
-                                                        ? 'bg-primary text-primary-foreground'
-                                                        : 'bg-secondary text-secondary-foreground'
-                                                }`}
-                                            >
-                                                {moodIcons[m]}
-                                                <span className="text-sm">
-                                                    {m}
-                                                </span>
-                                            </button>
-                                        ),
-                                    )}
-                                </div>
-                            </div>
                         </div>
 
                         <div>
