@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Heart, Star, Clock, Trash2 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/components/ui/utils'
 import { Place } from '../types'
+import { formatRatingDisplay } from '../ratingFormat'
 import { useDeletePlace } from '../hooks/useDeletePlace'
 import { usePartnerNickname } from '@/app/_hooks/usePartnerNickname'
 
@@ -29,9 +31,15 @@ const ReviewHeart = ({ fill }: { fill: HeartFill }) => {
 interface PlaceCardProps {
     place: Place
     onOpen: (place: Place) => void
+    /** 콤팩트 뷰: 더 작은 패딩·타이포 */
+    density?: 'default' | 'compact'
 }
 
-export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
+export const PlaceCard = ({
+    place,
+    onOpen,
+    density = 'default',
+}: PlaceCardProps) => {
     const [isConfirming, setIsConfirming] = useState(false)
     const { mutate: deletePlace, isPending: isDeleting } = useDeletePlace()
     const partnerNickname = usePartnerNickname()
@@ -39,6 +47,12 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
     const partnerReview = place.partnerReview as
         | Record<string, unknown>
         | undefined
+
+    /** 상대가 올린 사진 포함 전체 장소 사진 */
+    const placeImages = place.images ?? []
+    const firstImageUrl = placeImages[0]?.url
+    const secondImageUrl = placeImages[1]?.url
+    const extraBeyondTwo = Math.max(0, placeImages.length - 2)
 
     const reviewStatus = (() => {
         if (myReview && partnerReview) return 'both'
@@ -67,6 +81,8 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
         setIsConfirming(false)
     }
 
+    const compact = density === 'compact'
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -74,7 +90,10 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
             exit={{ opacity: 0, y: -20 }}
         >
             <Card
-                className="hover:shadow-xl transition-shadow cursor-pointer relative overflow-hidden"
+                className={cn(
+                    'relative cursor-pointer overflow-hidden transition-shadow hover:shadow-xl',
+                    compact && '!rounded-2xl !p-4 shadow-md',
+                )}
                 onClick={handleCardClick}
             >
                 {/* 삭제 컨펌 오버레이 */}
@@ -119,10 +138,82 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                     )}
                 </AnimatePresence>
 
-                <div className="flex items-start justify-between mb-3">
+                {placeImages.length >= 2 ? (
+                    <div
+                        className={cn(
+                            'relative w-full overflow-hidden rounded-2xl bg-muted',
+                            compact
+                                ? 'mb-3 aspect-[16/10] rounded-xl'
+                                : 'mb-4 aspect-[2/1]',
+                        )}
+                    >
+                        <div className="flex h-full w-full gap-px">
+                            <div className="relative min-h-0 min-w-0 flex-1">
+                                <img
+                                    src={firstImageUrl}
+                                    alt=""
+                                    loading="lazy"
+                                    decoding="async"
+                                    draggable={false}
+                                    className="h-full w-full object-cover"
+                                />
+                            </div>
+                            <div className="relative min-h-0 min-w-0 flex-1">
+                                <img
+                                    src={secondImageUrl}
+                                    alt=""
+                                    loading="lazy"
+                                    decoding="async"
+                                    draggable={false}
+                                    className="h-full w-full object-cover"
+                                />
+                                {extraBeyondTwo > 0 && (
+                                    <span className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-[2px]">
+                                        +{extraBeyondTwo}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ) : firstImageUrl ? (
+                    <div
+                        className={cn(
+                            'relative w-full overflow-hidden rounded-2xl bg-muted',
+                            compact
+                                ? 'mb-3 aspect-[16/10] rounded-xl'
+                                : 'mb-4 aspect-[2/1]',
+                        )}
+                    >
+                        <img
+                            src={firstImageUrl}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            draggable={false}
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
+                ) : null}
+
+                <div
+                    className={cn(
+                        'mb-3 flex items-start justify-between',
+                        compact && 'mb-2',
+                    )}
+                >
                     <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                            <h3 className="text-lg font-bold text-foreground">
+                        <div
+                            className={cn(
+                                'mb-1 flex items-center gap-2',
+                                compact && 'mb-0.5',
+                            )}
+                        >
+                            <h3
+                                className={cn(
+                                    'font-bold text-foreground',
+                                    compact ? 'text-base' : 'text-lg',
+                                )}
+                            >
                                 {place.name}
                             </h3>
                             <ReviewHeart
@@ -135,10 +226,24 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                                 }
                             />
                         </div>
-                        <p className="text-sm text-muted-foreground mb-2">
+                        <p
+                            className={cn(
+                                'text-muted-foreground',
+                                compact
+                                    ? 'mb-1.5 line-clamp-2 text-xs'
+                                    : 'mb-2 text-sm',
+                            )}
+                        >
                             {place.address}
                         </p>
-                        <span className="inline-block px-3 py-1 rounded-full text-xs bg-secondary text-secondary-foreground">
+                        <span
+                            className={cn(
+                                'inline-block rounded-full bg-secondary text-secondary-foreground',
+                                compact
+                                    ? 'px-2 py-0.5 text-[10px]'
+                                    : 'px-3 py-1 text-xs',
+                            )}
+                        >
                             {place.category}
                         </span>
                     </div>
@@ -151,7 +256,12 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                     </button>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-border">
+                <div
+                    className={cn(
+                        'border-t border-border',
+                        compact ? 'mt-3 pt-3' : 'mt-4 pt-4',
+                    )}
+                >
                     {reviewStatus === 'both' && myReview && partnerReview ? (
                         <div className="space-y-2">
                             <div className="grid grid-cols-2 gap-2">
@@ -164,15 +274,41 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                                 ].map(({ label, review }) => (
                                     <div
                                         key={label}
-                                        className="bg-background shadow rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5"
+                                        className={cn(
+                                            'flex flex-col items-center gap-0.5 bg-background shadow',
+                                            compact
+                                                ? 'rounded-xl px-2 py-1.5'
+                                                : 'rounded-2xl px-3 py-2',
+                                        )}
                                     >
-                                        <span className="text-xs text-muted-foreground">
+                                        <span
+                                            className={cn(
+                                                'text-muted-foreground',
+                                                compact
+                                                    ? 'text-[10px]'
+                                                    : 'text-xs',
+                                            )}
+                                        >
                                             {label}
                                         </span>
                                         <div className="flex items-center gap-1">
-                                            <Star className="w-3.5 h-3.5 text-primary fill-primary" />
-                                            <span className="text-base font-bold text-foreground">
-                                                {String(review.rating)}
+                                            <Star
+                                                className={cn(
+                                                    'text-primary fill-primary',
+                                                    compact
+                                                        ? 'h-3 w-3'
+                                                        : 'h-3.5 w-3.5',
+                                                )}
+                                            />
+                                            <span
+                                                className={cn(
+                                                    'font-bold text-foreground',
+                                                    compact ? 'text-sm' : 'text-base',
+                                                )}
+                                            >
+                                                {formatRatingDisplay(
+                                                    review.rating,
+                                                )}
                                             </span>
                                         </div>
                                     </div>
@@ -181,36 +317,97 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                         </div>
                     ) : reviewStatus === 'mine-only' && myReview ? (
                         <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-background shadow rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5">
-                                <span className="text-xs text-muted-foreground">
+                            <div
+                                className={cn(
+                                    'flex flex-col items-center gap-0.5 bg-background shadow',
+                                    compact
+                                        ? 'rounded-xl px-2 py-1.5'
+                                        : 'rounded-2xl px-3 py-2',
+                                )}
+                            >
+                                <span
+                                    className={cn(
+                                        'text-muted-foreground',
+                                        compact ? 'text-[10px]' : 'text-xs',
+                                    )}
+                                >
                                     내 평점
                                 </span>
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-3.5 h-3.5 text-primary fill-primary" />
-                                    <span className="text-base font-bold text-foreground">
-                                        {String(myReview.rating)}
+                                    <Star
+                                        className={cn(
+                                            'text-primary fill-primary',
+                                            compact
+                                                ? 'h-3 w-3'
+                                                : 'h-3.5 w-3.5',
+                                        )}
+                                    />
+                                    <span
+                                        className={cn(
+                                            'font-bold text-foreground',
+                                            compact ? 'text-sm' : 'text-base',
+                                        )}
+                                    >
+                                        {formatRatingDisplay(myReview.rating)}
                                     </span>
                                 </div>
                             </div>
-                            <div className="bg-background shadow rounded-2xl px-3 py-2 flex flex-col items-center justify-center gap-1">
-                                <Clock className="w-4 h-4 text-muted-foreground" />
-                                <p className="text-xs text-muted-foreground text-center leading-tight">
+                            <div
+                                className={cn(
+                                    'flex flex-col items-center justify-center gap-1 bg-background shadow',
+                                    compact
+                                        ? 'rounded-xl px-2 py-2'
+                                        : 'rounded-2xl px-3 py-2',
+                                )}
+                            >
+                                <Clock
+                                    className={cn(
+                                        'text-muted-foreground',
+                                        compact ? 'h-3.5 w-3.5' : 'h-4 w-4',
+                                    )}
+                                />
+                                <p
+                                    className={cn(
+                                        'text-center leading-tight text-muted-foreground',
+                                        compact ? 'text-[10px]' : 'text-xs',
+                                    )}
+                                >
                                     기다리는 중...
                                 </p>
                             </div>
                         </div>
                     ) : reviewStatus === 'partner-only' ? (
-                        <div className="text-center py-2 px-1 space-y-1">
-                            <p className="text-sm font-medium text-foreground">
+                        <div
+                            className={cn(
+                                'space-y-1 px-1 text-center',
+                                compact ? 'py-1' : 'py-2',
+                            )}
+                        >
+                            <p
+                                className={cn(
+                                    'font-medium text-foreground',
+                                    compact ? 'text-xs' : 'text-sm',
+                                )}
+                            >
                                 상대방이 기다리고 있어요 💌
                             </p>
-                            <p className="text-xs text-muted-foreground leading-snug">
+                            <p
+                                className={cn(
+                                    'leading-snug text-muted-foreground',
+                                    compact ? 'text-[10px]' : 'text-xs',
+                                )}
+                            >
                                 리뷰를 작성하면 상대방의 리뷰를 볼 수 있어요
                             </p>
                         </div>
                     ) : (
-                        <div className="text-center py-2">
-                            <p className="text-sm text-muted-foreground">
+                        <div className={cn('text-center', compact ? 'py-1' : 'py-2')}>
+                            <p
+                                className={cn(
+                                    'text-muted-foreground',
+                                    compact ? 'text-xs' : 'text-sm',
+                                )}
+                            >
                                 아직 리뷰가 없어요
                             </p>
                         </div>

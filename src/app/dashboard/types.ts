@@ -20,6 +20,9 @@ export interface Place {
     bothCompleted: boolean
 }
 
+/** 장소 목록 표시 형식 */
+export type PlaceListViewMode = 'cards' | 'grid' | 'compact'
+
 export interface PlaceModalProps {
     onClose: () => void
     onPlaceAdded: () => void

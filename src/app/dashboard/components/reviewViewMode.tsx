@@ -1,5 +1,6 @@
 import { Heart, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { formatRatingDisplay } from '../ratingFormat'
 import { usePartnerNickname } from '@/app/_hooks/usePartnerNickname'
 
 interface ReviewPanelProps {
@@ -51,7 +52,7 @@ const ReviewPanel = ({ label, review, fields }: ReviewPanelProps) => {
             <div className="pt-3 border-t border-border">
                 <p className="text-sm text-muted-foreground mb-1">총점</p>
                 <p className="text-2xl font-bold text-primary">
-                    {String(review.rating)} / 5.0
+                    {formatRatingDisplay(review.rating)} / 5.0
                 </p>
             </div>
             {commentText && (

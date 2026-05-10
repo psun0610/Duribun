@@ -13,6 +13,7 @@
 /* Webkit (Chrome, Safari, Edge): overlay로 공간 미점유 */
 html {
     overflow-y: overlay;
+    word-break: keep-all;
 }
 
 ::-webkit-scrollbar {

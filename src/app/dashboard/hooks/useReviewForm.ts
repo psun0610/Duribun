@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import confetti from 'canvas-confetti'
 import { addReview } from '../api'
+import { formatRatingDisplay } from '../ratingFormat'
 import { Place, PlaceCategory } from '../types'
 import { PLACES_QUERY_KEY } from './usePlaces'
 import { supabase } from '@/lib/supabase/client'
@@ -60,10 +61,7 @@ const uploadAndSavePlaceImages = async (
 
 const deletePlaceImagesByIds = async (ids: string[]): Promise<void> => {
     if (ids.length === 0) return
-    const { error } = await supabase
-        .from('place_images')
-        .delete()
-        .in('id', ids)
+    const { error } = await supabase.from('place_images').delete().in('id', ids)
     if (error) throw new Error(error.message)
 }
 
@@ -108,6 +106,8 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         resetImageDraftState()
     }, [place.id, resetImageDraftState])
 
+    const placeHasNoImages = (place.images ?? []).length === 0
+
     const mineImagesAll = (place.images ?? []).filter((img) => img.isMine)
     /** X로 제거 예정 처리된 사진은 화면·슬롯에서 제외 (저장 시 DB 삭제) */
     const existingMyPlaceImages = mineImagesAll.filter(
@@ -141,7 +141,7 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         setRatings((prev) => ({ ...prev, [field]: value }))
     }
 
-    const getAverageRating = (ratingMap: Record<string, number>) => {
+    const computeAverageRating = (ratingMap: Record<string, number>) => {
         const values = Object.values(ratingMap)
         if (values.length === 0) return 0
         return parseFloat(
@@ -166,14 +166,11 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
                 ratings: vars.snapshotRatings,
                 revisit: vars.snapshotRevisit,
                 comment: vars.snapshotComment,
-                rating: getAverageRating(vars.snapshotRatings),
+                rating: computeAverageRating(vars.snapshotRatings),
             })
             await deletePlaceImagesByIds(vars.snapshotRemovedExistingIds)
             if (vars.snapshotNewFiles.length > 0) {
-                await uploadAndSavePlaceImages(
-                    vars.snapshotNewFiles,
-                    place.id,
-                )
+                await uploadAndSavePlaceImages(vars.snapshotNewFiles, place.id)
             }
         },
         onSuccess: () => {
@@ -201,6 +198,10 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         setError('')
+        if (placeHasNoImages && totalImageCount < 1) {
+            setError('이 장소에는 아직 사진이 없어요. 사진을 추가해 주세요.')
+            return
+        }
         mutate({
             snapshotRatings: ratings,
             snapshotRevisit: revisit,
@@ -222,7 +223,8 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         myReview,
         partnerReview,
         handleRatingChange,
-        getAverageRating: () => getAverageRating(ratings),
+        getAverageRating: () =>
+            formatRatingDisplay(computeAverageRating(ratings)),
         handleSubmit,
         existingMyPlaceImages,
         newImagePreviews,
@@ -232,5 +234,6 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         removeNewImage,
         markExistingImageRemoved,
         resetImageDraftState,
+        requirePhotoWhenPlaceHasNoImages: placeHasNoImages,
     }
 }
