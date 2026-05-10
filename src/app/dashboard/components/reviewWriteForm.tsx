@@ -2,6 +2,8 @@ import { useRef } from 'react'
 import { Star, Heart, Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+import type { PlaceImage } from '../types'
+
 interface ReviewWriteFormProps {
     fields: string[]
     ratings: Record<string, number>
@@ -12,13 +14,16 @@ interface ReviewWriteFormProps {
     isEditing?: boolean
     hasPartnerReview: boolean
     averageRating: string | number
+    existingMyPlaceImages: Pick<PlaceImage, 'id' | 'url'>[]
     newImagePreviews: string[]
     totalImageCount: number
     maxImages: number
+    removingExistingImageId: string | null
     onRatingChange: (field: string, value: number) => void
     onRevisitChange: (value: boolean) => void
     onCommentChange: (value: string) => void
     onAddImages: (files: FileList) => void
+    onRemoveExistingPlaceImage: (imageId: string) => void
     onRemoveNewImage: (index: number) => void
     onSubmit: (e: React.FormEvent) => void
     onCancel: () => void
@@ -34,13 +39,16 @@ export const ReviewWriteForm = ({
     isEditing = false,
     hasPartnerReview,
     averageRating,
+    existingMyPlaceImages,
     newImagePreviews,
     totalImageCount,
     maxImages,
+    removingExistingImageId,
     onRatingChange,
     onRevisitChange,
     onCommentChange,
     onAddImages,
+    onRemoveExistingPlaceImage,
     onRemoveNewImage,
     onSubmit,
     onCancel,
@@ -132,6 +140,38 @@ export const ReviewWriteForm = ({
                     </span>
                 </label>
                 <div className="flex flex-wrap gap-2">
+                    {/* 장소에 이미 등록한 내 사진 */}
+                    {existingMyPlaceImages.map((img, i) => {
+                        const canRemove = Boolean(img.id)
+                        const busy =
+                            removingExistingImageId !== null &&
+                            removingExistingImageId === img.id
+                        return (
+                            <div
+                                key={`existing-${img.id ?? img.url}-${i}`}
+                                className="relative w-20 h-20"
+                            >
+                                <img
+                                    src={img.url}
+                                    alt=""
+                                    className={`w-20 h-20 object-cover rounded-2xl border border-border ${busy ? 'opacity-50' : ''}`}
+                                />
+                                {canRemove && (
+                                    <button
+                                        type="button"
+                                        disabled={busy || removingExistingImageId !== null}
+                                        onClick={() =>
+                                            img.id &&
+                                            onRemoveExistingPlaceImage(img.id)
+                                        }
+                                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-foreground text-background rounded-full flex items-center justify-center disabled:opacity-50"
+                                    >
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                )}
+                            </div>
+                        )
+                    })}
                     {/* 새로 선택한 이미지 미리보기 */}
                     {newImagePreviews.map((url, i) => (
                         <div key={`new-${i}`} className="relative w-20 h-20">

@@ -413,10 +413,18 @@ app.get('/duribun-api/places/list', async (c) => {
             byPlace.set(r.place_id, list)
         }
 
-        const imagesByPlace = new Map<string, { url: string; userId: string; isMine: boolean }[]>()
+        const imagesByPlace = new Map<
+            string,
+            { id: string; url: string; userId: string; isMine: boolean }[]
+        >()
         for (const img of imageRows) {
             const list = imagesByPlace.get(img.place_id) ?? []
-            list.push({ url: img.image_url, userId: img.user_id, isMine: img.user_id === user.id })
+            list.push({
+                id: img.id,
+                url: img.image_url,
+                userId: img.user_id,
+                isMine: img.user_id === user.id,
+            })
             imagesByPlace.set(img.place_id, list)
         }
 

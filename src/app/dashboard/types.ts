@@ -1,6 +1,7 @@
 export type PlaceCategory = '식당' | '카페' | '액티비티'
 
 export interface PlaceImage {
+    id?: string
     url: string
     userId: string
     isMine: boolean

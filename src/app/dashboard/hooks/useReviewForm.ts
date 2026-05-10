@@ -66,6 +66,9 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
 
     const [newImageFiles, setNewImageFiles] = useState<File[]>([])
     const [newImagePreviews, setNewImagePreviews] = useState<string[]>([])
+    const [removingExistingImageId, setRemovingExistingImageId] = useState<
+        string | null
+    >(null)
 
     const queryClient = useQueryClient()
 
@@ -83,7 +86,29 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         }
     }, [myReview])
 
-    const totalImageCount = place.images.length + newImageFiles.length
+    const existingMyPlaceImages = (place.images ?? []).filter((img) => img.isMine)
+
+    /** 내가 이 장소에 이미 등록한 사진 + 새로 고른 파일 (슬롯은 본인 사진만) */
+    const totalImageCount = existingMyPlaceImages.length + newImageFiles.length
+
+    const removeExistingPlaceImage = async (imageId: string) => {
+        setError('')
+        setRemovingExistingImageId(imageId)
+        try {
+            const { error: delErr } = await supabase
+                .from('place_images')
+                .delete()
+                .eq('id', imageId)
+            if (delErr) throw new Error(delErr.message)
+            await queryClient.invalidateQueries({ queryKey: PLACES_QUERY_KEY })
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : '사진 삭제에 실패했습니다',
+            )
+        } finally {
+            setRemovingExistingImageId(null)
+        }
+    }
 
     const addImages = (files: FileList) => {
         const remaining = MAX_IMAGES - totalImageCount
@@ -185,10 +210,13 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         handleRatingChange,
         getAverageRating: () => getAverageRating(ratings),
         handleSubmit,
+        existingMyPlaceImages,
         newImagePreviews,
         totalImageCount,
         maxImages: MAX_IMAGES,
         addImages,
         removeNewImage,
+        removeExistingPlaceImage,
+        removingExistingImageId,
     }
 }
