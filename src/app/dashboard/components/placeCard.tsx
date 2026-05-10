@@ -6,6 +6,25 @@ import { Button } from '@/components/ui/button'
 import { Place } from '../types'
 import { useDeletePlace } from '../hooks/useDeletePlace'
 
+type HeartFill = 'none' | 'half' | 'full'
+
+const ReviewHeart = ({ fill }: { fill: HeartFill }) => {
+    if (fill === 'full') {
+        return <Heart className="w-5 h-5 text-primary fill-primary" />
+    }
+    if (fill === 'none') {
+        return <Heart className="w-5 h-5 text-muted" />
+    }
+    return (
+        <div className="relative w-5 h-5">
+            <Heart className="absolute inset-0 w-5 h-5 text-muted fill-muted" />
+            <div className="absolute inset-0 overflow-hidden w-[52%]">
+                <Heart className="w-5 h-5 text-primary fill-primary" />
+            </div>
+        </div>
+    )
+}
+
 interface PlaceCardProps {
     place: Place
     onOpen: (place: Place) => void
@@ -29,7 +48,7 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
 
     const handleCardClick = () => {
         if (isConfirming) return
-        if (reviewStatus !== 'both') onOpen(place)
+        onOpen(place)
     }
 
     const handleDeleteClick = (e: React.MouseEvent) => {
@@ -105,18 +124,15 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                             <h3 className="text-lg font-bold text-foreground">
                                 {place.name}
                             </h3>
-                            {place.bothCompleted ? (
-                                <Heart className="w-5 h-5 text-primary fill-primary" />
-                            ) : (
-                                <div className="flex">
-                                    <Heart
-                                        className={`w-5 h-5 ${myReview ? 'text-primary fill-primary' : 'text-muted-foreground'}`}
-                                    />
-                                    <Heart
-                                        className={`w-5 h-5 -ml-2 ${partnerReview ? 'text-primary fill-primary' : 'text-muted-foreground'}`}
-                                    />
-                                </div>
-                            )}
+                            <ReviewHeart
+                                fill={
+                                    reviewStatus === 'both'
+                                        ? 'full'
+                                        : reviewStatus === 'none'
+                                          ? 'none'
+                                          : 'half'
+                                }
+                            />
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">
                             {place.address}
@@ -137,52 +153,48 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                 <div className="mt-4 pt-4 border-t border-border">
                     {reviewStatus === 'both' && myReview && partnerReview ? (
                         <div className="space-y-2">
-                            {[
-                                { label: '내 평점', review: myReview },
-                                { label: '상대 평점', review: partnerReview },
-                            ].map(({ label, review }) => (
-                                <div
-                                    key={label}
-                                    className="flex items-center justify-between"
-                                >
-                                    <span className="text-sm text-muted-foreground">
-                                        {label}
-                                    </span>
-                                    <div className="flex items-center gap-1">
-                                        <Star className="w-4 h-4 text-primary fill-primary" />
-                                        <span className="text-sm font-medium">
-                                            {String(review.rating)}
+                            <div className="grid grid-cols-2 gap-2">
+                                {[
+                                    { label: '내 평점', review: myReview },
+                                    {
+                                        label: '상대 평점',
+                                        review: partnerReview,
+                                    },
+                                ].map(({ label, review }) => (
+                                    <div
+                                        key={label}
+                                        className="bg-[aliceblue] rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5"
+                                    >
+                                        <span className="text-xs text-muted-foreground">
+                                            {label}
                                         </span>
+                                        <div className="flex items-center gap-1">
+                                            <Star className="w-3.5 h-3.5 text-primary fill-primary" />
+                                            <span className="text-base font-bold text-foreground">
+                                                {String(review.rating)}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    onOpen(place)
-                                }}
-                                className="w-full mt-2 text-sm text-primary hover:underline"
-                            >
-                                자세히 보기
-                            </button>
+                                ))}
+                            </div>
                         </div>
                     ) : reviewStatus === 'mine-only' && myReview ? (
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-muted-foreground">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-[aliceblue] rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5">
+                                <span className="text-xs text-muted-foreground">
                                     내 평점
                                 </span>
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-4 h-4 text-primary fill-primary" />
-                                    <span className="text-sm font-medium">
+                                    <Star className="w-3.5 h-3.5 text-primary fill-primary" />
+                                    <span className="text-base font-bold text-foreground">
                                         {String(myReview.rating)}
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-1.5 text-muted-foreground pt-1">
-                                <Clock className="w-4 h-4 shrink-0" />
-                                <p className="text-xs">
-                                    상대방이 작성하기 기다리는 중...
+                            <div className="bg-[aliceblue] rounded-2xl px-3 py-2 flex flex-col items-center justify-center gap-1">
+                                <Clock className="w-4 h-4 text-muted-foreground" />
+                                <p className="text-xs text-muted-foreground text-center leading-tight">
+                                    기다리는 중...
                                 </p>
                             </div>
                         </div>
