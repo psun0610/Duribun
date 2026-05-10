@@ -48,7 +48,14 @@ type ReviewRow = {
     revisit: boolean
     comment: string | null
     rating: number
-    images: string[]
+    created_at: string
+}
+
+type PlaceImageRow = {
+    id: string
+    place_id: string
+    user_id: string
+    image_url: string
     created_at: string
 }
 
@@ -61,7 +68,6 @@ function mapReviewRow(r: ReviewRow) {
         revisit: r.revisit,
         comment: r.comment,
         rating: r.rating,
-        images: r.images ?? [],
         createdAt: r.created_at,
     }
 }
@@ -370,21 +376,34 @@ app.get('/duribun-api/places/list', async (c) => {
         const places = placeRows ?? []
         const placeIds = places.map((p) => p.id)
         let reviewRows: ReviewRow[] = []
+        let imageRows: PlaceImageRow[] = []
 
         if (placeIds.length > 0) {
-            // weather, mood 컬럼 제거됨
-            const { data: rData, error: rErr } = await supabase
-                .from('reviews')
-                .select(
-                    'id, place_id, user_id, ratings, revisit, comment, rating, images, created_at',
-                )
-                .in('place_id', placeIds)
+            const [reviewResult, imageResult] = await Promise.all([
+                supabase
+                    .from('reviews')
+                    .select(
+                        'id, place_id, user_id, ratings, revisit, comment, rating, created_at',
+                    )
+                    .in('place_id', placeIds),
+                supabase
+                    .from('place_images')
+                    .select('id, place_id, user_id, image_url, created_at')
+                    .in('place_id', placeIds)
+                    .order('created_at', { ascending: true }),
+            ])
 
-            if (rErr) {
-                console.log('Reviews batch error:', rErr)
+            if (reviewResult.error) {
+                console.log('Reviews batch error:', reviewResult.error)
                 return c.json({ error: 'Failed to get places' }, 500)
             }
-            reviewRows = (rData ?? []) as ReviewRow[]
+            if (imageResult.error) {
+                console.log('Place images batch error:', imageResult.error)
+                return c.json({ error: 'Failed to get places' }, 500)
+            }
+
+            reviewRows = (reviewResult.data ?? []) as ReviewRow[]
+            imageRows = (imageResult.data ?? []) as PlaceImageRow[]
         }
 
         const byPlace = new Map<string, ReturnType<typeof mapReviewRow>[]>()
@@ -392,6 +411,21 @@ app.get('/duribun-api/places/list', async (c) => {
             const list = byPlace.get(r.place_id) ?? []
             list.push(mapReviewRow(r))
             byPlace.set(r.place_id, list)
+        }
+
+        const imagesByPlace = new Map<
+            string,
+            { id: string; url: string; userId: string; isMine: boolean }[]
+        >()
+        for (const img of imageRows) {
+            const list = imagesByPlace.get(img.place_id) ?? []
+            list.push({
+                id: img.id,
+                url: img.image_url,
+                userId: img.user_id,
+                isMine: img.user_id === user.id,
+            })
+            imagesByPlace.set(img.place_id, list)
         }
 
         const placesWithReviews = places.map((p) => {
@@ -406,6 +440,7 @@ app.get('/duribun-api/places/list', async (c) => {
                 address: p.address,
                 category: p.category,
                 createdAt: p.created_at,
+                images: imagesByPlace.get(p.id) ?? [],
                 myReview,
                 partnerReview,
                 bothCompleted: !!(myReview && partnerReview),
@@ -475,7 +510,7 @@ app.post('/duribun-api/reviews', async (c) => {
             return c.json({ error: 'Unauthorized' }, 401)
         }
 
-        const { placeId, ratings, revisit, comment, rating, images } =
+        const { placeId, ratings, revisit, comment, rating } =
             await c.req.json()
         if (!placeId) {
             return c.json({ error: 'placeId required' }, 400)
@@ -513,7 +548,6 @@ app.post('/duribun-api/reviews', async (c) => {
                     revisit: revisit ?? true,
                     comment: comment ?? null,
                     rating,
-                    images: images ?? [],
                 },
                 { onConflict: 'place_id,user_id' },
             )
@@ -565,7 +599,7 @@ app.get('/duribun-api/reviews/:placeId', async (c) => {
         const { data: reviewRows, error: rErr } = await supabase
             .from('reviews')
             .select(
-                'id, place_id, user_id, ratings, revisit, comment, rating, images, created_at',
+                'id, place_id, user_id, ratings, revisit, comment, rating, created_at',
             )
             .eq('place_id', placeId)
 

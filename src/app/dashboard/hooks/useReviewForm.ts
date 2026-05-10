@@ -20,23 +20,42 @@ export const getCategoryFields = (category: string): string[] =>
 const MAX_IMAGES = 5
 const BUCKET = 'review-images'
 
-const uploadToStorage = async (files: File[], placeId: string): Promise<string[]> => {
-    const { data: { user } } = await supabase.auth.getUser()
+const uploadAndSavePlaceImages = async (
+    files: File[],
+    placeId: string,
+): Promise<void> => {
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
     if (!user) throw new Error('Not authenticated')
 
-    const urls: string[] = []
-    for (const file of files) {
-        const ext = file.name.split('.').pop() ?? 'jpg'
-        const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-        const path = `reviews/${placeId}/${user.id}/${uniqueName}`
+    await Promise.all(
+        files.map(async (file) => {
+            const ext = file.name.split('.').pop() ?? 'jpg'
+            const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+            const filePath = `reviews/${placeId}/${user.id}/${uniqueName}`
 
-        const { error } = await supabase.storage.from(BUCKET).upload(path, file)
-        if (error) throw new Error(error.message)
+            // 1. Storage 업로드
+            const { data: uploadData, error: uploadError } =
+                await supabase.storage.from(BUCKET).upload(filePath, file)
+            if (uploadError) throw new Error(uploadError.message)
 
-        const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(path)
-        urls.push(urlData.publicUrl)
-    }
-    return urls
+            // 2. 업로드된 실제 path로 Public URL 취득
+            const {
+                data: { publicUrl },
+            } = supabase.storage.from(BUCKET).getPublicUrl(uploadData.path)
+
+            // 3. place_images 테이블에 insert (RLS: 인증된 사용자 본인만 가능)
+            const { error: insertError } = await supabase
+                .from('place_images')
+                .insert({
+                    place_id: placeId,
+                    user_id: user.id,
+                    image_url: publicUrl,
+                })
+            if (insertError) throw new Error(insertError.message)
+        }),
+    )
 }
 
 export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
@@ -45,11 +64,11 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
     const [comment, setComment] = useState('')
     const [error, setError] = useState('')
 
-    // 이미 저장된 이미지 URL (수정 시 기존 이미지 유지/제거 가능)
-    const [savedImageUrls, setSavedImageUrls] = useState<string[]>([])
-    // 새로 선택한 파일 + 미리보기 URL
     const [newImageFiles, setNewImageFiles] = useState<File[]>([])
     const [newImagePreviews, setNewImagePreviews] = useState<string[]>([])
+    const [removingExistingImageId, setRemovingExistingImageId] = useState<
+        string | null
+    >(null)
 
     const queryClient = useQueryClient()
 
@@ -64,11 +83,32 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
             setRatings((myReview.ratings as Record<string, number>) ?? {})
             setRevisit((myReview.revisit as boolean) ?? true)
             setComment((myReview.comment as string) ?? '')
-            setSavedImageUrls((myReview.images as string[]) ?? [])
         }
     }, [myReview])
 
-    const totalImageCount = savedImageUrls.length + newImageFiles.length
+    const existingMyPlaceImages = (place.images ?? []).filter((img) => img.isMine)
+
+    /** 내가 이 장소에 이미 등록한 사진 + 새로 고른 파일 (슬롯은 본인 사진만) */
+    const totalImageCount = existingMyPlaceImages.length + newImageFiles.length
+
+    const removeExistingPlaceImage = async (imageId: string) => {
+        setError('')
+        setRemovingExistingImageId(imageId)
+        try {
+            const { error: delErr } = await supabase
+                .from('place_images')
+                .delete()
+                .eq('id', imageId)
+            if (delErr) throw new Error(delErr.message)
+            await queryClient.invalidateQueries({ queryKey: PLACES_QUERY_KEY })
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : '사진 삭제에 실패했습니다',
+            )
+        } finally {
+            setRemovingExistingImageId(null)
+        }
+    }
 
     const addImages = (files: FileList) => {
         const remaining = MAX_IMAGES - totalImageCount
@@ -78,10 +118,6 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         const previews = toAdd.map((f) => URL.createObjectURL(f))
         setNewImageFiles((prev) => [...prev, ...toAdd])
         setNewImagePreviews((prev) => [...prev, ...previews])
-    }
-
-    const removeSavedImage = (index: number) => {
-        setSavedImageUrls((prev) => prev.filter((_, i) => i !== index))
     }
 
     const removeNewImage = (index: number) => {
@@ -94,27 +130,39 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         setRatings((prev) => ({ ...prev, [field]: value }))
     }
 
-    const getAverageRating = () => {
-        const values = Object.values(ratings)
+    const getAverageRating = (ratingMap: Record<string, number>) => {
+        const values = Object.values(ratingMap)
         if (values.length === 0) return 0
-        return (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1)
+        return parseFloat(
+            (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1),
+        )
     }
 
     const isFirstSubmission = !myReview
 
+    type MutationVars = {
+        snapshotRatings: Record<string, number>
+        snapshotRevisit: boolean
+        snapshotComment: string
+        snapshotNewFiles: File[]
+    }
+
     const { mutate, isPending } = useMutation({
-        mutationFn: async () => {
-            const uploadedUrls = newImageFiles.length > 0
-                ? await uploadToStorage(newImageFiles, place.id)
-                : []
-            return addReview({
-                placeId: place.id,
-                ratings,
-                revisit,
-                comment,
-                rating: parseFloat(String(getAverageRating())),
-                images: [...savedImageUrls, ...uploadedUrls],
-            })
+        mutationFn: async (vars: MutationVars) => {
+            await Promise.all([
+                // 리뷰 저장
+                addReview({
+                    placeId: place.id,
+                    ratings: vars.snapshotRatings,
+                    revisit: vars.snapshotRevisit,
+                    comment: vars.snapshotComment,
+                    rating: getAverageRating(vars.snapshotRatings),
+                }),
+                // 사진 업로드 + place_images insert
+                vars.snapshotNewFiles.length > 0
+                    ? uploadAndSavePlaceImages(vars.snapshotNewFiles, place.id)
+                    : Promise.resolve(),
+            ])
         },
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: PLACES_QUERY_KEY })
@@ -140,7 +188,12 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         setError('')
-        mutate()
+        mutate({
+            snapshotRatings: ratings,
+            snapshotRevisit: revisit,
+            snapshotComment: comment,
+            snapshotNewFiles: newImageFiles,
+        })
     }
 
     return {
@@ -155,14 +208,15 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         myReview,
         partnerReview,
         handleRatingChange,
-        getAverageRating,
+        getAverageRating: () => getAverageRating(ratings),
         handleSubmit,
-        savedImageUrls,
+        existingMyPlaceImages,
         newImagePreviews,
         totalImageCount,
         maxImages: MAX_IMAGES,
         addImages,
-        removeSavedImage,
         removeNewImage,
+        removeExistingPlaceImage,
+        removingExistingImageId,
     }
 }

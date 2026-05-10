@@ -2,6 +2,8 @@ import { useRef } from 'react'
 import { Star, Heart, Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+import type { PlaceImage } from '../types'
+
 interface ReviewWriteFormProps {
     fields: string[]
     ratings: Record<string, number>
@@ -12,15 +14,16 @@ interface ReviewWriteFormProps {
     isEditing?: boolean
     hasPartnerReview: boolean
     averageRating: string | number
-    savedImageUrls: string[]
+    existingMyPlaceImages: Pick<PlaceImage, 'id' | 'url'>[]
     newImagePreviews: string[]
     totalImageCount: number
     maxImages: number
+    removingExistingImageId: string | null
     onRatingChange: (field: string, value: number) => void
     onRevisitChange: (value: boolean) => void
     onCommentChange: (value: string) => void
     onAddImages: (files: FileList) => void
-    onRemoveSavedImage: (index: number) => void
+    onRemoveExistingPlaceImage: (imageId: string) => void
     onRemoveNewImage: (index: number) => void
     onSubmit: (e: React.FormEvent) => void
     onCancel: () => void
@@ -36,15 +39,16 @@ export const ReviewWriteForm = ({
     isEditing = false,
     hasPartnerReview,
     averageRating,
-    savedImageUrls,
+    existingMyPlaceImages,
     newImagePreviews,
     totalImageCount,
     maxImages,
+    removingExistingImageId,
     onRatingChange,
     onRevisitChange,
     onCommentChange,
     onAddImages,
-    onRemoveSavedImage,
+    onRemoveExistingPlaceImage,
     onRemoveNewImage,
     onSubmit,
     onCancel,
@@ -60,6 +64,100 @@ export const ReviewWriteForm = ({
 
     return (
         <form onSubmit={onSubmit} className="space-y-6">
+            {hasPartnerReview && (
+                <div className="bg-primary/10 rounded-2xl p-4 text-center">
+                    <Heart className="w-8 h-8 text-primary fill-primary mx-auto mb-2" />
+                    <p className="text-sm text-foreground">
+                        상대방이 먼저 리뷰를 작성했어요!
+                        <br />
+                        리뷰를 완성하면 함께 볼 수 있어요
+                    </p>
+                </div>
+            )}
+
+            {/* 사진 업로드 */}
+            <div>
+                <label className="block mb-2 text-sm text-foreground/80">
+                    사진{' '}
+                    <span className="text-muted-foreground">
+                        ({totalImageCount}/{maxImages})
+                    </span>
+                </label>
+                <div className="flex flex-wrap gap-2">
+                    {/* 장소에 이미 등록한 내 사진 */}
+                    {existingMyPlaceImages.map((img, i) => {
+                        const canRemove = Boolean(img.id)
+                        const busy =
+                            removingExistingImageId !== null &&
+                            removingExistingImageId === img.id
+                        return (
+                            <div
+                                key={`existing-${img.id ?? img.url}-${i}`}
+                                className="relative w-20 h-20"
+                            >
+                                <img
+                                    src={img.url}
+                                    alt=""
+                                    className={`w-20 h-20 object-cover rounded-2xl border border-border ${busy ? 'opacity-50' : ''}`}
+                                />
+                                {canRemove && (
+                                    <button
+                                        type="button"
+                                        disabled={
+                                            busy ||
+                                            removingExistingImageId !== null
+                                        }
+                                        onClick={() =>
+                                            img.id &&
+                                            onRemoveExistingPlaceImage(img.id)
+                                        }
+                                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-foreground text-background rounded-full flex items-center justify-center disabled:opacity-50"
+                                    >
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                )}
+                            </div>
+                        )
+                    })}
+                    {/* 새로 선택한 이미지 미리보기 */}
+                    {newImagePreviews.map((url, i) => (
+                        <div key={`new-${i}`} className="relative w-20 h-20">
+                            <img
+                                src={url}
+                                alt=""
+                                className="w-20 h-20 object-cover rounded-2xl"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => onRemoveNewImage(i)}
+                                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-foreground text-background rounded-full flex items-center justify-center"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </div>
+                    ))}
+                    {/* 추가 버튼 */}
+                    {totalImageCount < maxImages && (
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-20 h-20 border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+                        >
+                            <Plus className="w-5 h-5" />
+                            <span className="text-xs">사진 추가</span>
+                        </button>
+                    )}
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        hidden
+                        onChange={handleFileChange}
+                    />
+                </div>
+            </div>
+
             <div className="space-y-4">
                 <h3 className="font-bold text-lg">세부 평가</h3>
                 {fields.map((field) => (
@@ -127,88 +225,12 @@ export const ReviewWriteForm = ({
                 />
             </div>
 
-            {/* 사진 업로드 */}
-            <div>
-                <label className="block mb-2 text-sm text-foreground/80">
-                    사진{' '}
-                    <span className="text-muted-foreground">
-                        ({totalImageCount}/{maxImages})
-                    </span>
-                </label>
-                <div className="flex flex-wrap gap-2">
-                    {/* 저장된 이미지 */}
-                    {savedImageUrls.map((url, i) => (
-                        <div key={`saved-${i}`} className="relative w-20 h-20">
-                            <img
-                                src={url}
-                                alt=""
-                                className="w-20 h-20 object-cover rounded-2xl"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => onRemoveSavedImage(i)}
-                                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-foreground text-background rounded-full flex items-center justify-center"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        </div>
-                    ))}
-                    {/* 새로 선택한 이미지 미리보기 */}
-                    {newImagePreviews.map((url, i) => (
-                        <div key={`new-${i}`} className="relative w-20 h-20">
-                            <img
-                                src={url}
-                                alt=""
-                                className="w-20 h-20 object-cover rounded-2xl"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => onRemoveNewImage(i)}
-                                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-foreground text-background rounded-full flex items-center justify-center"
-                            >
-                                <X className="w-3 h-3" />
-                            </button>
-                        </div>
-                    ))}
-                    {/* 추가 버튼 */}
-                    {totalImageCount < maxImages && (
-                        <button
-                            type="button"
-                            onClick={() => fileInputRef.current?.click()}
-                            className="w-20 h-20 border-2 border-dashed border-border rounded-2xl flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-                        >
-                            <Plus className="w-5 h-5" />
-                            <span className="text-xs">사진 추가</span>
-                        </button>
-                    )}
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        hidden
-                        onChange={handleFileChange}
-                    />
-                </div>
-            </div>
-
             <div className="bg-secondary/30 rounded-2xl p-4 text-center">
                 <p className="text-sm text-muted-foreground mb-1">종합 평점</p>
                 <p className="text-3xl font-bold text-primary">
                     {averageRating} / 5.0
                 </p>
             </div>
-
-            {hasPartnerReview && (
-                <div className="bg-primary/10 rounded-2xl p-4 text-center">
-                    <Heart className="w-8 h-8 text-primary fill-primary mx-auto mb-2" />
-                    <p className="text-sm text-foreground">
-                        상대방이 먼저 리뷰를 작성했어요!
-                        <br />
-                        리뷰를 완성하면 함께 볼 수 있어요
-                    </p>
-                </div>
-            )}
 
             {error && (
                 <p className="text-destructive text-sm text-center">{error}</p>
@@ -227,7 +249,9 @@ export const ReviewWriteForm = ({
                     type="submit"
                     variant="default"
                     disabled={
-                        loading || Object.keys(ratings).length !== fields.length
+                        loading ||
+                        Object.keys(ratings).length !== fields.length ||
+                        !comment.trim()
                     }
                     className="flex-1"
                 >

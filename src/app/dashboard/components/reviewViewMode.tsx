@@ -11,7 +11,6 @@ interface ReviewPanelProps {
 const ReviewPanel = ({ label, review, fields }: ReviewPanelProps) => {
     const commentText =
         typeof review.comment === 'string' ? review.comment : ''
-    const images = Array.isArray(review.images) ? (review.images as string[]) : []
 
     return (
         <div className="space-y-4">
@@ -58,24 +57,6 @@ const ReviewPanel = ({ label, review, fields }: ReviewPanelProps) => {
             {commentText && (
                 <div className="bg-muted/30 rounded-2xl p-4">
                     <p className="text-sm">{commentText}</p>
-                </div>
-            )}
-            {images.length > 0 && (
-                <div className="grid grid-cols-3 gap-1.5">
-                    {images.map((url, i) => (
-                        <a
-                            key={i}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <img
-                                src={url}
-                                alt=""
-                                className="w-full aspect-square object-cover rounded-xl hover:opacity-90 transition-opacity"
-                            />
-                        </a>
-                    ))}
                 </div>
             )}
         </div>
