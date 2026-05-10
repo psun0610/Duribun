@@ -10,6 +10,7 @@
 }
 
 /* Webkit (Chrome, Safari, Edge): overlay로 공간 미점유 */
+/* Webkit (Chrome, Safari, Edge): overlay로 공간 미점유 */
 html {
     overflow-y: overlay;
 }

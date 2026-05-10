@@ -163,7 +163,7 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                                 ].map(({ label, review }) => (
                                     <div
                                         key={label}
-                                        className="bg-[aliceblue] rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5"
+                                        className="bg-background shadow rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5"
                                     >
                                         <span className="text-xs text-muted-foreground">
                                             {label}
@@ -180,7 +180,7 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                         </div>
                     ) : reviewStatus === 'mine-only' && myReview ? (
                         <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-[aliceblue] rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5">
+                            <div className="bg-background shadow rounded-2xl px-3 py-2 flex flex-col items-center gap-0.5">
                                 <span className="text-xs text-muted-foreground">
                                     내 평점
                                 </span>
@@ -191,7 +191,7 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                                     </span>
                                 </div>
                             </div>
-                            <div className="bg-[aliceblue] rounded-2xl px-3 py-2 flex flex-col items-center justify-center gap-1">
+                            <div className="bg-background shadow rounded-2xl px-3 py-2 flex flex-col items-center justify-center gap-1">
                                 <Clock className="w-4 h-4 text-muted-foreground" />
                                 <p className="text-xs text-muted-foreground text-center leading-tight">
                                     기다리는 중...
