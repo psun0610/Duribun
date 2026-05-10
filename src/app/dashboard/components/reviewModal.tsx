@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
+import { useClickOutside } from '@/app/_hooks/useClickOutside'
 import { ReviewModalProps } from '../types'
 import { useReviewForm } from '../hooks/useReviewForm'
 import { ReviewViewMode } from './reviewViewMode'
@@ -14,6 +15,8 @@ export const ReviewModal = ({
     onReviewAdded,
 }: ReviewModalProps) => {
     const [isEditing, setIsEditing] = useState(false)
+    const modalRef = useRef<HTMLDivElement>(null)
+    useClickOutside(modalRef, onClose)
 
     const isViewMode = !!(place.myReview && place.bothCompleted)
     const showViewMode = isViewMode && !isEditing
@@ -53,6 +56,7 @@ export const ReviewModal = ({
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <motion.div
+                ref={modalRef}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}

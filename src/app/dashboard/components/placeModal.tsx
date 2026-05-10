@@ -1,7 +1,9 @@
 'use client'
 
+import { useRef } from 'react'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
+import { useClickOutside } from '@/app/_hooks/useClickOutside'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PlaceModalProps, PlaceCategory } from '../types'
@@ -10,6 +12,9 @@ import { usePlaceForm } from '../hooks/usePlaceForm'
 const CATEGORIES: PlaceCategory[] = ['식당', '카페', '액티비티']
 
 export const PlaceModal = ({ onClose, onPlaceAdded }: PlaceModalProps) => {
+    const modalRef = useRef<HTMLDivElement>(null)
+    useClickOutside(modalRef, onClose)
+
     const {
         name,
         setName,
@@ -25,6 +30,7 @@ export const PlaceModal = ({ onClose, onPlaceAdded }: PlaceModalProps) => {
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <motion.div
+                ref={modalRef}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
