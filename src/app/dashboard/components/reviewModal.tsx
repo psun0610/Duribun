@@ -49,8 +49,8 @@ export const ReviewModal = ({
         totalImageCount,
         maxImages,
         addImages,
-        removeExistingPlaceImage,
-        removingExistingImageId,
+        markExistingImageRemoved,
+        resetImageDraftState,
         removeNewImage,
     } = useReviewForm(place, handleReviewComplete)
 
@@ -91,8 +91,10 @@ export const ReviewModal = ({
                     </button>
                 </div>
 
-                {/* 장소 사진 캐러셀 (상단 공통 표시) */}
-                <PlaceImageCarousel images={place.images} />
+                {/* 리뷰 수정 화면에서는 캐러셀 숨김 */}
+                {!isEditing && (
+                    <PlaceImageCarousel images={place.images} />
+                )}
 
                 {showViewMode && myReview && partnerReview ? (
                     <ReviewViewMode
@@ -117,16 +119,20 @@ export const ReviewModal = ({
                         newImagePreviews={newImagePreviews}
                         totalImageCount={totalImageCount}
                         maxImages={maxImages}
-                        removingExistingImageId={removingExistingImageId}
                         onRatingChange={handleRatingChange}
                         onRevisitChange={setRevisit}
                         onCommentChange={setComment}
                         onAddImages={addImages}
-                        onRemoveExistingPlaceImage={removeExistingPlaceImage}
+                        onMarkExistingImageRemoved={markExistingImageRemoved}
                         onRemoveNewImage={removeNewImage}
                         onSubmit={handleSubmit}
                         onCancel={
-                            isEditing ? () => setIsEditing(false) : onClose
+                            isEditing
+                                ? () => {
+                                      resetImageDraftState()
+                                      setIsEditing(false)
+                                  }
+                                : onClose
                         }
                     />
                 )}
