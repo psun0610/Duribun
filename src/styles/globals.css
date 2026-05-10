@@ -1,2 +1,38 @@
 @import './tailwind.css';
 @import './theme.css';
+
+/* ─── Custom Scrollbar ─────────────────────────────────────────────────────── */
+
+/* Firefox: 얇게만 적용 (overlay 미지원) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #d4c4bc transparent;
+}
+
+/* Webkit (Chrome, Safari, Edge): overlay로 공간 미점유 */
+/* Webkit (Chrome, Safari, Edge): overlay로 공간 미점유 */
+html {
+    overflow-y: overlay;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d4c4bc;
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #8b7e79;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}

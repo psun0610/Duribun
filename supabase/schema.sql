@@ -73,6 +73,7 @@ create table if not exists public.reviews (
   rating numeric(4, 2) not null,
   revisit boolean not null default true,
   comment text,
+  images text[] not null default '{}',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint reviews_place_user_unique unique (place_id, user_id)

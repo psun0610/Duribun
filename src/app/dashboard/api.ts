@@ -27,6 +27,7 @@ export const addReview = async (data: {
     revisit: boolean
     comment: string
     rating: number
+    images: string[]
 }): Promise<void> => {
     await apiCall('/reviews', {
         method: 'POST',
