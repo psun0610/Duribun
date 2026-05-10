@@ -1,10 +1,27 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { motion } from 'motion/react'
-import { X } from 'lucide-react'
+import { MoreVertical, Trash2, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { ReviewModalProps } from '../types'
 import { useReviewForm } from '../hooks/useReviewForm'
+import { useDeletePlace } from '../hooks/useDeletePlace'
 import { ReviewViewMode } from './reviewViewMode'
 import { ReviewWriteForm } from './reviewWriteForm'
 import { PlaceImageCarousel } from './placeImageCarousel'
@@ -16,8 +33,14 @@ export const ReviewModal = ({
     onReviewAdded,
 }: ReviewModalProps) => {
     const [isEditing, setIsEditing] = useState(false)
+    const [deleteAlertOpen, setDeleteAlertOpen] = useState(false)
+    const { mutate: deletePlace, isPending: isDeleting } = useDeletePlace()
     const modalRef = useRef<HTMLDivElement>(null)
-    useClickOutside(modalRef, onClose)
+    const handleModalBackdropIntent = useCallback(() => {
+        if (deleteAlertOpen) return
+        onClose()
+    }, [deleteAlertOpen, onClose])
+    useClickOutside(modalRef, handleModalBackdropIntent, true)
 
     const isViewMode = !!(place.myReview && place.bothCompleted)
     const showViewMode = isViewMode && !isEditing
@@ -55,8 +78,41 @@ export const ReviewModal = ({
         removeNewImage,
     } = useReviewForm(place, handleReviewComplete)
 
+    const handleConfirmDeletePlace = () => {
+        deletePlace(place.id, {
+            onSuccess: () => {
+                setDeleteAlertOpen(false)
+                onClose()
+            },
+        })
+    }
+
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
+                <AlertDialogContent className="z-[80] gap-4 border-border shadow-xl sm:max-w-md">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>장소를 삭제할까요?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            작성된 리뷰도 함께 삭제됩니다.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeleting}>
+                            취소
+                        </AlertDialogCancel>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            disabled={isDeleting}
+                            onClick={handleConfirmDeletePlace}
+                        >
+                            {isDeleting ? '…' : '삭제하기'}
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             <motion.div
                 ref={modalRef}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -66,9 +122,40 @@ export const ReviewModal = ({
             >
                 <div className="mb-6 flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1 pr-2">
-                        <h2 className="text-2xl font-bold leading-tight text-foreground break-words">
-                            {place.name}
-                        </h2>
+                        <div className="flex items-start gap-1">
+                            <h2 className="min-w-0 flex-1 text-2xl font-bold leading-tight text-foreground break-words">
+                                {place.name}
+                            </h2>
+                            <DropdownMenu modal={false}>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-10 w-10 shrink-0 rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+                                        aria-label="장소 옵션"
+                                    >
+                                        <MoreVertical className="h-5 w-5" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    align="end"
+                                    sideOffset={4}
+                                    className="z-[80] min-w-[10rem]"
+                                >
+                                    <DropdownMenuItem
+                                        variant="destructive"
+                                        disabled={isDeleting}
+                                        onSelect={() =>
+                                            setDeleteAlertOpen(true)
+                                        }
+                                    >
+                                        <Trash2 />
+                                        삭제하기
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
                             <span className="inline-flex shrink-0 items-center rounded-full bg-secondary px-3 py-0.5 text-xs font-medium text-secondary-foreground">
                                 {place.category}
@@ -85,6 +172,7 @@ export const ReviewModal = ({
                         </p>
                     </div>
                     <button
+                        type="button"
                         onClick={onClose}
                         className="p-2 hover:bg-muted rounded-full transition-colors"
                     >

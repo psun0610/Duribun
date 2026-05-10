@@ -13,7 +13,7 @@ interface ReviewWriteFormProps {
     error: string
     isEditing?: boolean
     hasPartnerReview: boolean
-    averageRating: string | number
+    averageRating: string
     existingMyPlaceImages: Pick<PlaceImage, 'id' | 'url'>[]
     newImagePreviews: string[]
     totalImageCount: number

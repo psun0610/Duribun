@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import confetti from 'canvas-confetti'
 import { addReview } from '../api'
+import { formatRatingDisplay } from '../ratingFormat'
 import { Place, PlaceCategory } from '../types'
 import { PLACES_QUERY_KEY } from './usePlaces'
 import { supabase } from '@/lib/supabase/client'
@@ -140,7 +141,7 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         setRatings((prev) => ({ ...prev, [field]: value }))
     }
 
-    const getAverageRating = (ratingMap: Record<string, number>) => {
+    const computeAverageRating = (ratingMap: Record<string, number>) => {
         const values = Object.values(ratingMap)
         if (values.length === 0) return 0
         return parseFloat(
@@ -165,7 +166,7 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
                 ratings: vars.snapshotRatings,
                 revisit: vars.snapshotRevisit,
                 comment: vars.snapshotComment,
-                rating: getAverageRating(vars.snapshotRatings),
+                rating: computeAverageRating(vars.snapshotRatings),
             })
             await deletePlaceImagesByIds(vars.snapshotRemovedExistingIds)
             if (vars.snapshotNewFiles.length > 0) {
@@ -222,7 +223,8 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         myReview,
         partnerReview,
         handleRatingChange,
-        getAverageRating: () => getAverageRating(ratings),
+        getAverageRating: () =>
+            formatRatingDisplay(computeAverageRating(ratings)),
         handleSubmit,
         existingMyPlaceImages,
         newImagePreviews,
