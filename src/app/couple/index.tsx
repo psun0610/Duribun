@@ -6,20 +6,28 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { motion } from 'motion/react'
-import { Heart, Copy, Check } from 'lucide-react'
+import { Heart, Share2 } from 'lucide-react'
+import { toast } from 'sonner'
 import confetti from 'canvas-confetti'
+
+type CoupleMode = 'select' | 'create' | 'join' | 'nickname'
 
 interface CoupleMatchPageProps {
     onMatchSuccess: () => void
+    /** 유저 A가 매칭 완료 후 진입할 때 별명 설정 단계부터 시작하도록 지원 */
+    initialMode?: CoupleMode
 }
 
-export const CoupleMatchPage = ({ onMatchSuccess }: CoupleMatchPageProps) => {
-    const [mode, setMode] = useState<'select' | 'create' | 'join'>('select')
+export const CoupleMatchPage = ({
+    onMatchSuccess,
+    initialMode = 'select',
+}: CoupleMatchPageProps) => {
+    const [mode, setMode] = useState<CoupleMode>(initialMode)
     const [code, setCode] = useState('')
     const [generatedCode, setGeneratedCode] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const [copied, setCopied] = useState(false)
+    const [partnerNickname, setPartnerNickname] = useState('')
 
     const handleCreateCode = async () => {
         setLoading(true)
@@ -44,25 +52,53 @@ export const CoupleMatchPage = ({ onMatchSuccess }: CoupleMatchPageProps) => {
                 method: 'POST',
                 body: JSON.stringify({ code }),
             })
-
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#FF9B9B', '#FFD4C4', '#FFCBA4'],
-            })
-
-            setTimeout(() => onMatchSuccess(), 1500)
+            setLoading(false)
+            setMode('nickname')
         } catch (err: unknown) {
             setError((err as Error).message || '커플 연결에 실패했습니다')
             setLoading(false)
         }
     }
 
-    const copyCode = () => {
-        navigator.clipboard.writeText(generatedCode)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+    const handleSaveNickname = async () => {
+        if (!partnerNickname.trim()) return
+
+        setLoading(true)
+        setError('')
+        try {
+            await apiCall('/profile/partner-nickname', {
+                method: 'PATCH',
+                body: JSON.stringify({ partner_nickname: partnerNickname.trim() }),
+            })
+
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#FF9B9B', '#FFD4C4', '#FFCBA4'],
+            })
+
+            setTimeout(() => onMatchSuccess(), 1500)
+        } catch (err: unknown) {
+            setError((err as Error).message || '별명 저장에 실패했습니다')
+            setLoading(false)
+        }
+    }
+
+    const handleShare = async () => {
+        const message = `나랑 우리만의 추억 지도를 그려보지 않을래?\n📍 두리번 초대 코드: [${generatedCode}]`
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: '두리번 초대', text: message })
+                toast('초대를 보냈습니다! 💌')
+            } catch {
+                // 사용자가 공유를 취소한 경우 무시
+            }
+        } else {
+            await navigator.clipboard.writeText(message)
+            toast('코드가 복사되었습니다! 🎉')
+        }
     }
 
     if (mode === 'select') {
@@ -132,7 +168,7 @@ export const CoupleMatchPage = ({ onMatchSuccess }: CoupleMatchPageProps) => {
                             onClick={() => setMode('select')}
                             className="text-sm text-muted-foreground hover:text-foreground mb-4"
                         >
-                            ← 돌아가기
+                            ←돌아가기
                         </button>
                         <h3 className="text-2xl font-bold mb-6 text-center">
                             코드 생성
@@ -157,23 +193,15 @@ export const CoupleMatchPage = ({ onMatchSuccess }: CoupleMatchPageProps) => {
                                         {generatedCode}
                                     </p>
                                 </div>
-                                <Button
-                                    onClick={copyCode}
-                                    variant="outline"
-                                    className="w-full"
+                                <motion.button
+                                    onClick={handleShare}
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className="w-full flex items-center justify-center gap-2 rounded-full py-3 px-6 bg-primary text-primary-foreground font-medium text-sm shadow-sm transition-colors hover:bg-primary/90"
                                 >
-                                    {copied ? (
-                                        <>
-                                            <Check className="w-4 h-4 mr-2" />
-                                            복사됨!
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy className="w-4 h-4 mr-2" />
-                                            코드 복사
-                                        </>
-                                    )}
-                                </Button>
+                                    <Share2 className="w-4 h-4" />
+                                    공유하기
+                                </motion.button>
                                 <p className="text-sm text-center text-muted-foreground">
                                     이 코드를 상대방에게 공유하세요.
                                     <br />
@@ -193,6 +221,70 @@ export const CoupleMatchPage = ({ onMatchSuccess }: CoupleMatchPageProps) => {
         )
     }
 
+    if (mode === 'nickname') {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                    className="w-full max-w-md"
+                >
+                    <Card>
+                        <div className="text-center mb-8">
+                            <motion.div
+                                animate={{ scale: [1, 1.15, 1] }}
+                                transition={{ duration: 1.8, repeat: Infinity }}
+                                className="inline-flex mb-4"
+                            >
+                                <Heart className="w-14 h-14 text-primary fill-primary" />
+                            </motion.div>
+                            <h3 className="text-2xl font-bold mb-2">
+                                반가워요!
+                            </h3>
+                            <p className="text-muted-foreground">
+                                당신의 연인을 뭐라고 부를까요? 🥰
+                            </p>
+                        </div>
+
+                        <div className="space-y-4">
+                            <Input
+                                type="text"
+                                value={partnerNickname}
+                                onChange={(e) =>
+                                    setPartnerNickname(e.target.value)
+                                }
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSaveNickname()
+                                }}
+                                placeholder="자기야, 여보, 토끼..."
+                                maxLength={20}
+                                className="text-center text-lg h-14 rounded-2xl"
+                                autoFocus
+                            />
+                            <motion.button
+                                onClick={handleSaveNickname}
+                                disabled={
+                                    loading || !partnerNickname.trim()
+                                }
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="w-full flex items-center justify-center gap-2 rounded-full py-3 px-6 bg-primary text-primary-foreground font-medium text-sm shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {loading ? '저장 중...' : '시작하기 💕'}
+                            </motion.button>
+                            {error && (
+                                <p className="text-destructive text-sm text-center">
+                                    {error}
+                                </p>
+                            )}
+                        </div>
+                    </Card>
+                </motion.div>
+            </div>
+        )
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-background">
             <motion.div
@@ -205,14 +297,13 @@ export const CoupleMatchPage = ({ onMatchSuccess }: CoupleMatchPageProps) => {
                         onClick={() => setMode('select')}
                         className="text-sm text-muted-foreground hover:text-foreground mb-4"
                     >
-                        ← 돌아가기
+                        ←돌아가기
                     </button>
                     <h3 className="text-2xl font-bold mb-6 text-center">
                         코드 입력
                     </h3>
                     <div className="space-y-4">
                         <Input
-                            // label="6자리 매칭 코드"
                             type="text"
                             value={code}
                             onChange={(e) =>
