@@ -40,6 +40,10 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
         | Record<string, unknown>
         | undefined
 
+    const placeImages = place.images ?? []
+    const previewSrc = placeImages[0]?.url
+    const moreImageCount = Math.max(0, placeImages.length - 1)
+
     const reviewStatus = (() => {
         if (myReview && partnerReview) return 'both'
         if (myReview) return 'mine-only'
@@ -118,6 +122,24 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                         </motion.div>
                     )}
                 </AnimatePresence>
+
+                {previewSrc ? (
+                    <div className="relative mb-4 aspect-[2/1] w-full overflow-hidden rounded-2xl bg-muted">
+                        <img
+                            src={previewSrc}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            draggable={false}
+                            className="h-full w-full object-cover"
+                        />
+                        {moreImageCount > 0 && (
+                            <span className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-[2px]">
+                                +{moreImageCount}
+                            </span>
+                        )}
+                    </div>
+                ) : null}
 
                 <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">

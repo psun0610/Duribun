@@ -18,6 +18,8 @@ interface ReviewWriteFormProps {
     newImagePreviews: string[]
     totalImageCount: number
     maxImages: number
+    /** 장소에 등록된 사진이 없으면 최소 1장 필수 */
+    requirePhotoWhenPlaceHasNoImages?: boolean
     onRatingChange: (field: string, value: number) => void
     onRevisitChange: (value: boolean) => void
     onCommentChange: (value: string) => void
@@ -42,6 +44,7 @@ export const ReviewWriteForm = ({
     newImagePreviews,
     totalImageCount,
     maxImages,
+    requirePhotoWhenPlaceHasNoImages = false,
     onRatingChange,
     onRevisitChange,
     onCommentChange,
@@ -52,6 +55,9 @@ export const ReviewWriteForm = ({
     onCancel,
 }: ReviewWriteFormProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const missingRequiredPhoto =
+        requirePhotoWhenPlaceHasNoImages && totalImageCount < 1
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -81,6 +87,11 @@ export const ReviewWriteForm = ({
                         ({totalImageCount}/{maxImages})
                     </span>
                 </label>
+                {missingRequiredPhoto && (
+                    <p className="mb-2 text-xs text-muted-foreground">
+                        이 장소에는 아직 사진이 없어요. 최소 한 장 올려 주세요.
+                    </p>
+                )}
                 <div className="flex flex-wrap gap-2">
                     {/* 장소에 이미 등록한 내 사진 */}
                     {existingMyPlaceImages.map((img, i) => {
@@ -243,7 +254,8 @@ export const ReviewWriteForm = ({
                     disabled={
                         loading ||
                         Object.keys(ratings).length !== fields.length ||
-                        !comment.trim()
+                        !comment.trim() ||
+                        missingRequiredPhoto
                     }
                     className="flex-1"
                 >

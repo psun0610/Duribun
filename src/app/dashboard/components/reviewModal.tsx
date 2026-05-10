@@ -51,6 +51,7 @@ export const ReviewModal = ({
         addImages,
         markExistingImageRemoved,
         resetImageDraftState,
+        requirePhotoWhenPlaceHasNoImages,
         removeNewImage,
     } = useReviewForm(place, handleReviewComplete)
 
@@ -119,6 +120,9 @@ export const ReviewModal = ({
                         newImagePreviews={newImagePreviews}
                         totalImageCount={totalImageCount}
                         maxImages={maxImages}
+                        requirePhotoWhenPlaceHasNoImages={
+                            requirePhotoWhenPlaceHasNoImages
+                        }
                         onRatingChange={handleRatingChange}
                         onRevisitChange={setRevisit}
                         onCommentChange={setComment}
