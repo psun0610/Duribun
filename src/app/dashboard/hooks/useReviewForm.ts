@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import confetti from 'canvas-confetti'
 import { addReview } from '../api'
@@ -58,6 +58,15 @@ const uploadAndSavePlaceImages = async (
     )
 }
 
+const deletePlaceImagesByIds = async (ids: string[]): Promise<void> => {
+    if (ids.length === 0) return
+    const { error } = await supabase
+        .from('place_images')
+        .delete()
+        .in('id', ids)
+    if (error) throw new Error(error.message)
+}
+
 export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
     const [ratings, setRatings] = useState<Record<string, number>>({})
     const [revisit, setRevisit] = useState(true)
@@ -66,11 +75,20 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
 
     const [newImageFiles, setNewImageFiles] = useState<File[]>([])
     const [newImagePreviews, setNewImagePreviews] = useState<string[]>([])
-    const [removingExistingImageId, setRemovingExistingImageId] = useState<
-        string | null
-    >(null)
+    const [pendingRemoveExistingIds, setPendingRemoveExistingIds] = useState<
+        Set<string>
+    >(() => new Set())
 
     const queryClient = useQueryClient()
+
+    const resetImageDraftState = useCallback(() => {
+        setPendingRemoveExistingIds(new Set())
+        setNewImageFiles([])
+        setNewImagePreviews((prev) => {
+            prev.forEach((u) => URL.revokeObjectURL(u))
+            return []
+        })
+    }, [])
 
     const fields = getCategoryFields(place.category)
     const myReview = place.myReview as Record<string, unknown> | undefined
@@ -86,28 +104,21 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         }
     }, [myReview])
 
-    const existingMyPlaceImages = (place.images ?? []).filter((img) => img.isMine)
+    useEffect(() => {
+        resetImageDraftState()
+    }, [place.id, resetImageDraftState])
+
+    const mineImagesAll = (place.images ?? []).filter((img) => img.isMine)
+    /** X로 제거 예정 처리된 사진은 화면·슬롯에서 제외 (저장 시 DB 삭제) */
+    const existingMyPlaceImages = mineImagesAll.filter(
+        (img) => !img.id || !pendingRemoveExistingIds.has(img.id),
+    )
 
     /** 내가 이 장소에 이미 등록한 사진 + 새로 고른 파일 (슬롯은 본인 사진만) */
     const totalImageCount = existingMyPlaceImages.length + newImageFiles.length
 
-    const removeExistingPlaceImage = async (imageId: string) => {
-        setError('')
-        setRemovingExistingImageId(imageId)
-        try {
-            const { error: delErr } = await supabase
-                .from('place_images')
-                .delete()
-                .eq('id', imageId)
-            if (delErr) throw new Error(delErr.message)
-            await queryClient.invalidateQueries({ queryKey: PLACES_QUERY_KEY })
-        } catch (err) {
-            setError(
-                err instanceof Error ? err.message : '사진 삭제에 실패했습니다',
-            )
-        } finally {
-            setRemovingExistingImageId(null)
-        }
+    const markExistingImageRemoved = (imageId: string) => {
+        setPendingRemoveExistingIds((prev) => new Set(prev).add(imageId))
     }
 
     const addImages = (files: FileList) => {
@@ -145,26 +156,28 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         snapshotRevisit: boolean
         snapshotComment: string
         snapshotNewFiles: File[]
+        snapshotRemovedExistingIds: string[]
     }
 
     const { mutate, isPending } = useMutation({
         mutationFn: async (vars: MutationVars) => {
-            await Promise.all([
-                // 리뷰 저장
-                addReview({
-                    placeId: place.id,
-                    ratings: vars.snapshotRatings,
-                    revisit: vars.snapshotRevisit,
-                    comment: vars.snapshotComment,
-                    rating: getAverageRating(vars.snapshotRatings),
-                }),
-                // 사진 업로드 + place_images insert
-                vars.snapshotNewFiles.length > 0
-                    ? uploadAndSavePlaceImages(vars.snapshotNewFiles, place.id)
-                    : Promise.resolve(),
-            ])
+            await addReview({
+                placeId: place.id,
+                ratings: vars.snapshotRatings,
+                revisit: vars.snapshotRevisit,
+                comment: vars.snapshotComment,
+                rating: getAverageRating(vars.snapshotRatings),
+            })
+            await deletePlaceImagesByIds(vars.snapshotRemovedExistingIds)
+            if (vars.snapshotNewFiles.length > 0) {
+                await uploadAndSavePlaceImages(
+                    vars.snapshotNewFiles,
+                    place.id,
+                )
+            }
         },
         onSuccess: () => {
+            resetImageDraftState()
             void queryClient.invalidateQueries({ queryKey: PLACES_QUERY_KEY })
             if (partnerReview && isFirstSubmission) {
                 confetti({
@@ -193,6 +206,7 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
             snapshotRevisit: revisit,
             snapshotComment: comment,
             snapshotNewFiles: newImageFiles,
+            snapshotRemovedExistingIds: Array.from(pendingRemoveExistingIds),
         })
     }
 
@@ -216,7 +230,7 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         maxImages: MAX_IMAGES,
         addImages,
         removeNewImage,
-        removeExistingPlaceImage,
-        removingExistingImageId,
+        markExistingImageRemoved,
+        resetImageDraftState,
     }
 }
