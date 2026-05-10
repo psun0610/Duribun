@@ -13,7 +13,8 @@ const HomePage = () => {
         isAuthenticated,
         setIsAuthenticated,
         isCoupleMatched,
-        setIsCoupleMatched,
+        hasNickname,
+        refetchCoupleStatus,
     } = useAppInit()
 
     if (loading) {
@@ -21,7 +22,11 @@ const HomePage = () => {
             <div className="flex min-h-dvh items-center justify-center bg-background">
                 <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: 'linear',
+                    }}
                 >
                     <Heart className="size-12 fill-primary text-primary" />
                 </motion.div>
@@ -33,9 +38,22 @@ const HomePage = () => {
         return <AuthPage onAuthSuccess={() => setIsAuthenticated(true)} />
     }
 
+    // 미매칭: 코드 생성/입력 화면
     if (!isCoupleMatched) {
         return (
-            <CoupleMatchPage onMatchSuccess={() => setIsCoupleMatched(true)} />
+            <CoupleMatchPage
+                onMatchSuccess={() => void refetchCoupleStatus()}
+            />
+        )
+    }
+
+    // 매칭됨 + 별명 미설정: User B 성공 직후 또는 User A가 앱에 복귀했을 때
+    if (!hasNickname) {
+        return (
+            <CoupleMatchPage
+                initialMode="nickname"
+                onMatchSuccess={() => void refetchCoupleStatus()}
+            />
         )
     }
 

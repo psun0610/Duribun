@@ -1,27 +1,15 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { fetchPlaces } from '../api'
-import { Place } from '../types'
+
+export const PLACES_QUERY_KEY = ['places'] as const
 
 export const usePlaces = () => {
-    const [places, setPlaces] = useState<Place[]>([])
-    const [loading, setLoading] = useState(true)
+    const { data: places = [], isLoading } = useQuery({
+        queryKey: PLACES_QUERY_KEY,
+        queryFn: fetchPlaces,
+    })
 
-    const loadPlaces = useCallback(async () => {
-        try {
-            const data = await fetchPlaces()
-            setPlaces(data)
-        } catch (err) {
-            console.error('Failed to load places:', err)
-        } finally {
-            setLoading(false)
-        }
-    }, [])
-
-    useEffect(() => {
-        void loadPlaces()
-    }, [loadPlaces])
-
-    return { places, loading, loadPlaces }
+    return { places, loading: isLoading }
 }

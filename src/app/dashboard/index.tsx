@@ -13,7 +13,7 @@ import { ReviewModal } from './components/reviewModal'
 import { Place } from './types'
 
 export const Dashboard = () => {
-    const { places, loading, loadPlaces } = usePlaces()
+    const { places, loading } = usePlaces()
     const [showPlaceModal, setShowPlaceModal] = useState(false)
     const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
 
@@ -22,22 +22,16 @@ export const Dashboard = () => {
         window.location.reload()
     }
 
-    const handlePlaceAdded = () => {
-        setShowPlaceModal(false)
-        void loadPlaces()
-    }
-
-    const handleReviewAdded = () => {
-        setSelectedPlace(null)
-        void loadPlaces()
-    }
-
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
                 <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: 'linear',
+                    }}
                 >
                     <Heart className="w-12 h-12 text-primary fill-primary" />
                 </motion.div>
@@ -119,7 +113,7 @@ export const Dashboard = () => {
             {showPlaceModal && (
                 <PlaceModal
                     onClose={() => setShowPlaceModal(false)}
-                    onPlaceAdded={handlePlaceAdded}
+                    onPlaceAdded={() => setShowPlaceModal(false)}
                 />
             )}
 
@@ -127,7 +121,7 @@ export const Dashboard = () => {
                 <ReviewModal
                     place={selectedPlace}
                     onClose={() => setSelectedPlace(null)}
-                    onReviewAdded={handleReviewAdded}
+                    onReviewAdded={() => setSelectedPlace(null)}
                 />
             )}
         </div>

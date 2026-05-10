@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import { Providers } from './providers'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: ReactNode }) => {
     return (
         <html lang="ko">
-            <body className="min-h-dvh antialiased">{children}</body>
+            <body className="min-h-dvh antialiased">
+                <Providers>{children}</Providers>
+            </body>
         </html>
     )
 }

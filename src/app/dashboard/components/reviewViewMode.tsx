@@ -1,5 +1,6 @@
 import { Heart, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { usePartnerNickname } from '@/app/_hooks/usePartnerNickname'
 
 interface ReviewPanelProps {
     label: string
@@ -74,18 +75,26 @@ export const ReviewViewMode = ({
     partnerReview,
     fields,
     onClose,
-}: ReviewViewModeProps) => (
-    <div className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
-            <ReviewPanel label="내 리뷰" review={myReview} fields={fields} />
-            <ReviewPanel
-                label="상대 리뷰"
-                review={partnerReview}
-                fields={fields}
-            />
+}: ReviewViewModeProps) => {
+    const partnerNickname = usePartnerNickname()
+
+    return (
+        <div className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+                <ReviewPanel
+                    label="내 리뷰"
+                    review={myReview}
+                    fields={fields}
+                />
+                <ReviewPanel
+                    label={`${partnerNickname}의 리뷰`}
+                    review={partnerReview}
+                    fields={fields}
+                />
+            </div>
+            <Button variant="default" onClick={onClose} className="w-full">
+                닫기
+            </Button>
         </div>
-        <Button variant="default" onClick={onClose} className="w-full">
-            닫기
-        </Button>
-    </div>
-)
+    )
+}

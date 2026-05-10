@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import confetti from 'canvas-confetti'
 import { addReview } from '../api'
 import { Place, PlaceCategory } from '../types'
+import { PLACES_QUERY_KEY } from './usePlaces'
 
 const CATEGORY_FIELDS: Record<PlaceCategory | string, string[]> = {
     식당: ['맛', '분위기', '가성비', '청결도', '만족도'],
@@ -18,12 +20,15 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
     const [ratings, setRatings] = useState<Record<string, number>>({})
     const [revisit, setRevisit] = useState(true)
     const [comment, setComment] = useState('')
-    const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+
+    const queryClient = useQueryClient()
 
     const fields = getCategoryFields(place.category)
     const myReview = place.myReview as Record<string, unknown> | undefined
-    const partnerReview = place.partnerReview as Record<string, unknown> | undefined
+    const partnerReview = place.partnerReview as
+        | Record<string, unknown>
+        | undefined
 
     useEffect(() => {
         if (myReview) {
@@ -43,19 +48,17 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         return (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1)
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
-        setLoading(true)
-        try {
-            await addReview({
+    const { mutate, isPending } = useMutation({
+        mutationFn: () =>
+            addReview({
                 placeId: place.id,
                 ratings,
                 revisit,
                 comment,
                 rating: parseFloat(String(getAverageRating())),
-            })
-
+            }),
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: PLACES_QUERY_KEY })
             if (partnerReview) {
                 confetti({
                     particleCount: 150,
@@ -69,11 +72,16 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
             } else {
                 onReviewAdded()
             }
-        } catch (err: unknown) {
-            setError((err as Error).message || '리뷰 작성에 실패했습니다')
-        } finally {
-            setLoading(false)
-        }
+        },
+        onError: (err: Error) => {
+            setError(err.message || '리뷰 작성에 실패했습니다')
+        },
+    })
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        setError('')
+        mutate()
     }
 
     return {
@@ -82,7 +90,7 @@ export const useReviewForm = (place: Place, onReviewAdded: () => void) => {
         setRevisit,
         comment,
         setComment,
-        loading,
+        loading: isPending,
         error,
         fields,
         myReview,

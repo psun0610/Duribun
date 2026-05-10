@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { signUp, signIn } from '../api'
 
 export const useAuthForm = (onAuthSuccess: () => void) => {
@@ -8,25 +9,26 @@ export const useAuthForm = (onAuthSuccess: () => void) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
-    const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
-        setLoading(true)
-        try {
+    const { mutate, isPending } = useMutation({
+        mutationFn: async () => {
             if (isSignUp) {
                 await signUp(email, password, name)
             } else {
                 await signIn(email, password)
             }
-            onAuthSuccess()
-        } catch (err: unknown) {
-            setError((err as Error).message || '로그인에 실패했습니다')
-        } finally {
-            setLoading(false)
-        }
+        },
+        onSuccess: () => onAuthSuccess(),
+        onError: (err: Error) => {
+            setError(err.message || '로그인에 실패했습니다')
+        },
+    })
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        setError('')
+        mutate()
     }
 
     return {
@@ -38,7 +40,7 @@ export const useAuthForm = (onAuthSuccess: () => void) => {
         setPassword,
         name,
         setName,
-        loading,
+        loading: isPending,
         error,
         handleSubmit,
     }

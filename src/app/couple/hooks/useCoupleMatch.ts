@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import confetti from 'canvas-confetti'
 import { createCode, joinCouple, saveNickname } from '../api'
@@ -13,43 +14,35 @@ export const useCoupleMatch = (
     const [mode, setMode] = useState<CoupleMode>(initialMode)
     const [inputCode, setInputCode] = useState('')
     const [generatedCode, setGeneratedCode] = useState('')
-    const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [partnerNickname, setPartnerNickname] = useState('')
 
-    const handleCreateCode = async () => {
-        setLoading(true)
-        setError('')
-        try {
-            const code = await createCode()
+    const createCodeMutation = useMutation({
+        mutationFn: createCode,
+        onSuccess: (code) => {
             setGeneratedCode(code)
-        } catch (err: unknown) {
-            setError((err as Error).message || '코드 생성에 실패했습니다')
-        } finally {
-            setLoading(false)
-        }
-    }
+            setError('')
+        },
+        onError: (err: Error) => {
+            setError(err.message || '코드 생성에 실패했습니다')
+        },
+    })
 
-    const handleJoinCouple = async () => {
-        setLoading(true)
-        setError('')
-        try {
-            await joinCouple(inputCode)
-            setLoading(false)
+    const joinCoupleMutation = useMutation({
+        mutationFn: () => joinCouple(inputCode),
+        onSuccess: () => {
+            setError('')
             setMode('nickname')
-        } catch (err: unknown) {
-            setError((err as Error).message || '커플 연결에 실패했습니다')
-            setLoading(false)
-        }
-    }
+        },
+        onError: (err: Error) => {
+            setError(err.message || '커플 연결에 실패했습니다')
+        },
+    })
 
-    const handleSaveNickname = async () => {
-        if (!partnerNickname.trim()) return
-
-        setLoading(true)
-        setError('')
-        try {
-            await saveNickname(partnerNickname.trim())
+    const saveNicknameMutation = useMutation({
+        mutationFn: () => saveNickname(partnerNickname.trim()),
+        onSuccess: () => {
+            setError('')
             confetti({
                 particleCount: 120,
                 spread: 80,
@@ -57,11 +50,11 @@ export const useCoupleMatch = (
                 colors: ['#FF9B9B', '#FFD4C4', '#FFCBA4'],
             })
             setTimeout(() => onMatchSuccess(), 1500)
-        } catch (err: unknown) {
-            setError((err as Error).message || '별명 저장에 실패했습니다')
-            setLoading(false)
-        }
-    }
+        },
+        onError: (err: Error) => {
+            setError(err.message || '별명 저장에 실패했습니다')
+        },
+    })
 
     const handleShare = async () => {
         const message = `나랑 우리만의 추억 지도를 그려보지 않을래?\n📍 두리번 초대 코드: [${generatedCode}]`
@@ -79,6 +72,11 @@ export const useCoupleMatch = (
         }
     }
 
+    const loading =
+        createCodeMutation.isPending ||
+        joinCoupleMutation.isPending ||
+        saveNicknameMutation.isPending
+
     return {
         mode,
         setMode,
@@ -89,9 +87,9 @@ export const useCoupleMatch = (
         error,
         partnerNickname,
         setPartnerNickname,
-        handleCreateCode,
-        handleJoinCouple,
-        handleSaveNickname,
+        handleCreateCode: () => createCodeMutation.mutate(),
+        handleJoinCouple: () => joinCoupleMutation.mutate(),
+        handleSaveNickname: () => saveNicknameMutation.mutate(),
         handleShare,
     }
 }

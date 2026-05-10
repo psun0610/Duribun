@@ -1,25 +1,39 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { supabase, apiCall } from '@/lib/supabase/client'
 
-export const useAppInit = () => {
-    const [loading, setLoading] = useState(true)
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [isCoupleMatched, setIsCoupleMatched] = useState(false)
+export const COUPLE_STATUS_QUERY_KEY = ['couple-status'] as const
 
-    const checkCoupleStatus = useCallback(async () => {
-        try {
-            const response = (await apiCall('/couple/status')) as {
-                matched?: boolean
-            }
-            setIsCoupleMatched(!!response.matched)
-        } catch {
-            setIsCoupleMatched(false)
-        } finally {
-            setLoading(false)
-        }
-    }, [])
+export type CoupleStatusResponse = {
+    matched: boolean
+    hasNickname: boolean
+    partnerNickname: string | null
+}
+
+const fetchCoupleStatus = async (): Promise<CoupleStatusResponse> => {
+    const res = (await apiCall('/couple/status')) as {
+        matched?: boolean
+        hasNickname?: boolean
+        partnerNickname?: string | null
+    }
+    return {
+        matched: !!res.matched,
+        hasNickname: !!res.hasNickname,
+        partnerNickname: res.partnerNickname ?? null,
+    }
+}
+
+export const useAppInit = () => {
+    const [authLoading, setAuthLoading] = useState(true)
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+    const coupleStatusQuery = useQuery({
+        queryKey: COUPLE_STATUS_QUERY_KEY,
+        queryFn: fetchCoupleStatus,
+        enabled: isAuthenticated,
+    })
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -27,11 +41,7 @@ export const useAppInit = () => {
                 data: { session },
             } = await supabase.auth.getSession()
             setIsAuthenticated(!!session)
-            if (session) {
-                await checkCoupleStatus()
-            } else {
-                setLoading(false)
-            }
+            setAuthLoading(false)
         }
 
         void checkAuth()
@@ -40,22 +50,20 @@ export const useAppInit = () => {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setIsAuthenticated(!!session)
-            if (session) {
-                void checkCoupleStatus()
-            } else {
-                setIsCoupleMatched(false)
-                setLoading(false)
-            }
         })
 
         return () => subscription.unsubscribe()
-    }, [checkCoupleStatus])
+    }, [])
+
+    const loading =
+        authLoading || (isAuthenticated && coupleStatusQuery.isLoading)
 
     return {
         loading,
         isAuthenticated,
         setIsAuthenticated,
-        isCoupleMatched,
-        setIsCoupleMatched,
+        isCoupleMatched: coupleStatusQuery.data?.matched ?? false,
+        hasNickname: coupleStatusQuery.data?.hasNickname ?? false,
+        refetchCoupleStatus: coupleStatusQuery.refetch,
     }
 }
