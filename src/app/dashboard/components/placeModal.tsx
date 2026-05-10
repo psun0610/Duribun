@@ -1,23 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import { apiCall } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { motion } from 'motion/react'
 import { X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { addPlace } from '../api'
+import { PlaceModalProps, PlaceCategory } from '../types'
 
-interface PlaceModalProps {
-    onClose: () => void
-    onPlaceAdded: () => void
-}
+const CATEGORIES: PlaceCategory[] = ['식당', '카페', '액티비티']
 
 export const PlaceModal = ({ onClose, onPlaceAdded }: PlaceModalProps) => {
     const [name, setName] = useState('')
     const [address, setAddress] = useState('')
-    const [category, setCategory] = useState<'식당' | '카페' | '액티비티'>(
-        '식당',
-    )
+    const [category, setCategory] = useState<PlaceCategory>('식당')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
@@ -26,10 +22,7 @@ export const PlaceModal = ({ onClose, onPlaceAdded }: PlaceModalProps) => {
         setError('')
         setLoading(true)
         try {
-            await apiCall('/places', {
-                method: 'POST',
-                body: JSON.stringify({ name, address, category }),
-            })
+            await addPlace({ name, address, category })
             onPlaceAdded()
         } catch (err: unknown) {
             setError((err as Error).message || '장소 추가에 실패했습니다')
@@ -64,27 +57,24 @@ export const PlaceModal = ({ onClose, onPlaceAdded }: PlaceModalProps) => {
                             카테고리
                         </label>
                         <div className="grid grid-cols-3 gap-2">
-                            {(['식당', '카페', '액티비티'] as const).map(
-                                (cat) => (
-                                    <button
-                                        key={cat}
-                                        type="button"
-                                        onClick={() => setCategory(cat)}
-                                        className={`py-3 rounded-2xl font-medium transition-all ${
-                                            category === cat
-                                                ? 'bg-primary text-primary-foreground shadow-md'
-                                                : 'bg-secondary text-secondary-foreground'
-                                        }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ),
-                            )}
+                            {CATEGORIES.map((cat) => (
+                                <button
+                                    key={cat}
+                                    type="button"
+                                    onClick={() => setCategory(cat)}
+                                    className={`py-3 rounded-2xl font-medium transition-all ${
+                                        category === cat
+                                            ? 'bg-primary text-primary-foreground shadow-md'
+                                            : 'bg-secondary text-secondary-foreground'
+                                    }`}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
                     <Input
-                        // label="장소 이름"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -92,7 +82,6 @@ export const PlaceModal = ({ onClose, onPlaceAdded }: PlaceModalProps) => {
                         placeholder="예: 맛있는 파스타집"
                     />
                     <Input
-                        // label="주소"
                         type="text"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}

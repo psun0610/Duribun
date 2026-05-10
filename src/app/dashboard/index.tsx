@@ -1,49 +1,21 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { apiCall, supabase } from '@/lib/supabase/client'
+import { useState } from 'react'
+import { supabase } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { PlaceModal } from './placeModal'
-import { ReviewModal } from './reviewModal'
 import { motion, AnimatePresence } from 'motion/react'
-import { Heart, MapPin, Plus, LogOut, Star, Eye, EyeOff } from 'lucide-react'
-
-interface Place {
-    id: string
-    name: string
-    address: string
-    category: string
-    lat?: number
-    lng?: number
-    myReview?: Record<string, unknown>
-    partnerReview?: Record<string, unknown>
-    bothCompleted: boolean
-}
+import { Heart, MapPin, Plus, LogOut } from 'lucide-react'
+import { usePlaces } from './hooks/usePlaces'
+import { PlaceCard } from './components/placeCard'
+import { PlaceModal } from './components/placeModal'
+import { ReviewModal } from './components/reviewModal'
+import { Place } from './types'
 
 export const Dashboard = () => {
-    const [places, setPlaces] = useState<Place[]>([])
-    const [loading, setLoading] = useState(true)
+    const { places, loading, loadPlaces } = usePlaces()
     const [showPlaceModal, setShowPlaceModal] = useState(false)
     const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
-    const [showReviewModal, setShowReviewModal] = useState(false)
-
-    const loadPlaces = useCallback(async () => {
-        try {
-            const response = (await apiCall('/places/list')) as {
-                places?: Place[]
-            }
-            setPlaces(response.places || [])
-        } catch (err) {
-            console.error('Failed to load places:', err)
-        } finally {
-            setLoading(false)
-        }
-    }, [])
-
-    useEffect(() => {
-        void loadPlaces()
-    }, [loadPlaces])
 
     const handleLogout = async () => {
         await supabase.auth.signOut()
@@ -56,14 +28,8 @@ export const Dashboard = () => {
     }
 
     const handleReviewAdded = () => {
-        setShowReviewModal(false)
         setSelectedPlace(null)
         void loadPlaces()
-    }
-
-    const openReviewModal = (place: Place) => {
-        setSelectedPlace(place)
-        setShowReviewModal(true)
     }
 
     if (loading) {
@@ -71,11 +37,7 @@ export const Dashboard = () => {
             <div className="min-h-screen flex items-center justify-center bg-background">
                 <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: 'linear',
-                    }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 >
                     <Heart className="w-12 h-12 text-primary fill-primary" />
                 </motion.div>
@@ -143,117 +105,11 @@ export const Dashboard = () => {
                     <div className="grid gap-4 md:grid-cols-2">
                         <AnimatePresence>
                             {places.map((place) => (
-                                <motion.div
+                                <PlaceCard
                                     key={place.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -20 }}
-                                >
-                                    <Card
-                                        className="hover:shadow-xl transition-shadow cursor-pointer"
-                                        onClick={() =>
-                                            !place.myReview &&
-                                            openReviewModal(place)
-                                        }
-                                    >
-                                        <div className="flex items-start justify-between mb-3">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="text-lg font-bold text-foreground">
-                                                        {place.name}
-                                                    </h3>
-                                                    {place.bothCompleted ? (
-                                                        <Heart className="w-5 h-5 text-primary fill-primary" />
-                                                    ) : (
-                                                        <div className="flex">
-                                                            <Heart
-                                                                className={`w-5 h-5 ${place.myReview ? 'text-primary fill-primary' : 'text-muted-foreground'}`}
-                                                            />
-                                                            <Heart
-                                                                className={`w-5 h-5 -ml-2 ${place.partnerReview ? 'text-primary fill-primary' : 'text-muted-foreground'}`}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <p className="text-sm text-muted-foreground mb-2">
-                                                    {place.address}
-                                                </p>
-                                                <span className="inline-block px-3 py-1 rounded-full text-xs bg-secondary text-secondary-foreground">
-                                                    {place.category}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div className="mt-4 pt-4 border-t border-border">
-                                            {place.myReview &&
-                                            place.partnerReview ? (
-                                                <div className="space-y-2">
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-sm text-muted-foreground">
-                                                            내 평점
-                                                        </span>
-                                                        <div className="flex items-center gap-1">
-                                                            <Star className="w-4 h-4 text-primary fill-primary" />
-                                                            <span className="text-sm font-medium">
-                                                                {String(
-                                                                    place
-                                                                        .myReview
-                                                                        .rating,
-                                                                )}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-sm text-muted-foreground">
-                                                            상대 평점
-                                                        </span>
-                                                        <div className="flex items-center gap-1">
-                                                            <Star className="w-4 h-4 text-primary fill-primary" />
-                                                            <span className="text-sm font-medium">
-                                                                {String(
-                                                                    place
-                                                                        .partnerReview
-                                                                        .rating,
-                                                                )}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation()
-                                                            openReviewModal(
-                                                                place,
-                                                            )
-                                                        }}
-                                                        className="w-full mt-2 text-sm text-primary hover:underline"
-                                                    >
-                                                        자세히 보기
-                                                    </button>
-                                                </div>
-                                            ) : place.myReview ? (
-                                                <div className="text-center py-2">
-                                                    <EyeOff className="w-5 h-5 text-muted-foreground mx-auto mb-1" />
-                                                    <p className="text-sm text-muted-foreground">
-                                                        상대방이 리뷰 작성 중...
-                                                    </p>
-                                                </div>
-                                            ) : place.partnerReview ? (
-                                                <div className="text-center py-2">
-                                                    <Eye className="w-5 h-5 text-primary mx-auto mb-1" />
-                                                    <p className="text-sm text-primary font-medium">
-                                                        리뷰를 작성해주세요!
-                                                    </p>
-                                                </div>
-                                            ) : (
-                                                <div className="text-center py-2">
-                                                    <p className="text-sm text-muted-foreground">
-                                                        아직 리뷰가 없어요
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </Card>
-                                </motion.div>
+                                    place={place}
+                                    onOpen={setSelectedPlace}
+                                />
                             ))}
                         </AnimatePresence>
                     </div>
@@ -267,13 +123,10 @@ export const Dashboard = () => {
                 />
             )}
 
-            {showReviewModal && selectedPlace && (
+            {selectedPlace && (
                 <ReviewModal
                     place={selectedPlace}
-                    onClose={() => {
-                        setShowReviewModal(false)
-                        setSelectedPlace(null)
-                    }}
+                    onClose={() => setSelectedPlace(null)}
                     onReviewAdded={handleReviewAdded}
                 />
             )}

@@ -1,26 +1,22 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { apiCall } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
 import { motion } from 'motion/react'
 import { X, Star, Heart } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import confetti from 'canvas-confetti'
+import { addReview } from '../api'
+import { ReviewModalProps } from '../types'
+import { PlaceCategory } from '../types'
 
-interface Place {
-    id: string
-    name: string
-    category: string
-    myReview?: Record<string, unknown>
-    partnerReview?: Record<string, unknown>
-    bothCompleted: boolean
+const CATEGORY_FIELDS: Record<PlaceCategory | string, string[]> = {
+    식당: ['맛', '분위기', '가성비', '청결도', '만족도'],
+    카페: ['커피맛', '디저트', '좌석', '감성', '만족도'],
+    액티비티: ['재미', '활동량', '소요시간', '만족도'],
 }
 
-interface ReviewModalProps {
-    place: Place
-    onClose: () => void
-    onReviewAdded: () => void
-}
+const getCategoryFields = (category: string): string[] =>
+    CATEGORY_FIELDS[category] ?? ['평가']
 
 export const ReviewModal = ({
     place,
@@ -34,26 +30,20 @@ export const ReviewModal = ({
     const [error, setError] = useState('')
 
     const isViewMode = !!(place.myReview && place.bothCompleted)
+    const fields = getCategoryFields(place.category)
+
+    const myReview = place.myReview as Record<string, unknown> | undefined
+    const partnerReview = place.partnerReview as
+        | Record<string, unknown>
+        | undefined
 
     useEffect(() => {
-        if (place.myReview) {
-            setRatings((place.myReview.ratings as Record<string, number>) || {})
-            setRevisit((place.myReview.revisit as boolean) ?? true)
-            setComment((place.myReview.comment as string) || '')
+        if (myReview) {
+            setRatings((myReview.ratings as Record<string, number>) ?? {})
+            setRevisit((myReview.revisit as boolean) ?? true)
+            setComment((myReview.comment as string) ?? '')
         }
-    }, [place.myReview])
-
-    const getCategoryFields = () => {
-        if (place.category === '식당')
-            return ['맛', '분위기', '가성비', '청결도', '만족도']
-        if (place.category === '카페')
-            return ['커피맛', '디저트', '좌석', '감성', '만족도']
-        if (place.category === '액티비티')
-            return ['재미', '활동량', '소요시간', '만족도']
-        return ['평가']
-    }
-
-    const fields = getCategoryFields()
+    }, [myReview])
 
     const handleRatingChange = (field: string, value: number) => {
         setRatings((prev) => ({ ...prev, [field]: value }))
@@ -70,18 +60,15 @@ export const ReviewModal = ({
         setError('')
         setLoading(true)
         try {
-            await apiCall('/reviews', {
-                method: 'POST',
-                body: JSON.stringify({
-                    placeId: place.id,
-                    ratings,
-                    revisit,
-                    comment,
-                    rating: parseFloat(String(getAverageRating())),
-                }),
+            await addReview({
+                placeId: place.id,
+                ratings,
+                revisit,
+                comment,
+                rating: parseFloat(String(getAverageRating())),
             })
 
-            if (place.partnerReview) {
+            if (partnerReview) {
                 confetti({
                     particleCount: 150,
                     spread: 100,
@@ -100,11 +87,6 @@ export const ReviewModal = ({
             setLoading(false)
         }
     }
-
-    const myReview = place.myReview as Record<string, unknown> | undefined
-    const partnerReview = place.partnerReview as
-        | Record<string, unknown>
-        | undefined
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -170,9 +152,7 @@ export const ReviewModal = ({
                                                                                 string,
                                                                                 number
                                                                             >
-                                                                        )?.[
-                                                                            field
-                                                                        ] || 0)
+                                                                        )?.[field] ?? 0)
                                                                             ? 'text-primary fill-primary'
                                                                             : 'text-muted-foreground'
                                                                     }`}
@@ -236,7 +216,7 @@ export const ReviewModal = ({
                                                 <Star
                                                     className={`w-8 h-8 ${
                                                         star <=
-                                                        (ratings[field] || 0)
+                                                        (ratings[field] ?? 0)
                                                             ? 'text-primary fill-primary'
                                                             : 'text-muted-foreground'
                                                     }`}

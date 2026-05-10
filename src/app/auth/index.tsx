@@ -1,52 +1,28 @@
 'use client'
 
-import { useState } from 'react'
-import { supabase, apiCall } from '@/lib/supabase/client'
+import { motion } from 'motion/react'
+import { Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { motion } from 'motion/react'
-import { Heart } from 'lucide-react'
-
-interface AuthPageProps {
-    onAuthSuccess: () => void
-}
+import { AuthPageProps } from './types'
+import { useAuthForm } from './hooks/useAuthForm'
 
 export const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
-    const [isSignUp, setIsSignUp] = useState(false)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [name, setName] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
-        setLoading(true)
-
-        try {
-            if (isSignUp) {
-                await apiCall('/auth/signup', {
-                    method: 'POST',
-                    body: JSON.stringify({ email, password, name }),
-                })
-                const { error: signInError } =
-                    await supabase.auth.signInWithPassword({ email, password })
-                if (signInError) throw signInError
-            } else {
-                const { error: signInError } =
-                    await supabase.auth.signInWithPassword({ email, password })
-                if (signInError) throw signInError
-            }
-            onAuthSuccess()
-        } catch (err: unknown) {
-            setError((err as Error).message || '로그인에 실패했습니다')
-        } finally {
-            setLoading(false)
-        }
-    }
+    const {
+        isSignUp,
+        setIsSignUp,
+        email,
+        setEmail,
+        password,
+        setPassword,
+        name,
+        setName,
+        loading,
+        error,
+        handleSubmit,
+    } = useAuthForm(onAuthSuccess)
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-background">
