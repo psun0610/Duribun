@@ -41,6 +41,13 @@ export const ReviewModal = ({
         handleRatingChange,
         getAverageRating,
         handleSubmit,
+        savedImageUrls,
+        newImagePreviews,
+        totalImageCount,
+        maxImages,
+        addImages,
+        removeSavedImage,
+        removeNewImage,
     } = useReviewForm(place, handleReviewComplete)
 
     return (
@@ -92,9 +99,16 @@ export const ReviewModal = ({
                         isEditing={isEditing}
                         hasPartnerReview={!!partnerReview && !myReview}
                         averageRating={getAverageRating()}
+                        savedImageUrls={savedImageUrls}
+                        newImagePreviews={newImagePreviews}
+                        totalImageCount={totalImageCount}
+                        maxImages={maxImages}
                         onRatingChange={handleRatingChange}
                         onRevisitChange={setRevisit}
                         onCommentChange={setComment}
+                        onAddImages={addImages}
+                        onRemoveSavedImage={removeSavedImage}
+                        onRemoveNewImage={removeNewImage}
                         onSubmit={handleSubmit}
                         onCancel={isEditing ? () => setIsEditing(false) : onClose}
                     />

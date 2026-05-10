@@ -48,6 +48,7 @@ type ReviewRow = {
     revisit: boolean
     comment: string | null
     rating: number
+    images: string[]
     created_at: string
 }
 
@@ -60,6 +61,7 @@ function mapReviewRow(r: ReviewRow) {
         revisit: r.revisit,
         comment: r.comment,
         rating: r.rating,
+        images: r.images ?? [],
         createdAt: r.created_at,
     }
 }
@@ -374,7 +376,7 @@ app.get('/duribun-api/places/list', async (c) => {
             const { data: rData, error: rErr } = await supabase
                 .from('reviews')
                 .select(
-                    'id, place_id, user_id, ratings, revisit, comment, rating, created_at',
+                    'id, place_id, user_id, ratings, revisit, comment, rating, images, created_at',
                 )
                 .in('place_id', placeIds)
 
@@ -473,8 +475,7 @@ app.post('/duribun-api/reviews', async (c) => {
             return c.json({ error: 'Unauthorized' }, 401)
         }
 
-        // weather, mood 제거됨
-        const { placeId, ratings, revisit, comment, rating } =
+        const { placeId, ratings, revisit, comment, rating, images } =
             await c.req.json()
         if (!placeId) {
             return c.json({ error: 'placeId required' }, 400)
@@ -512,6 +513,7 @@ app.post('/duribun-api/reviews', async (c) => {
                     revisit: revisit ?? true,
                     comment: comment ?? null,
                     rating,
+                    images: images ?? [],
                 },
                 { onConflict: 'place_id,user_id' },
             )
@@ -560,11 +562,10 @@ app.get('/duribun-api/reviews/:placeId', async (c) => {
             return c.json({ error: 'Place not found' }, 404)
         }
 
-        // weather, mood 컬럼 제거됨
         const { data: reviewRows, error: rErr } = await supabase
             .from('reviews')
             .select(
-                'id, place_id, user_id, ratings, revisit, comment, rating, created_at',
+                'id, place_id, user_id, ratings, revisit, comment, rating, images, created_at',
             )
             .eq('place_id', placeId)
 
