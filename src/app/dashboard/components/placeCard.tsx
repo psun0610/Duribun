@@ -1,7 +1,10 @@
-import { motion } from 'motion/react'
-import { Heart, Star, Eye, EyeOff } from 'lucide-react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { Heart, Star, Eye, Clock, Trash2 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Place } from '../types'
+import { useDeletePlace } from '../hooks/useDeletePlace'
 
 interface PlaceCardProps {
     place: Place
@@ -9,6 +12,9 @@ interface PlaceCardProps {
 }
 
 export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
+    const [isConfirming, setIsConfirming] = useState(false)
+    const { mutate: deletePlace, isPending: isDeleting } = useDeletePlace()
+
     const myReview = place.myReview as Record<string, unknown> | undefined
     const partnerReview = place.partnerReview as
         | Record<string, unknown>
@@ -21,6 +27,26 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
         return 'none'
     })()
 
+    const handleCardClick = () => {
+        if (isConfirming) return
+        if (reviewStatus !== 'both') onOpen(place)
+    }
+
+    const handleDeleteClick = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setIsConfirming(true)
+    }
+
+    const handleConfirmDelete = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        deletePlace(place.id)
+    }
+
+    const handleCancelDelete = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setIsConfirming(false)
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -28,9 +54,51 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
             exit={{ opacity: 0, y: -20 }}
         >
             <Card
-                className="hover:shadow-xl transition-shadow cursor-pointer"
-                onClick={() => reviewStatus !== 'both' && onOpen(place)}
+                className="hover:shadow-xl transition-shadow cursor-pointer relative overflow-hidden"
+                onClick={handleCardClick}
             >
+                {/* 삭제 컨펌 오버레이 */}
+                <AnimatePresence>
+                    {isConfirming && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute inset-0 bg-background/95 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3 p-6"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <Trash2 className="w-8 h-8 text-destructive" />
+                            <div className="text-center">
+                                <p className="font-semibold text-foreground">
+                                    이 장소를 삭제할까요?
+                                </p>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                    작성된 리뷰도 함께 삭제됩니다
+                                </p>
+                            </div>
+                            <div className="flex gap-3 w-full mt-1">
+                                <Button
+                                    variant="outline"
+                                    onClick={handleCancelDelete}
+                                    className="flex-1"
+                                    disabled={isDeleting}
+                                >
+                                    취소
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    onClick={handleConfirmDelete}
+                                    className="flex-1"
+                                    disabled={isDeleting}
+                                >
+                                    {isDeleting ? '삭제 중...' : '삭제'}
+                                </Button>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -57,6 +125,13 @@ export const PlaceCard = ({ place, onOpen }: PlaceCardProps) => {
                             {place.category}
                         </span>
                     </div>
+
+                    <button
+                        onClick={handleDeleteClick}
+                        className="p-1.5 hover:bg-destructive/10 hover:text-destructive rounded-full transition-colors ml-2 -mt-1 -mr-1 text-muted-foreground"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </button>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-border">

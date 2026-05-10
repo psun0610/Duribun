@@ -17,6 +17,10 @@ export const addPlace = async (data: {
     })
 }
 
+export const deletePlace = async (placeId: string): Promise<void> => {
+    await apiCall(`/places/${placeId}`, { method: 'DELETE' })
+}
+
 export const addReview = async (data: {
     placeId: string
     ratings: Record<string, number>

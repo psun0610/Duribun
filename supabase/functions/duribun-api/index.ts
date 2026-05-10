@@ -417,6 +417,52 @@ app.get('/duribun-api/places/list', async (c) => {
     }
 })
 
+app.delete('/duribun-api/places/:placeId', async (c) => {
+    try {
+        const user = await verifyAuth(c.req.header('Authorization'))
+        if (!user) return c.json({ error: 'Unauthorized' }, 401)
+
+        const placeId = c.req.param('placeId')
+        const supabase = serviceSupabase()
+
+        const { data: profile, error: pErr } = await supabase
+            .from('profiles')
+            .select('couple_id')
+            .eq('id', user.id)
+            .maybeSingle()
+
+        if (pErr || !profile?.couple_id) {
+            return c.json({ error: 'Not in a couple' }, 400)
+        }
+
+        const { data: place, error: plErr } = await supabase
+            .from('places')
+            .select('id, couple_id')
+            .eq('id', placeId)
+            .maybeSingle()
+
+        if (plErr || !place || place.couple_id !== profile.couple_id) {
+            return c.json({ error: 'Place not found' }, 404)
+        }
+
+        // reviews 테이블은 ON DELETE CASCADE 설정으로 자동 삭제됨
+        const { error: delErr } = await supabase
+            .from('places')
+            .delete()
+            .eq('id', placeId)
+
+        if (delErr) {
+            console.log('Delete place error:', delErr)
+            return c.json({ error: 'Failed to delete place' }, 500)
+        }
+
+        return c.json({ ok: true })
+    } catch (error) {
+        console.log('Delete place error:', error)
+        return c.json({ error: 'Failed to delete place' }, 500)
+    }
+})
+
 // ---------------------------------------------------------------------------
 // Reviews
 // ---------------------------------------------------------------------------
