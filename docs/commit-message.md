@@ -2,6 +2,7 @@
 
 ## Commit Messages
 
+항상 커밋 메시지는 한국어로 작성합니다.
 All AI-generated commits must use one of the following prefixes:
 
 - `[Init]` for project setup, initial schema, baseline docs, or first-time scaffolding.
@@ -20,7 +21,7 @@ Format:
 Examples:
 
 ```text
-[Init] Add product decisions and initial Supabase schema
-[Feat] Add couple invite onboarding
-[Fix] Correct review visibility policy
+[Init] 제품 결정 및 초기 Supabase 스키마를 추가합니다.
+[Feat] 커플 초대 온보딩 추가합니다.
+[Fix] 올바른 리뷰 공개 정책으로 수정합니다.
 ```
