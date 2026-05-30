@@ -1,0 +1,1 @@
+export { ProtectedSpace } from './ProtectedSpace';

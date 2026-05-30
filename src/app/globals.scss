@@ -1,0 +1,43 @@
+@use '../styles/variables' as *;
+
+:root {
+    --background: #{$color-background};
+    --foreground: #{$color-text};
+    --muted: #{$color-muted};
+    --line: #{$color-line};
+    --surface: #{$color-surface};
+    --primary: #{$color-primary};
+    --accent: #{$color-accent};
+    --secondary: #{$color-secondary};
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    background: $color-background;
+    color: var(--foreground);
+    font-family: $font-body;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+a {
+    color: inherit;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    border: 0;
+}
