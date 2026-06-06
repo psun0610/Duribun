@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">NAVER</title>
+  <circle cx="24" cy="24" r="24" fill="#03C75A"/>
+  <path fill="#FFFFFF" d="M27.3 24.7 20.3 14H14v20h6.7V23.3L27.7 34H34V14h-6.7v10.7Z"/>
+</svg>

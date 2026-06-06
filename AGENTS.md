@@ -21,6 +21,7 @@ Before making non-trivial changes, read the relevant project context first.
 - Read and follow `docs/component-rule.md` before creating or modifying React components.
 - Read `docs/frontend.md` before starting frontend development.
 - Read the relevant files in `docs/prds/` when the change implements or modifies planned product work.
+- Read `docs/design-system.md` before starting development.
 - If `CONTEXT.md` exists, treat it as the primary source for domain language and current project framing.
 
 Do not infer domain language or architecture from implementation alone when documented context exists.

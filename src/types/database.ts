@@ -12,6 +12,7 @@ export type Database = {
             profiles: {
                 Row: {
                     id: string;
+                    email: string;
                     display_name: string;
                     avatar_url: string | null;
                     created_at: string;
@@ -19,6 +20,7 @@ export type Database = {
                 };
                 Insert: {
                     id: string;
+                    email: string;
                     display_name: string;
                     avatar_url?: string | null;
                     created_at?: string;
@@ -26,11 +28,13 @@ export type Database = {
                 };
                 Update: {
                     id?: string;
+                    email?: string;
                     display_name?: string;
                     avatar_url?: string | null;
                     created_at?: string;
                     updated_at?: string;
                 };
+                Relationships: [];
             };
         };
         Views: Record<string, never>;

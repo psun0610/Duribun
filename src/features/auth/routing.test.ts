@@ -5,6 +5,7 @@ describe('auth gate routing', () => {
     it('marks app routes as protected', () => {
         expect(isProtectedPath('/app')).toBe(true)
         expect(isProtectedPath('/app/places')).toBe(true)
+        expect(isProtectedPath('/profile/setup')).toBe(true)
         expect(isProtectedPath('/login')).toBe(false)
     })
 
@@ -32,6 +33,6 @@ describe('auth gate routing', () => {
                 pathname: '/login',
                 isAuthenticated: true,
             })
-        ).toBe('/app')
+        ).toBe('/profile/setup')
     })
 })

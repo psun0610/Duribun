@@ -100,3 +100,4 @@ Initial tag examples:
 ## Auth
 
 Use Supabase Auth with Kakao, Naver, and Google providers. Email auth can remain enabled for development and testing.
+Social auth does not use provider email as the app profile email. After social sign-in, the profile setup form always asks for email directly while pre-filling nickname and avatar when the provider returns them.

@@ -14,6 +14,14 @@ const providerMap = {
 
 type SupportedProvider = keyof typeof providerMap
 
+const parseEmail = (value: FormDataEntryValue | null) => {
+    if (typeof value !== 'string') {
+        return ''
+    }
+
+    return value.trim().toLowerCase()
+}
+
 const parseProvider = (value: FormDataEntryValue | null): SupportedProvider => {
     if (value === 'kakao' || value === 'naver' || value === 'google') {
         return value
@@ -45,6 +53,31 @@ export const signInWithProvider = async (formData: FormData) => {
     }
 
     redirect('/login')
+}
+
+export const signInWithEmail = async (formData: FormData) => {
+    const email = parseEmail(formData.get('email'))
+
+    if (!email) {
+        throw new Error('이메일을 입력해 주세요.')
+    }
+
+    const headerStore = await headers()
+    const origin = headerStore.get('origin') ?? getSiteUrl()
+    const supabase = await createServerSupabaseClient()
+    const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+            emailRedirectTo: `${origin}/auth/callback`,
+            shouldCreateUser: true,
+        },
+    })
+
+    if (error) {
+        throw error
+    }
+
+    redirect('/login?emailSent=1')
 }
 
 export const signOut = async () => {

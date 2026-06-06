@@ -1,4 +1,4 @@
-export const protectedRoutes = ['/app']
+export const protectedRoutes = ['/app', '/profile/setup']
 
 type AuthGateInput = {
     pathname: string
@@ -20,7 +20,7 @@ export const getAuthGateRedirect = ({
     }
 
     if (isAuthenticated && pathname === '/login') {
-        return '/app'
+        return '/profile/setup'
     }
 
     return null

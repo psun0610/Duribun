@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">Kakao</title>
+  <circle cx="24" cy="24" r="24" fill="#FEE500"/>
+  <path fill="#000000" fill-opacity=".85" d="M24 13.2c-7.4 0-13.4 4.7-13.4 10.5 0 3.7 2.5 7 6.2 8.9l-1.2 4.4c-.1.5.4.8.8.5l5.2-3.4c.8.1 1.6.2 2.4.2 7.4 0 13.4-4.7 13.4-10.5S31.4 13.2 24 13.2Z"/>
+</svg>
