@@ -20,14 +20,14 @@ export const LOGIN_PROVIDERS = [
 ] as const
 
 export const LOGIN_PANEL_COPY = {
-    eyebrow: 'Login',
-    title: '로그인',
-    description:
-        '이미 쓰던 계정으로 로그인하고, 우리만의 장소 기록을 이어가세요.',
+    eyebrow: 'Get started',
+    title: '시작하기',
+    description: '우리의 데이트 기록 시작하기',
     emailLabel: '이메일',
     emailPlaceholder: 'you@example.com',
-    emailSubmitLabel: '로그인 링크 받기',
-    emailSentMessage: '로그인 링크를 보냈어요. 메일함에서 링크를 눌러 계속하세요.',
+    emailSubmitLabel: '이메일 링크 받기',
+    emailSentMessage:
+        '로그인 링크를 보냈어요. 메일함에서 링크를 눌러 계속하세요.',
     socialLabel: '간편 로그인',
     accountHint:
         '처음 방문한 경우에도 같은 버튼으로 시작할 수 있어요. 별도 회원가입 단계는 없어요.',

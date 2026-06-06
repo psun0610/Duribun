@@ -64,9 +64,9 @@ export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
                         </form>
                     ))}
                 </div>
-                <p className={styles.accountHint}>
+                {/* <p className={styles.accountHint}>
                     {LOGIN_PANEL_COPY.accountHint}
-                </p>
+                </p> */}
             </section>
         </main>
     )
