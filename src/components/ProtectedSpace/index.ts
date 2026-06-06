@@ -1,1 +1,1 @@
-export { ProtectedSpace } from './ProtectedSpace';
+export { ProtectedSpace } from './ProtectedSpace'

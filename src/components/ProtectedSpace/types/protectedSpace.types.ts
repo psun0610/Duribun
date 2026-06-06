@@ -1,3 +1,3 @@
 export interface ProtectedSpaceProps {
-    userLabel: string;
+    userLabel: string
 }

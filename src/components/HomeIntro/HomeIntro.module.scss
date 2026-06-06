@@ -1,4 +1,3 @@
-@use 'sass:color';
 @use '../../styles/variables' as *;
 
 .home {
@@ -24,29 +23,33 @@
 
     .eyebrow {
         margin: 0;
-        color: color.adjust($color-secondary, $lightness: -28%);
+        color: $color-primary;
         font-size: 0.78rem;
-        font-weight: 800;
+        font-weight: 900;
         letter-spacing: 0;
         text-transform: uppercase;
     }
 
     .title {
-        max-width: 10ch;
+        word-break: keep-all;
+        max-width: 11ch;
         margin: 0;
-        color: $color-text;
-        font-family: $font-display;
-        font-size: clamp(2.55rem, 13vw, 5.2rem);
-        line-height: 0.98;
+        background: linear-gradient(90deg, $color-primary, $color-secondary);
+        background-clip: text;
+        color: transparent;
+        font-size: clamp(2.5rem, 12vw, 5rem);
+        font-weight: 950;
+        line-height: 1;
         letter-spacing: 0;
     }
 
     .description {
-        max-width: 33rem;
+        max-width: 34rem;
         margin: 0;
         color: $color-muted;
         font-size: 1rem;
-        line-height: 1.75;
+        font-weight: 500;
+        line-height: 1.8;
     }
 
     .actions {
@@ -58,46 +61,46 @@
 
     .primaryAction,
     .secondaryAction {
-        min-height: 2.9rem;
+        min-height: 3rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid rgba($color-primary, 0.5);
-        border-radius: $radius-control;
-        padding: 0.75rem 1rem;
-        color: $color-text;
-        font-weight: 800;
+        border-radius: 999px;
+        padding: 0.8rem 1.15rem;
+        font-weight: 600;
         text-decoration: none;
         transition:
             transform 160ms ease,
             box-shadow 160ms ease,
-            border-color 160ms ease;
+            background 160ms ease;
 
         &:hover {
             transform: translateY(-1px);
         }
 
         &:focus-visible {
-            outline: 3px solid rgba($color-primary, 0.5);
+            outline: 3px solid rgba($color-primary, 0.34);
             outline-offset: 3px;
         }
     }
 
     .primaryAction {
         background: $color-primary;
-        box-shadow: 0 12px 30px rgba($color-primary, 0.24);
+        color: $color-primary-foreground;
+        box-shadow: 0 14px 32px rgba($color-primary, 0.28);
     }
 
     .secondaryAction {
-        background: rgba($color-surface, 0.82);
+        background: $color-muted-surface;
+        color: $color-text;
     }
 
     .memoryCard {
         overflow: hidden;
-        border: 1px solid var(--line);
+        border: 2px solid transparent;
         border-radius: $radius-photo-card;
         background: $color-surface;
-        box-shadow: $shadow-soft;
+        box-shadow: $shadow-lifted;
     }
 
     .photoGrid {
@@ -117,59 +120,41 @@
     .photoSecondary,
     .photoTertiary {
         min-height: 8rem;
-        background-color: $color-accent;
+        background-color: $color-muted-surface;
+        background-position: center;
         background-size: cover;
+        transition: transform 300ms ease;
     }
 
     .photoPrimary {
         grid-row: span 2;
-        border-radius: 20px 8px 8px 20px;
-        background-image:
-            linear-gradient(
-                145deg,
-                rgba($color-primary, 0.18),
-                rgba($color-accent, 0.18)
-            ),
-            url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80');
+        border-radius: 1.75rem 0.75rem 0.75rem 1.75rem;
     }
 
     .photoSecondary {
-        border-radius: 8px 20px 8px 8px;
-        background-image:
-            linear-gradient(
-                145deg,
-                rgba($color-secondary, 0.2),
-                rgba($color-surface, 0.08)
-            ),
-            url('https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=600&q=80');
+        border-radius: 0.75rem 1.75rem 0.75rem 0.75rem;
     }
 
     .photoTertiary {
-        border-radius: 8px 8px 20px 8px;
-        background-image:
-            linear-gradient(
-                145deg,
-                rgba($color-accent, 0.22),
-                rgba($color-surface, 0.08)
-            ),
-            url('https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=600&q=80');
+        border-radius: 0.75rem 0.75rem 1.75rem 0.75rem;
     }
 
     .memoryMeta {
         display: grid;
-        gap: 0.35rem;
+        gap: 0.4rem;
         padding: 1rem 1.1rem 1.15rem;
 
         span {
             color: $color-muted;
             font-size: 0.82rem;
+            font-weight: 800;
             line-height: 1.4;
         }
 
         strong {
             color: $color-text;
-            font-family: $font-display;
             font-size: 1.45rem;
+            font-weight: 950;
             line-height: 1.15;
         }
     }

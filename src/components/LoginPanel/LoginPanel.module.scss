@@ -1,4 +1,3 @@
-@use 'sass:color';
 @use '../../styles/variables' as *;
 
 .login {
@@ -7,28 +6,30 @@
     padding: $space-page-block $space-page-inline;
 
     .panel {
-        border: 1px solid var(--line);
+        border: 2px solid var(--border);
         border-radius: $radius-photo-card;
-        background: rgba($color-surface, 0.92);
+        background: $color-surface;
         padding: clamp(1.25rem, 6vw, 2.25rem);
-        box-shadow: $shadow-soft;
+        box-shadow: $shadow-lifted;
     }
 
     .eyebrow {
         margin: 0 0 0.75rem;
-        color: color.adjust($color-primary, $lightness: -24%);
+        color: $color-primary;
         font-size: 0.78rem;
-        font-weight: 800;
+        font-weight: 900;
         letter-spacing: 0;
         text-transform: uppercase;
     }
 
     .title {
-        max-width: 11ch;
+        max-width: 12ch;
         margin: 0;
-        color: $color-text;
-        font-family: $font-display;
+        background: linear-gradient(90deg, $color-primary, $color-secondary);
+        background-clip: text;
+        color: transparent;
         font-size: clamp(2.1rem, 10vw, 3.7rem);
+        font-weight: 950;
         line-height: 1;
         letter-spacing: 0;
     }
@@ -36,6 +37,7 @@
     .description {
         margin: 1rem 0 0;
         color: $color-muted;
+        font-weight: 700;
         line-height: 1.7;
     }
 
@@ -50,8 +52,8 @@
         min-height: 4rem;
         display: grid;
         gap: 0.2rem;
-        border: 1px solid var(--line);
-        border-radius: $radius-control;
+        border: 2px solid var(--border);
+        border-radius: $radius-surface;
         padding: 0.85rem 1rem;
         background: $color-surface;
         color: $color-text;
@@ -63,22 +65,23 @@
             box-shadow 160ms ease;
 
         span {
-            font-weight: 800;
+            font-weight: 950;
         }
 
         small {
             color: $color-muted;
             font-size: 0.82rem;
+            font-weight: 700;
         }
 
         &:hover {
-            border-color: rgba($color-primary, 0.58);
+            border-color: rgba($color-primary, 0.42);
             transform: translateY(-1px);
-            box-shadow: 0 12px 28px rgba($color-primary, 0.12);
+            box-shadow: 0 12px 28px rgba($color-primary, 0.14);
         }
 
         &:focus-visible {
-            outline: 3px solid rgba($color-accent, 0.75);
+            outline: 3px solid rgba($color-primary, 0.34);
             outline-offset: 3px;
         }
     }

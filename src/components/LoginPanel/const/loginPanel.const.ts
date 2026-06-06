@@ -1,6 +1,6 @@
 export const LOGIN_PROVIDERS = [
     {
-        description: '익숙한 카카오 계정으로 시작',
+        description: '카카오 계정으로 빠르게 시작',
         label: 'Kakao로 계속하기',
         value: 'kakao',
     },
@@ -14,4 +14,4 @@ export const LOGIN_PROVIDERS = [
         label: 'Google로 계속하기',
         value: 'google',
     },
-] as const;
+] as const

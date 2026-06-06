@@ -1,8 +1,8 @@
-import { signInWithProvider } from '@/features/auth/actions';
+import { signInWithProvider } from '@/features/auth/actions'
 
-import { LOGIN_PROVIDERS } from './const/loginPanel.const';
+import { LOGIN_PROVIDERS } from './const/loginPanel.const'
 
-import styles from './LoginPanel.module.scss';
+import styles from './LoginPanel.module.scss'
 
 export const LoginPanel = () => {
     return (
@@ -10,10 +10,11 @@ export const LoginPanel = () => {
             <section className={styles.panel} aria-labelledby="login-title">
                 <p className={styles.eyebrow}>Sign in</p>
                 <h1 className={styles.title} id="login-title">
-                    조용히 이어서 기록하기
+                    둘만의 장소 기록 시작하기
                 </h1>
                 <p className={styles.description}>
-                    사용하는 계정으로 로그인하고 둘만의 장소 아카이브로 돌아갑니다.
+                    사용하는 계정으로 로그인하고 우리 커플의 데이트 장소를
+                    귀엽고 선명하게 모아보세요.
                 </p>
                 <div className={styles.providerList}>
                     {LOGIN_PROVIDERS.map(provider => (
@@ -23,7 +24,10 @@ export const LoginPanel = () => {
                                 type="hidden"
                                 value={provider.value}
                             />
-                            <button className={styles.providerButton} type="submit">
+                            <button
+                                className={styles.providerButton}
+                                type="submit"
+                            >
                                 <span>{provider.label}</span>
                                 <small>{provider.description}</small>
                             </button>
@@ -32,5 +36,5 @@ export const LoginPanel = () => {
                 </div>
             </section>
         </main>
-    );
-};
+    )
+}

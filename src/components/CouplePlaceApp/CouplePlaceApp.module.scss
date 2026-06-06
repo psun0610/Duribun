@@ -1,0 +1,19 @@
+@use '../../styles/variables' as *;
+
+.app {
+    min-height: calc(100vh - 4.25rem);
+    background: $color-background;
+
+    .feedPhoto {
+        background-position: center;
+        background-size: cover;
+    }
+
+    .centerAction {
+        box-shadow: 0 18px 40px rgba($color-primary, 0.36);
+    }
+
+    .bottomNav {
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+}

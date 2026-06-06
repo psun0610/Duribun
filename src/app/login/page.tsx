@@ -1,19 +1,19 @@
-import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation'
 
-import { LoginPanel } from '@/components/LoginPanel';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { LoginPanel } from '@/components/LoginPanel'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 const LoginPage = async () => {
-    const supabase = await createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient()
     const {
         data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (user) {
-        redirect('/app');
+        redirect('/app')
     }
 
-    return <LoginPanel />;
-};
+    return <LoginPanel />
+}
 
-export default LoginPage;
+export default LoginPage

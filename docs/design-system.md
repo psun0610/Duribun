@@ -1,133 +1,90 @@
 # Duribun Design System
 
-Duribun is a private shared memory archive for couples. It should feel like a
-beautiful shared photo journal built by two people over time, not like a cute
-pink dating app.
+Duribun now uses the visual language from the Modern Cute App Design reference:
+bright, playful, mobile-first, photo-led, and icon-heavy. The product should
+feel like a modern cute couple archive rather than a quiet premium journal.
 
 ## Product Feeling
 
-- Default personality: private photo journal 70%, place recommendation service 30%.
-- Primary emotional cue: calm, premium, personal, and accumulated over time.
-- Visual references: modern iOS native apps, Apple Journal, and Apple Photos.
-- The app should feel warm, but never childish.
-- Avoid romantic cliches. Do not use hearts, bright pink UI, kawaii illustration,
-  couple mascots, or decorative romance motifs as default design language.
+- Default personality: cute couple place archive 70%, recommendation app 30%.
+- Primary emotional cue: cheerful, friendly, quick to scan, and mobile native.
+- Visual references: the imported Modern Cute App Design, shadcn-style rounded
+  controls, bright app icons, and photo-first mobile feeds.
+- Use strong rounded shapes, bold labels, soft shadows, and clear icon states.
+- Romantic cliches are allowed only when they serve a real feature. Do not add
+  decorative hearts or mascots by default.
 
 ## Core Layout Principle
 
-The home screen defaults to a photo-first feed.
+The private app home defaults to a photo-first place feed.
 
 - One couple place is one card.
-- The main card subject is the place memory, not an individual photo.
-- Large photos lead the layout.
-- Place name, date, review state, rating, and visibility state support the photo.
-- Users should be able to switch between photo feed and list layout.
-- The layout switch should be an icon control, not explanatory text.
+- Use a two-column photo feed on mobile when space allows.
+- Each card must show photo, place name, review state, and public/private state.
+- Rating appears as a compact pill when available.
+- Users can switch between feed and list view using icon controls.
 
-Use list layout for scanning and management:
+List layout is for scanning and management:
 
 - Small thumbnail.
 - Place name.
-- Category.
+- Category and visit date.
 - Review status.
-- Rating or completion state.
-- Privacy/public state.
+- Rating when available.
+- Public/private state.
 
 ## Color Palette
 
 Use this palette as the default app language.
 
-- Background: `#FFFDFD`
-- Surface: `#FFFFFF`
-- Primary: `#A8B9D8`
-- Accent: `#F5D8DE`
-- Secondary: `#B8C8B4`
-- Text: `#2E2E2E`
+- Background: `#FFFFFF`
+- Surface/Card: `#FFFFFF`
+- Primary: `#FF6B9D`
+- Primary foreground: `#FFFFFF`
+- Secondary: `#FFC75F`
+- Text: `#1A1A1A`
+- Muted surface: `#F5F5F5`
+- Muted text: `#737373`
+- Border: `rgba(0, 0, 0, 0.08)`
 
-Supporting colors should stay soft, low-saturation, and close to iOS native
-surfaces. Do not introduce loud pinks, saturated purples, heavy gradients, or
-dark-mode-first palettes without an explicit product reason.
+The UI may use pink-to-yellow gradients for brand text, add buttons, empty
+states, and playful emphasis. Avoid making every surface tinted; keep cards
+white so photos remain readable.
 
-## SCSS Rules
+## Tailwind And SCSS
 
-- Write styles in SCSS, not plain CSS.
-- Use nested selectors when they express component ownership clearly.
-- Keep nesting shallow. Do not nest more than three levels deep.
-- Store reusable design tokens in `src/styles/variables.scss`.
-- Do not define reusable colors, spacing, radii, shadows, or breakpoints inside
-  component files when they belong to the design system.
-- Import variables with `@use`.
-- Prefer CSS custom properties for runtime theme values exposed to the browser.
-- Prefer SCSS variables for build-time tokens, maps, and breakpoints.
-- Keep selector names semantic and product-oriented.
-- Avoid global selectors except reset, app shell, and documented shared utility
-  classes.
+- Tailwind is allowed and should be used for layout, spacing, typography
+  utilities, responsive rules, and common state styles.
+- SCSS Modules remain the place for component-owned custom styling, generated
+  background behavior, safe-area rules, non-trivial shadows, and reusable design
+  token composition.
+- Keep reusable tokens in `src/styles/variables.scss`.
+- Expose app theme values as CSS custom properties in `src/app/globals.scss`.
+- Tailwind theme values are mapped in `src/app/tailwind.css`.
+- Do not copy the entire shadcn component kit from reference projects. Install
+  or create only components that are actually needed.
 
-## Responsive Rules
+## Shape And Shadow
 
-- Design mobile-first.
-- Every screen must work at narrow mobile widths before adding desktop layout.
-- Use shared breakpoint variables from `src/styles/variables.scss`.
-- Avoid viewport-scaled text. Use fixed or `clamp()` sizes with stable min and
-  max values.
-- Make fixed-format UI such as cards, controls, tabs, and media areas stable
-  with `min-height`, `aspect-ratio`, or explicit layout constraints.
-- Verify that Korean and English labels fit in buttons and compact controls.
-
-## Cross-Browser Rules
-
-- Use standards-based CSS first.
-- Add fallback values before newer features when browser support is uneven.
-- Avoid relying on `backdrop-filter`, `:has()`, container queries, or advanced
-  color functions unless the UI still works without them.
-- Include `-webkit-` prefixed properties only when they are needed for current
-  Safari/iOS behavior.
-- Keep focus states visible with `:focus-visible`.
-- Do not hide essential content behind hover-only interactions.
-
-## Surfaces
-
-- Prefer white surfaces over tinted cards.
-- Use subtle borders before shadows.
-- Shadows must be very soft and shallow.
-- Rounded corners should generally be `20px` to `24px` for photo cards and large
-  surfaces.
-- Smaller controls may use `12px` to `16px` radius.
-- Do not nest cards inside cards.
-
-## Spacing
-
-- Use airy spacing.
-- Leave room around photos and primary text.
-- Avoid dense dashboards on memory-first screens.
-- Use denser list rows only in explicit management or list modes.
-- Keep touch targets comfortable for mobile use.
-
-## Photos
-
-Photos are the primary visual material.
-
-- Use large, inspectable photos.
-- Avoid dark overlays unless text readability requires a subtle gradient.
-- Do not crop so aggressively that the place cannot be understood.
-- Public/shareable `place_food` photos and private `couple_private` photos must
-  be visually distinguishable in UI states.
-- Empty states should reserve space for future photos instead of becoming text
-  walls.
+- Use large rounded corners by default.
+- Photo cards: `2rem`.
+- Panels and list cards: `1.5rem`.
+- Small controls: `1.25rem` or pill radius.
+- Use soft but visible shadows for cards and floating actions.
+- Keep card borders subtle but present.
 
 ## Typography
 
-- Use elegant, readable typography.
-- Prefer an iOS-native feeling: clear hierarchy, quiet labels, generous line
-  height.
-- Do not make the app feel like a marketing landing page.
-- Use large type sparingly for page titles or memory moments.
-- Use compact, readable type for metadata such as category, review state,
-  privacy, and dates.
+- Prefer system sans-serif.
+- Use bold to black weights for app labels, buttons, card titles, tabs, and
+  important states.
+- Do not use serif display type for the main app.
+- Gradient text is allowed for the brand and landing hero only.
+- Korean labels must be short enough to fit compact mobile controls.
 
 ## Navigation
 
-Primary mobile navigation should support these product areas:
+The primary mobile navigation supports:
 
 - Our places.
 - Add place.
@@ -135,44 +92,50 @@ Primary mobile navigation should support these product areas:
 - Explore.
 - Settings.
 
-The home entry should prioritize "our places" as the private memory archive.
-Friend recommendations and explore are secondary surfaces and may use more
-information density than the private home feed.
+Use a bottom navigation pattern in the protected app. The add-place control is a
+center floating circular action with a pink-to-yellow gradient.
 
 ## Controls
 
-- Use icon controls for view switching, filtering, sorting, and common actions.
-- Use segmented controls for feed/list view switching when space allows.
-- Use menus for secondary filtering and sorting.
-- Use clear text buttons only for primary actions such as starting login,
-  saving, adding, or confirming destructive flows.
-- Keep destructive actions visually restrained but unmistakable.
+- Use icons for tabs, view switching, privacy state, rating, and common actions.
+- Use segmented icon controls for feed/list switching.
+- Use bright primary buttons for main actions.
+- Use muted rounded buttons for secondary actions.
+- Keep destructive actions restrained but clearly labeled.
 
 ## Review And Privacy States
 
-The UI must make review completion and visibility clear without making the app
-feel procedural.
+Review and privacy states must be visible on place cards.
 
-- Review state should be visible on place cards.
-- Public/private state should be visible but quiet.
-- Sharing eligibility should never look enabled until both reviews and required
-  public photo conditions are satisfied.
-- Private notes, individual ratings, and couple-private photos should visually
-  remain inside the couple space.
+- `none`: muted badge.
+- `waiting-partner`: light primary badge.
+- `partner-waiting`: primary badge.
+- `complete`: secondary badge.
+- Public state uses a globe icon.
+- Private state uses a lock icon.
+
+Sharing eligibility must still follow product rules; the cute visual language
+does not relax privacy constraints.
+
+## Photos
+
+- Photos are the main visual material.
+- Use large, inspectable images in the feed.
+- Feed cards may crop square for a cute mobile grid.
+- List rows use stable square thumbnails.
+- Empty states should use large gradient icon blocks, not long text walls.
 
 ## Do
 
-- Make photos the first visual anchor.
-- Use calm pastel blue-gray, blossom pink, and muted sage as accents.
-- Keep the app premium, spacious, and native-feeling.
-- Let emotional warmth come from saved memories, not decorative romance symbols.
-- Give users a clear feed/list layout switch.
+- Use bright pink and warm yellow as the main identity.
+- Use rounded, mobile-native, touch-friendly controls.
+- Use photos as the primary content.
+- Use icon-first navigation and state display.
+- Keep implementation aligned with current Next app structure.
 
 ## Do Not
 
-- Do not make a bright pink dating app.
-- Do not use hearts everywhere.
-- Do not use kawaii illustrations or mascots.
-- Do not use heavy gradients, excessive shadows, or glossy decoration.
-- Do not turn private memory screens into analytics dashboards.
-- Do not hide privacy or sharing states behind purely decorative UI.
+- Do not copy unused shadcn components into the repo.
+- Do not introduce MUI or the reference Vite app structure.
+- Do not hide privacy and sharing rules behind decorative UI.
+- Do not use broken imported Korean strings; rewrite copy in clear Korean.

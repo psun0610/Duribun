@@ -1,17 +1,18 @@
-import type { Metadata } from 'next';
+import type { Metadata } from 'next'
 
-import { AppShell } from '@/components/AppShell';
+import { AppShell } from '@/components/AppShell'
 
-import './globals.scss';
+import './tailwind.css'
+import '@/styles/globals.scss'
 
 export const metadata: Metadata = {
     title: 'Duribun',
     description: 'Private place reviews for couples.',
-};
+}
 
 type RootLayoutProps = Readonly<{
-    children: React.ReactNode;
-}>;
+    children: React.ReactNode
+}>
 
 const RootLayout = ({ children }: RootLayoutProps) => {
     return (
@@ -20,7 +21,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                 <AppShell>{children}</AppShell>
             </body>
         </html>
-    );
-};
+    )
+}
 
-export default RootLayout;
+export default RootLayout

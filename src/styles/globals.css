@@ -1,0 +1,50 @@
+:root {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --border: rgba(0, 0, 0, 0.08);
+  --line: rgba(0, 0, 0, 0.08);
+  --surface: #ffffff;
+  --primary: #ff6b9d;
+  --primary-foreground: #ffffff;
+  --accent: #ff6b9d;
+  --secondary: #ffc75f;
+  --secondary-foreground: #1a1a1a;
+  --ring: #ff6b9d;
+  --radius: 1.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #ffffff;
+  color: var(--foreground);
+  font-family: noto sans kr, system-ui, -apple-system;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}/*# sourceMappingURL=globals.css.map */

@@ -1,1 +1,1 @@
-export { LoginPanel } from './LoginPanel';
+export { LoginPanel } from './LoginPanel'

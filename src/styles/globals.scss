@@ -3,12 +3,20 @@
 :root {
     --background: #{$color-background};
     --foreground: #{$color-text};
-    --muted: #{$color-muted};
+    --card: #{$color-surface};
+    --card-foreground: #{$color-text};
+    --muted: #{$color-muted-surface};
+    --muted-foreground: #{$color-muted};
+    --border: #{$color-line};
     --line: #{$color-line};
     --surface: #{$color-surface};
     --primary: #{$color-primary};
+    --primary-foreground: #{$color-primary-foreground};
     --accent: #{$color-accent};
     --secondary: #{$color-secondary};
+    --secondary-foreground: #{$color-text};
+    --ring: #{$color-primary};
+    --radius: #{$radius-surface};
 }
 
 * {
@@ -25,6 +33,7 @@ body {
     background: $color-background;
     color: var(--foreground);
     font-family: $font-body;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
