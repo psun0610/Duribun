@@ -14,6 +14,10 @@ const providerMap = {
 
 type SupportedProvider = keyof typeof providerMap
 
+const providerScopes: Partial<Record<SupportedProvider, string>> = {
+    kakao: 'account_email profile_image profile_nickname',
+}
+
 const parseEmail = (value: FormDataEntryValue | null) => {
     if (typeof value !== 'string') {
         return ''
@@ -41,6 +45,7 @@ export const signInWithProvider = async (formData: FormData) => {
         provider,
         options: {
             redirectTo: `${origin}/auth/callback`,
+            scopes: providerScopes[selectedProvider],
         },
     })
 

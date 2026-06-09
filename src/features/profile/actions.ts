@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation'
 
+import { getKakaoAccountEmail } from '@/features/profile/utils/profileMetadata.utils'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 const normalizeRequiredText = (value: FormDataEntryValue | null) => {
@@ -13,13 +14,9 @@ const normalizeRequiredText = (value: FormDataEntryValue | null) => {
 }
 
 export const saveProfile = async (formData: FormData) => {
-    const email = normalizeRequiredText(formData.get('email'))
+    const submittedEmail = normalizeRequiredText(formData.get('email'))
     const displayName = normalizeRequiredText(formData.get('displayName'))
     const avatarUrl = normalizeRequiredText(formData.get('avatarUrl'))
-
-    if (!email || !displayName) {
-        throw new Error('이메일과 닉네임을 입력해 주세요.')
-    }
 
     const supabase = await createServerSupabaseClient()
     const {
@@ -28,6 +25,17 @@ export const saveProfile = async (formData: FormData) => {
 
     if (!user) {
         redirect('/login')
+    }
+
+    const kakaoAccountEmail = getKakaoAccountEmail({
+        appMetadata: user.app_metadata,
+        userEmail: user.email ?? null,
+        userMetadata: user.user_metadata,
+    })
+    const email = kakaoAccountEmail || submittedEmail
+
+    if (!email || !displayName) {
+        throw new Error('이메일과 닉네임을 입력해 주세요.')
     }
 
     const { error } = await supabase.from('profiles').upsert({

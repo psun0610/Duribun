@@ -20,6 +20,54 @@ const getMetadataText = (
     return ''
 }
 
+const getNestedMetadataText = (
+    metadata: ProfileUserMetadata,
+    parentKey: string,
+    childKeys: readonly string[]
+) => {
+    const parentValue = metadata[parentKey]
+
+    if (!parentValue || typeof parentValue !== 'object') {
+        return ''
+    }
+
+    const nestedMetadata = parentValue as Record<string, unknown>
+
+    for (const key of childKeys) {
+        const value = nestedMetadata[key]
+
+        if (typeof value === 'string' && value.trim()) {
+            return value.trim()
+        }
+    }
+
+    return ''
+}
+
+export const getKakaoAccountEmail = ({
+    appMetadata,
+    userEmail,
+    userMetadata,
+}: {
+    appMetadata: ProfileAppMetadata
+    userEmail: string | null
+    userMetadata: ProfileUserMetadata
+}) => {
+    if (appMetadata.provider !== 'kakao') {
+        return ''
+    }
+
+    return (
+        getMetadataText(userMetadata, ['account_email']) ||
+        getNestedMetadataText(userMetadata, 'kakao_account', [
+            'account_email',
+            'email',
+        ]) ||
+        userEmail ||
+        ''
+    ).trim()
+}
+
 export const getProfileInitialValues = ({
     appMetadata,
     profile,
@@ -33,7 +81,13 @@ export const getProfileInitialValues = ({
 }): ProfileInitialValues => {
     const authProvider = appMetadata.provider
     const isEmailAuth = authProvider === 'email'
-    const email = profile?.email || (isEmailAuth ? userEmail || '' : '')
+    const kakaoAccountEmail = getKakaoAccountEmail({
+        appMetadata,
+        userEmail,
+        userMetadata,
+    })
+    const email =
+        profile?.email || kakaoAccountEmail || (isEmailAuth ? userEmail || '' : '')
     const displayName =
         profile?.display_name ||
         getMetadataText(userMetadata, [
@@ -51,5 +105,6 @@ export const getProfileInitialValues = ({
         email,
         displayName,
         avatarUrl,
+        isEmailDisabled: Boolean(kakaoAccountEmail),
     }
 }

@@ -1,5 +1,6 @@
 import Image from 'next/image'
 
+import { FormCard, formCardStyles } from '@/components/FormCard'
 import { signInWithEmail, signInWithProvider } from '@/features/auth/actions'
 
 import type { LoginPanelProps } from './types/loginPanel.types'
@@ -10,16 +11,15 @@ import styles from './LoginPanel.module.scss'
 export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
     return (
         <main className={styles.login}>
-            <section className={styles.panel} aria-labelledby="login-title">
-                <p className={styles.eyebrow}>{LOGIN_PANEL_COPY.eyebrow}</p>
-                <h1 className={styles.title} id="login-title">
-                    {LOGIN_PANEL_COPY.title}
-                </h1>
-                <p className={styles.description}>
-                    {LOGIN_PANEL_COPY.description}
-                </p>
+            <FormCard
+                description={LOGIN_PANEL_COPY.description}
+                eyebrow={LOGIN_PANEL_COPY.eyebrow}
+                title={LOGIN_PANEL_COPY.title}
+                titleId="login-title"
+                titleVariant="gradient"
+            >
                 <form action={signInWithEmail} className={styles.emailForm}>
-                    <label className={styles.emailField}>
+                    <label className={formCardStyles.field}>
                         <span>{LOGIN_PANEL_COPY.emailLabel}</span>
                         <input
                             name="email"
@@ -28,11 +28,11 @@ export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
                             type="email"
                         />
                     </label>
-                    <button className={styles.emailButton} type="submit">
+                    <button className={formCardStyles.primaryButton} type="submit">
                         {LOGIN_PANEL_COPY.emailSubmitLabel}
                     </button>
                     {hasEmailSent ? (
-                        <p className={styles.emailSentMessage}>
+                        <p className={formCardStyles.supportMessage}>
                             {LOGIN_PANEL_COPY.emailSentMessage}
                         </p>
                     ) : null}
@@ -67,7 +67,7 @@ export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
                 {/* <p className={styles.accountHint}>
                     {LOGIN_PANEL_COPY.accountHint}
                 </p> */}
-            </section>
+            </FormCard>
         </main>
     )
 }

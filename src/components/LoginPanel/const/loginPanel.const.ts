@@ -22,7 +22,7 @@ export const LOGIN_PROVIDERS = [
 export const LOGIN_PANEL_COPY = {
     eyebrow: 'Get started',
     title: '시작하기',
-    description: '우리의 데이트 기록 시작하기',
+    description: '로그인 혹은 회원가입을 해 주세요.',
     emailLabel: '이메일',
     emailPlaceholder: 'you@example.com',
     emailSubmitLabel: '이메일 링크 받기',

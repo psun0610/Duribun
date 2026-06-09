@@ -4,6 +4,7 @@ export interface ProfileInitialValues {
     email: string
     displayName: string
     avatarUrl: string
+    isEmailDisabled: boolean
 }
 
 export interface ProfileRowValues {
