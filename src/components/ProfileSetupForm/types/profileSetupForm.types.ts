@@ -3,3 +3,9 @@ import type { ProfileInitialValues } from '@/features/profile/types/profileMetad
 export interface ProfileSetupFormProps {
     initialValues: ProfileInitialValues
 }
+
+export interface AvatarFileFieldProps {
+    initialAvatarUrl: string
+    inputId: string
+    label: string
+}

@@ -59,7 +59,7 @@ Use Supabase's built-in Kakao provider.
 3. Enable Kakao Login and activate the Kakao Login client secret.
 4. Register the Supabase Auth callback URL in Kakao Login redirect URIs.
 5. In Supabase, enable Kakao and enter the client ID and client secret.
-6. Request `profile_nickname` and `profile_image` in the Kakao/Supabase provider settings. Do not request `account_email`; the app collects email in the profile setup form after social sign-in. Enable Supabase's setting that allows users without email for Kakao.
+6. Request `profile_nickname` and `profile_image` in the Kakao/Supabase provider settings.
 
 If Kakao Login fails with `KOE205`, check Kakao Developers > Kakao Login > Consent Items and the Supabase Kakao provider configuration. Kakao returns `invalid_scope` when the authorization URL requests a scope that is not enabled for the Kakao app. Remove unavailable scopes such as `account_email`, or enable the matching Kakao consent item before testing again.
 

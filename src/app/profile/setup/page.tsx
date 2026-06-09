@@ -4,8 +4,15 @@ import { ProfileSetupForm } from '@/components/ProfileSetupForm'
 import { getProfileInitialValues } from '@/features/profile/utils/profileMetadata.utils'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
-const ProfileSetupPage = async () => {
+interface ProfileSetupPageProps {
+    searchParams: Promise<{
+        edit?: string
+    }>
+}
+
+const ProfileSetupPage = async ({ searchParams }: ProfileSetupPageProps) => {
     const supabase = await createServerSupabaseClient()
+    const resolvedSearchParams = await searchParams
     const {
         data: { user },
     } = await supabase.auth.getUser()
@@ -19,6 +26,10 @@ const ProfileSetupPage = async () => {
         .select('email, display_name, avatar_url')
         .eq('id', user.id)
         .maybeSingle()
+
+    if (profile && resolvedSearchParams.edit !== '1') {
+        redirect('/app')
+    }
 
     const initialValues = getProfileInitialValues({
         appMetadata: user.app_metadata,

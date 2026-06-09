@@ -1,4 +1,4 @@
-create extension if not exists pgcrypto;
+create extension if not exists pgcrypto with schema extensions;
 
 create type public.place_category as enum ('restaurant', 'cafe', 'activity');
 create type public.place_provider as enum ('kakao', 'manual');
@@ -312,7 +312,7 @@ returns text
 language sql
 volatile
 as $$
-  select upper(substr(encode(gen_random_bytes(8), 'hex'), 1, 10));
+  select upper(substr(encode(extensions.gen_random_bytes(8), 'hex'), 1, 6));
 $$;
 
 create or replace function public.create_couple(p_name text)
@@ -833,6 +833,11 @@ create policy "friend_filters upsert own"
 on public.friend_couple_filters for all
 using (user_id = auth.uid())
 with check (user_id = auth.uid());
+
+drop policy if exists "review photo objects select visible" on storage.objects;
+drop policy if exists "review photo objects insert own folder" on storage.objects;
+drop policy if exists "review photo objects update owner" on storage.objects;
+drop policy if exists "review photo objects delete owner" on storage.objects;
 
 create policy "review photo objects select visible"
 on storage.objects for select
