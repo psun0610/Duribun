@@ -36,9 +36,9 @@
     .brand {
         background: linear-gradient(90deg, $color-primary, $color-secondary);
         background-clip: text;
-        color: transparent;
         font-size: 1.35rem;
-        font-weight: 900;
+        font-weight: 750;
+        color: transparent;
         letter-spacing: 0;
     }
 
@@ -47,8 +47,8 @@
         padding: 0 1rem;
         background: $color-muted-surface;
         color: $color-text;
-        font-size: 0.9rem;
-        font-weight: 900;
+        font-size: 0.95rem;
+        font-weight: 650;
         white-space: nowrap;
 
         &:hover {

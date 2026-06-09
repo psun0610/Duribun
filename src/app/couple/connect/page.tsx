@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 
-import { ProtectedSpace } from '@/components/ProtectedSpace'
+import { CoupleOnboarding } from '@/components/CoupleOnboarding'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
-const ProtectedAppPage = async () => {
+const CoupleConnectPage = async () => {
     const supabase = await createServerSupabaseClient()
     const {
         data: { user },
@@ -32,7 +32,7 @@ const ProtectedAppPage = async () => {
         .maybeSingle()
 
     if (!membership) {
-        redirect('/couple/connect')
+        return <CoupleOnboarding initialCouple={null} userLabel={userLabel} />
     }
 
     const { data: couple } = await supabase
@@ -42,13 +42,17 @@ const ProtectedAppPage = async () => {
         .maybeSingle()
 
     if (!couple) {
-        redirect('/couple/connect')
+        return <CoupleOnboarding initialCouple={null} userLabel={userLabel} />
     }
 
     const { count: memberCount } = await supabase
         .from('couple_members')
         .select('user_id', { count: 'exact', head: true })
         .eq('couple_id', couple.id)
+
+    if ((memberCount ?? 0) >= 2) {
+        redirect('/app')
+    }
 
     const coupleSummary: CoupleSummary = {
         friendCode: couple.friend_code,
@@ -57,16 +61,12 @@ const ProtectedAppPage = async () => {
         name: couple.name,
     }
 
-    if ((memberCount ?? 0) < 2) {
-        redirect('/couple/connect')
-    }
-
     return (
-        <ProtectedSpace
-            coupleName={coupleSummary.name}
+        <CoupleOnboarding
+            initialCouple={coupleSummary}
             userLabel={userLabel}
         />
     )
 }
 
-export default ProtectedAppPage
+export default CoupleConnectPage

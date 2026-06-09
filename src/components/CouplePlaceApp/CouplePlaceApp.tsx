@@ -51,7 +51,7 @@ const COPY = {
 
 const getStatusClassName = (status: ReviewStatus) => {
     const baseClassName =
-        'inline-flex self-start rounded-full px-2.5 py-1 text-[10px] font-black'
+        'inline-flex self-start rounded-full px-2.5 py-1 text-[11px] font-semibold'
 
     if (status === 'complete') {
         return `${baseClassName} bg-secondary text-foreground`
@@ -111,7 +111,7 @@ const PlaceCardFeed = ({ place }: { place: CouplePlace }) => {
                                 aria-hidden="true"
                                 className="h-3.5 w-3.5 fill-secondary text-secondary"
                             />
-                            <span className="text-sm font-black text-foreground">
+                            <span className="text-[15px] font-bold text-foreground">
                                 {place.rating}
                             </span>
                         </div>
@@ -119,7 +119,7 @@ const PlaceCardFeed = ({ place }: { place: CouplePlace }) => {
                 </div>
             </div>
             <div className="space-y-2 px-1">
-                <h3 className="truncate text-sm font-black text-foreground">
+                <h3 className="truncate text-[15px] font-bold text-foreground">
                     {place.name}
                 </h3>
                 <span className={getStatusClassName(place.reviewStatus)}>
@@ -141,10 +141,10 @@ const PlaceCardList = ({ place }: { place: CouplePlace }) => {
                     <div className="space-y-1.5">
                         <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                                <h3 className="truncate text-base font-black">
+                                <h3 className="truncate text-[17px] font-bold">
                                     {place.name}
                                 </h3>
-                                <p className="text-xs font-bold text-muted-foreground">
+                                <p className="text-[13px] font-medium text-muted-foreground">
                                     {CATEGORY_LABEL[place.category]}
                                     {place.visitDate
                                         ? ` / ${place.visitDate}`
@@ -171,7 +171,7 @@ const PlaceCardList = ({ place }: { place: CouplePlace }) => {
                                     aria-hidden="true"
                                     className="h-3.5 w-3.5 fill-secondary text-secondary"
                                 />
-                                <span className="text-sm font-black">
+                                <span className="text-[15px] font-bold">
                                     {place.rating}
                                 </span>
                             </div>
@@ -201,8 +201,8 @@ const EmptyTab = ({
                 <Icon className="h-12 w-12 text-white" strokeWidth={2.5} />
             </div>
             <div className="space-y-2">
-                <h2 className="text-lg font-black">{title}</h2>
-                <p className="mx-auto max-w-xs text-sm font-bold leading-6 text-muted-foreground">
+                <h2 className="text-xl font-bold">{title}</h2>
+                <p className="mx-auto max-w-xs text-[15px] font-normal leading-6 text-muted-foreground">
                     {description}
                 </p>
             </div>
@@ -210,7 +210,10 @@ const EmptyTab = ({
     )
 }
 
-export const CouplePlaceApp = ({ userLabel }: CouplePlaceAppProps) => {
+export const CouplePlaceApp = ({
+    coupleName,
+    userLabel,
+}: CouplePlaceAppProps) => {
     const {
         activeTab,
         handleFeedView,
@@ -224,11 +227,11 @@ export const CouplePlaceApp = ({ userLabel }: CouplePlaceAppProps) => {
             <section className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
                 <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
-                        <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-3xl font-black text-transparent">
+                        <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-[2rem] font-bold text-transparent">
                             {COPY.appTitle}
                         </h1>
-                        <p className="mt-1 text-xs font-bold text-muted-foreground">
-                            {userLabel}
+                        <p className="mt-1 text-[13px] font-medium text-muted-foreground">
+                            {coupleName} / {userLabel}
                             {COPY.recordSuffix}
                         </p>
                     </div>
@@ -303,16 +306,16 @@ export const CouplePlaceApp = ({ userLabel }: CouplePlaceAppProps) => {
                             />
                         </div>
                         <div className="space-y-2">
-                            <h2 className="text-lg font-black">
+                            <h2 className="text-xl font-bold">
                                 {COPY.settingsTitle}
                             </h2>
-                            <p className="mx-auto max-w-xs text-sm font-bold leading-6 text-muted-foreground">
+                            <p className="mx-auto max-w-xs text-[15px] font-normal leading-6 text-muted-foreground">
                                 {COPY.settingsDescription}
                             </p>
                         </div>
                         <form action={signOut}>
                             <button
-                                className="rounded-2xl bg-muted px-5 py-3 text-sm font-black text-foreground transition hover:bg-primary hover:text-white"
+                                className="rounded-2xl bg-muted px-5 py-3 text-[15px] font-semibold text-foreground transition hover:bg-primary hover:text-white"
                                 type="submit"
                             >
                                 {COPY.logout}
@@ -346,7 +349,7 @@ export const CouplePlaceApp = ({ userLabel }: CouplePlaceAppProps) => {
                                     strokeWidth={isActive ? 2.5 : 2}
                                 />
                                 <span
-                                    className={`text-[11px] font-black ${
+                                    className={`text-xs font-semibold ${
                                         isActive
                                             ? 'text-primary'
                                             : 'text-muted-foreground'
@@ -386,7 +389,7 @@ export const CouplePlaceApp = ({ userLabel }: CouplePlaceAppProps) => {
                                     strokeWidth={isActive ? 2.5 : 2}
                                 />
                                 <span
-                                    className={`text-[11px] font-black ${
+                                    className={`text-xs font-semibold ${
                                         isActive
                                             ? 'text-primary'
                                             : 'text-muted-foreground'

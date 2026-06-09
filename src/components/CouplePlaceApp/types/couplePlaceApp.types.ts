@@ -23,5 +23,6 @@ export interface CouplePlace {
 }
 
 export interface CouplePlaceAppProps {
+    coupleName: string
     userLabel: string
 }
