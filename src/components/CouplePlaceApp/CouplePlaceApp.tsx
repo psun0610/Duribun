@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 
 import { signOut } from '@/features/auth/actions'
+import { requestCoupleDisconnect } from '@/features/couple/actions'
 
 import {
     CATEGORY_LABEL,
@@ -44,6 +45,7 @@ const COPY = {
     private: '\uBE44\uACF5\uAC1C',
     public: '\uACF5\uAC1C',
     recordSuffix: '\uC758 \uB370\uC774\uD2B8 \uAE30\uB85D',
+    requestDisconnect: '커플 연결 해제 요청',
     settingsDescription:
         '\uD504\uB85C\uD544\uACFC \uCEE4\uD50C \uACF5\uAC04\uC744 \uAD00\uB9AC\uD569\uB2C8\uB2E4.',
     settingsTitle: '\uC124\uC815',
@@ -319,6 +321,14 @@ export const CouplePlaceApp = ({
                                 type="submit"
                             >
                                 {COPY.logout}
+                            </button>
+                        </form>
+                        <form action={requestCoupleDisconnect}>
+                            <button
+                                className="rounded-2xl bg-primary/10 px-5 py-3 text-[15px] font-semibold text-primary transition hover:bg-primary hover:text-white"
+                                type="submit"
+                            >
+                                {COPY.requestDisconnect}
                             </button>
                         </form>
                     </section>

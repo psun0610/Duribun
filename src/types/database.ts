@@ -115,6 +115,18 @@ export type Database = {
                 };
                 Returns: string;
             };
+            request_couple_disconnect: {
+                Args: Record<PropertyKey, never>;
+                Returns: undefined;
+            };
+            cancel_couple_disconnect: {
+                Args: Record<PropertyKey, never>;
+                Returns: undefined;
+            };
+            delete_expired_disconnected_couples: {
+                Args: Record<PropertyKey, never>;
+                Returns: number;
+            };
         };
         Enums: {
             place_category: 'restaurant' | 'cafe' | 'activity';

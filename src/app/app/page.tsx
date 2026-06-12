@@ -1,10 +1,18 @@
 import { redirect } from 'next/navigation'
 
+import { CoupleDisconnectPending } from '@/components/CoupleDisconnectPending'
 import { ProtectedSpace } from '@/components/ProtectedSpace'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
-const ProtectedAppPage = async () => {
+interface ProtectedAppPageProps {
+    searchParams?: Promise<{
+        disconnectError?: string
+    }>
+}
+
+const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
+    const resolvedSearchParams = await searchParams
     const supabase = await createServerSupabaseClient()
     const {
         data: { user },
@@ -37,7 +45,9 @@ const ProtectedAppPage = async () => {
 
     const { data: couple } = await supabase
         .from('couples')
-        .select('id, name, invite_code, friend_code')
+        .select(
+            'id, name, invite_code, friend_code, status, disconnect_requested_at, delete_after'
+        )
         .eq('id', membership.couple_id)
         .maybeSingle()
 
@@ -55,6 +65,21 @@ const ProtectedAppPage = async () => {
         id: couple.id,
         inviteCode: couple.invite_code,
         name: couple.name,
+    }
+
+    if (couple.status === 'disconnect_pending') {
+        if (!couple.disconnect_requested_at || !couple.delete_after) {
+            redirect('/couple/connect')
+        }
+
+        return (
+            <CoupleDisconnectPending
+                coupleName={coupleSummary.name}
+                deleteAfter={couple.delete_after}
+                errorMessage={resolvedSearchParams?.disconnectError}
+                requestedAt={couple.disconnect_requested_at}
+            />
+        )
     }
 
     if ((memberCount ?? 0) < 2) {

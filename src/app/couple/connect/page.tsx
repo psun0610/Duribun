@@ -37,12 +37,16 @@ const CoupleConnectPage = async () => {
 
     const { data: couple } = await supabase
         .from('couples')
-        .select('id, name, invite_code, friend_code')
+        .select('id, name, invite_code, friend_code, status')
         .eq('id', membership.couple_id)
         .maybeSingle()
 
     if (!couple) {
         return <CoupleOnboarding initialCouple={null} userLabel={userLabel} />
+    }
+
+    if (couple.status === 'disconnect_pending') {
+        redirect('/app')
     }
 
     const { count: memberCount } = await supabase
