@@ -9,8 +9,8 @@ import type {
     KakaoPlaceSearchResult,
     PlaceCategory,
     PlaceRegistrationState,
-    PlaceSharingState,
     PlaceSearchState,
+    PlaceSharingState,
 } from './types/placeRegistration.types'
 import {
     mapCouplePlaceRow,
@@ -19,9 +19,12 @@ import {
 
 const KAKAO_LOCAL_API_BASE_URL =
     process.env.KAKAO_LOCAL_API_BASE_URL || 'https://dapi.kakao.com'
+const KAKAO_SEARCH_PAGE_SIZE = 15
 
 const EMPTY_SEARCH_STATE: PlaceSearchState = {
     errorMessage: '',
+    isEnd: true,
+    page: 0,
     query: '',
     results: [],
 }
@@ -66,6 +69,58 @@ const parseBoolean = (value: FormDataEntryValue | null) => {
     return normalizeText(value) === 'true'
 }
 
+const parsePage = (value: FormDataEntryValue | null) => {
+    const parsedPage = Number(normalizeText(value))
+
+    if (!Number.isInteger(parsedPage) || parsedPage < 1) {
+        return 1
+    }
+
+    return parsedPage
+}
+
+const shouldAppendSearchResults = (
+    previousState: PlaceSearchState,
+    query: string,
+    page: number,
+    mode: string
+) => {
+    return mode === 'append' && previousState.query === query && page > 1
+}
+
+const mergeSearchResults = (
+    previousResults: KakaoPlaceSearchResult[],
+    nextResults: KakaoPlaceSearchResult[]
+) => {
+    const resultsById = new Map<string, KakaoPlaceSearchResult>()
+
+    for (const result of previousResults) {
+        resultsById.set(result.id, result)
+    }
+
+    for (const result of nextResults) {
+        resultsById.set(result.id, result)
+    }
+
+    return Array.from(resultsById.values())
+}
+
+const mapKakaoSearchErrorMessage = (status: number, responseBody: string) => {
+    if (responseBody.includes('disabled OPEN_MAP_AND_LOCAL service')) {
+        return 'Kakao Developers에서 지도/로컬 서비스가 비활성화되어 있어요. 앱 설정에서 OPEN_MAP_AND_LOCAL 서비스를 활성화해 주세요.'
+    }
+
+    if (status === 401 || status === 403) {
+        return 'Kakao Local API 권한을 확인해 주세요. REST API 키와 Kakao Developers 서비스 설정이 필요해요.'
+    }
+
+    if (status === 429) {
+        return 'Kakao Local API 호출 한도를 초과했어요. 잠시 후 다시 시도해 주세요.'
+    }
+
+    return 'Kakao 장소 검색에 실패했어요. 잠시 후 다시 시도해 주세요.'
+}
+
 const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
     if (!message) {
         return '장소를 등록하지 못했어요. 다시 시도해 주세요.'
@@ -80,7 +135,7 @@ const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
     }
 
     if (message.includes('Manual place name required')) {
-        return '장소 이름을 입력해 주세요.'
+        return '장소명을 입력해 주세요.'
     }
 
     if (message.includes('permission denied')) {
@@ -103,12 +158,17 @@ export const searchKakaoPlaces = async (
     formData: FormData
 ): Promise<PlaceSearchState> => {
     const query = normalizeText(formData.get('query'))
+    const page = parsePage(formData.get('page'))
+    const mode = normalizeText(formData.get('mode'))
+    const shouldAppend = shouldAppendSearchResults(
+        previousState,
+        query,
+        page,
+        mode
+    )
 
     if (!query) {
-        return {
-            ...EMPTY_SEARCH_STATE,
-            errorMessage: '검색어를 입력해 주세요.',
-        }
+        return EMPTY_SEARCH_STATE
     }
 
     const kakaoRestApiKey = process.env.KAKAO_REST_API_KEY
@@ -122,9 +182,13 @@ export const searchKakaoPlaces = async (
         }
     }
 
-    const searchUrl = new URL('/v2/local/search/keyword.json', KAKAO_LOCAL_API_BASE_URL)
+    const searchUrl = new URL(
+        '/v2/local/search/keyword.json',
+        KAKAO_LOCAL_API_BASE_URL
+    )
     searchUrl.searchParams.set('query', query)
-    searchUrl.searchParams.set('size', '8')
+    searchUrl.searchParams.set('page', String(page))
+    searchUrl.searchParams.set('size', String(KAKAO_SEARCH_PAGE_SIZE))
 
     try {
         const response = await fetch(searchUrl, {
@@ -137,18 +201,26 @@ export const searchKakaoPlaces = async (
         })
 
         if (!response.ok) {
+            const responseBody = await response.text()
+
             return {
                 ...previousState,
-                errorMessage: 'Kakao 장소 검색에 실패했어요. 잠시 후 다시 시도해 주세요.',
+                errorMessage: mapKakaoSearchErrorMessage(
+                    response.status,
+                    responseBody
+                ),
                 query,
-                results: [],
+                results: shouldAppend ? previousState.results : [],
             }
         }
 
         const payload = (await response.json()) as {
             documents?: unknown[]
+            meta?: {
+                is_end?: boolean
+            }
         }
-        const results = (payload.documents ?? [])
+        const nextResults = (payload.documents ?? [])
             .map(document =>
                 mapKakaoPlaceDocument(
                     document as Parameters<typeof mapKakaoPlaceDocument>[0]
@@ -157,9 +229,14 @@ export const searchKakaoPlaces = async (
             .filter((result): result is KakaoPlaceSearchResult =>
                 Boolean(result)
             )
+        const results = shouldAppend
+            ? mergeSearchResults(previousState.results, nextResults)
+            : nextResults
 
         return {
             errorMessage: '',
+            isEnd: payload.meta?.is_end ?? true,
+            page,
             query,
             results,
         }
@@ -183,8 +260,12 @@ export const registerKakaoPlace = async (
     const { error } = await supabase.rpc('register_kakao_couple_place', {
         p_address: normalizeText(formData.get('address')) || null,
         p_category: parseCategory(formData.get('category')),
-        p_latitude: parseNullableNumber(normalizeText(formData.get('latitude'))),
-        p_longitude: parseNullableNumber(normalizeText(formData.get('longitude'))),
+        p_latitude: parseNullableNumber(
+            normalizeText(formData.get('latitude'))
+        ),
+        p_longitude: parseNullableNumber(
+            normalizeText(formData.get('longitude'))
+        ),
         p_name: normalizeText(formData.get('name')),
         p_place_url: normalizeText(formData.get('placeUrl')) || null,
         p_provider_category_name:
@@ -205,6 +286,7 @@ export const registerKakaoPlace = async (
                 error.message,
                 error.code
             ),
+            succeeded: false,
         }
     }
 
@@ -212,6 +294,7 @@ export const registerKakaoPlace = async (
 
     return {
         errorMessage: '',
+        succeeded: true,
     }
 }
 
@@ -239,6 +322,7 @@ export const registerManualPlace = async (
                 error.message,
                 error.code
             ),
+            succeeded: false,
         }
     }
 
@@ -246,6 +330,7 @@ export const registerManualPlace = async (
 
     return {
         errorMessage: '',
+        succeeded: true,
     }
 }
 
@@ -263,7 +348,7 @@ export const updateCouplePlaceSharing = async (
     if (!user) {
         return {
             ...previousState,
-            errorMessage: '로그인 세션이 필요해요.',
+            errorMessage: '로그인이 필요해요.',
         }
     }
 

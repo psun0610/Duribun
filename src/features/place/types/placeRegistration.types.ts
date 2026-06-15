@@ -16,12 +16,15 @@ export interface KakaoPlaceSearchResult {
 
 export interface PlaceSearchState {
     errorMessage: string
+    isEnd: boolean
+    page: number
     query: string
     results: KakaoPlaceSearchResult[]
 }
 
 export interface PlaceRegistrationState {
     errorMessage: string
+    succeeded: boolean
 }
 
 export interface PlaceSharingState {
