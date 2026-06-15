@@ -53,10 +53,10 @@ export const MOCK_PLACES: CouplePlace[] = [
 ]
 
 export const REVIEW_STATUS_LABEL: Record<ReviewStatus, string> = {
-    complete: '리뷰 완료',
-    none: '이 장소는 어땠나요?',
-    'partner-waiting': '상대가 기다리고 있어요.',
-    'waiting-partner': '상대를 기다리는 중...',
+    complete: '리뷰가 모두 작성됐어요',
+    none: '리뷰를 작성해 주세요!',
+    'partner-waiting': '상대가 리뷰를 기다리고 있어요',
+    'waiting-partner': '아직 상대가 작성하지 않았어요',
 }
 
 export const CATEGORY_LABEL: Record<PlaceCategory, string> = {
@@ -64,11 +64,6 @@ export const CATEGORY_LABEL: Record<PlaceCategory, string> = {
     cafe: '카페',
     restaurant: '식당',
 }
-
-export const PROVIDER_LABEL = {
-    kakao: 'Kakao 등록',
-    manual: '직접 입력',
-} as const
 
 export const COUPLE_PLACE_APP_COPY = {
     addPlace: '장소 추가',
@@ -78,9 +73,9 @@ export const COUPLE_PLACE_APP_COPY = {
     exploreTitle: '새로운 장소 탐색',
     feedView: '피드 보기',
     friendDescription:
-        '친구 코드를 연결하면 서로의 공개 가능한 추천 장소를 볼 수 있어요.',
+        '친구 커플을 연결하면 서로의 공개 가능한 추천 장소를 볼 수 있어요.',
     friendTitle: '친구 커플 추천',
-    listView: '리스트 보기',
+    listView: '목록 보기',
     logout: '로그아웃',
     manualExplorePending: '탐색 승인 전',
     private: '비공개',

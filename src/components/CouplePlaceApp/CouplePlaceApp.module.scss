@@ -1,8 +1,8 @@
 @use '../../styles/variables' as *;
 
 .app {
-    min-height: calc(100vh - 4.25rem);
     background: $color-background;
+    min-height: calc(100vh - 4.25rem);
 
     .feedPhoto {
         background-position: center;
@@ -10,154 +10,215 @@
     }
 
     .centerAction {
-        box-shadow: 0 18px 40px rgba($color-primary, 0.36);
+        box-shadow: 0 12px 32px rgba($color-primary, 0.32);
     }
 
     .bottomNav {
         padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
     }
 
-    .registeredPlaces {
+    .registeredFeedGrid {
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .registeredList {
         display: grid;
         gap: 0.75rem;
     }
 
-    .registeredPlaceCard {
-        align-items: center;
-        background: $color-surface;
-        border: 1px solid $color-line;
-        border-radius: $radius-surface;
-        box-shadow: $shadow-soft;
-        display: grid;
-        gap: 0.875rem;
-        grid-template-columns: auto 1fr auto;
-        padding: 1rem;
+    .registeredFeedCard,
+    .registeredListCard {
+        background: transparent;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        padding: 0;
+        text-align: left;
     }
 
-    .registeredPlaceIcon {
+    .registeredFeedCard {
+        display: grid;
+        gap: 0.5rem;
+        min-width: 0;
+    }
+
+    .registeredFeedVisual {
         align-items: center;
-        background: linear-gradient(135deg, $color-primary, $color-secondary);
+        aspect-ratio: 1;
+        background:
+            radial-gradient(circle at 24% 20%, rgba($color-secondary, 0.5), transparent 28%),
+            linear-gradient(135deg, rgba($color-primary, 0.18), rgba($color-secondary, 0.22));
+        border: 1px solid $color-line;
         border-radius: 1.25rem;
-        color: $color-primary-foreground;
+        color: $color-primary;
         display: flex;
-        height: 3rem;
         justify-content: center;
-        width: 3rem;
+        overflow: hidden;
+        position: relative;
+        transition:
+            box-shadow 0.15s,
+            transform 0.15s;
+
+        > svg {
+            height: 2rem;
+            width: 2rem;
+        }
+
+        .registeredFeedCard:hover & {
+            box-shadow: $shadow-soft;
+            transform: translateY(-1px);
+        }
+    }
+
+    .registeredPrivacyIcon {
+        align-items: center;
+        background: rgba(255, 255, 255, 0.88);
+        border-radius: 999px;
+        color: $color-muted;
+        display: inline-flex;
+        height: 1.55rem;
+        justify-content: center;
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+        width: 1.55rem;
+    }
+
+    .registeredRating {
+        align-items: center;
+        background: rgba(255, 255, 255, 0.94);
+        border-radius: 999px;
+        bottom: 0.5rem;
+        color: $color-text;
+        display: inline-flex;
+        font-size: 0.75rem;
+        font-weight: 600;
+        gap: 0.2rem;
+        left: 0.5rem;
+        padding: 0.25rem 0.45rem;
+        position: absolute;
 
         svg {
-            height: 1.25rem;
-            width: 1.25rem;
+            color: $color-secondary;
+            fill: $color-secondary;
         }
     }
 
-    .registeredPlaceBody {
+    .registeredFeedBody {
+        display: grid;
+        gap: 0.375rem;
         min-width: 0;
-
-        p {
-            color: $color-muted;
-            font-size: 0.8125rem;
-            font-weight: 700;
-            line-height: 1.4;
-            margin-top: 0.25rem;
-        }
 
         strong {
-            color: $color-primary;
-            display: inline-flex;
-            font-size: 0.75rem;
-            font-weight: 800;
-            margin-top: 0.35rem;
-        }
-    }
-
-    .reviewButton {
-        align-items: center;
-        background: $color-primary;
-        border: 0;
-        border-radius: 999px;
-        color: $color-primary-foreground;
-        cursor: pointer;
-        display: inline-flex;
-        font-size: 0.75rem;
-        font-weight: 800;
-        justify-content: center;
-        min-width: 5.75rem;
-        padding: 0.5rem 0.75rem;
-    }
-
-    .detailButton {
-        align-items: center;
-        background: $color-muted-surface;
-        border: 0;
-        border-radius: 999px;
-        color: $color-text;
-        cursor: pointer;
-        display: inline-flex;
-        font-size: 0.75rem;
-        font-weight: 800;
-        justify-content: center;
-        min-width: 5.75rem;
-        padding: 0.5rem 0.75rem;
-    }
-
-    .placeActionRow {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 0.75rem;
-    }
-
-    .registeredPlaceHeader {
-        align-items: center;
-        display: flex;
-        gap: 0.5rem;
-        min-width: 0;
-
-        h3 {
             color: $color-text;
-            font-size: 1rem;
-            font-weight: 800;
+            font-size: 0.875rem;
+            font-weight: 600;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+    }
 
-        span {
-            background: rgba($color-secondary, 0.28);
-            border-radius: 999px;
-            color: $color-text;
-            flex-shrink: 0;
-            font-size: 0.6875rem;
-            font-weight: 800;
-            padding: 0.25rem 0.5rem;
+    .registeredListCard {
+        align-items: center;
+        background: $color-surface;
+        border: 1px solid $color-line;
+        border-radius: 1.25rem;
+        display: grid;
+        gap: 0.875rem;
+        grid-template-columns: auto 1fr;
+        padding: 0.875rem;
+        transition:
+            border-color 0.15s,
+            box-shadow 0.15s;
+
+        &:hover {
+            border-color: rgba($color-primary, 0.22);
+            box-shadow: $shadow-soft;
         }
     }
 
-    .privacyPill {
+    .registeredListVisual {
+        align-items: center;
+        background: linear-gradient(135deg, rgba($color-primary, 0.18), rgba($color-secondary, 0.24));
+        border-radius: 1rem;
+        color: $color-primary;
+        display: inline-flex;
+        height: 3.25rem;
+        justify-content: center;
+        width: 3.25rem;
+
+        svg {
+            height: 1.35rem;
+            width: 1.35rem;
+        }
+    }
+
+    .registeredListBody {
+        display: grid;
+        gap: 0.3rem;
+        min-width: 0;
+    }
+
+    .registeredListHeader {
+        align-items: center;
+        display: flex;
+        gap: 0.5rem;
+        min-width: 0;
+
+        strong {
+            color: $color-text;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .registeredPrivacyIconInline {
+        align-items: center;
         background: $color-muted-surface;
         border-radius: 999px;
         color: $color-muted;
-        font-size: 0.75rem;
-        font-weight: 800;
-        padding: 0.5rem 0.625rem;
+        display: inline-flex;
+        flex-shrink: 0;
+        height: 1.5rem;
+        justify-content: center;
+        width: 1.5rem;
+    }
+
+    .registeredMeta {
+        color: $color-muted;
+        font-size: 0.8125rem;
+        font-weight: 400;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .registeredListRating {
+        align-items: center;
+        color: $color-text;
+        display: inline-flex;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        gap: 0.25rem;
+
+        svg {
+            color: $color-secondary;
+            fill: $color-secondary;
+        }
     }
 }
 
 @media (max-width: $breakpoint-sm) {
     .app {
-        .registeredPlaceCard {
-            align-items: start;
-            grid-template-columns: auto 1fr;
-        }
-
-        .placeActionRow {
-            grid-column: 1 / -1;
-        }
-
-        .privacyPill {
-            grid-column: 2;
-            justify-self: start;
+        .registeredFeedGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
     }
 }

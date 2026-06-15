@@ -36,13 +36,15 @@ describe('review detail', () => {
     it('opens a private detail panel with review state copy', () => {
         expect(couplePlaceAppSource).toContain('ReviewDetailPanel')
         expect(couplePlaceAppSource).toContain('onOpenReviewDetail')
-        expect(couplePlaceAppSource).toContain('상세 보기')
+        expect(couplePlaceAppSource).toContain('getReviewDetailTargetPlace')
         expect(reviewDetailCopySource).toContain(
-            "'partner-waiting': '상대가 기다리고 있어요.'"
+            "'partner-waiting': '상대가 리뷰를 기다리고 있어요'"
         )
-        expect(reviewDetailCopySource).toContain("none: '이 장소는 어땠나요?'")
         expect(reviewDetailCopySource).toContain(
-            "'waiting-partner': '상대를 기다리는 중...'"
+            "none: '리뷰를 작성해 주세요!'"
+        )
+        expect(reviewDetailCopySource).toContain(
+            "'waiting-partner': '아직 상대가 작성하지 않았어요'"
         )
     })
 
@@ -52,13 +54,21 @@ describe('review detail', () => {
         expect(reviewDetailPanelSource).toContain('photoGrid')
         expect(reviewDetailPanelSource).toContain('REVIEW_PHOTO_KIND_LABEL')
         expect(reviewDetailCopySource).toContain("myReview: '내 리뷰'")
-        expect(reviewDetailCopySource).toContain("partnerReview: '파트너 리뷰'")
+        expect(reviewDetailCopySource).toContain("partnerReview: '상대 리뷰'")
     })
 
     it('keeps completed review state aligned with average rating and photo visibility rules', () => {
         expect(reviewDetailPanelSource).toContain('averageRating')
-        expect(reviewDetailCopySource).toContain("complete: '커플 리뷰 완료'")
-        expect(reviewDetailCopySource).toContain("privateBadge: '비공개 상세'")
+        expect(reviewDetailCopySource).toContain(
+            "complete: '리뷰가 모두 작성되었어요'"
+        )
+        expect(reviewDetailCopySource).toContain("privateBadge: '비공개'")
         expect(reviewDetailCopySource).toContain("publicBadge: '공개'")
+    })
+
+    it('keeps the detail modal mounted while fade-out animation runs', () => {
+        expect(reviewDetailPanelSource).toContain('isClosing')
+        expect(reviewDetailPanelSource).toContain('MODAL_CLOSE_ANIMATION_MS')
+        expect(reviewDetailPanelSource).toContain('handleClosePanel')
     })
 })
