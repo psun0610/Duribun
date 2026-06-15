@@ -24,10 +24,14 @@ export const REVIEW_DETAIL_COPY = {
     oneLineLabel: '한 줄 리뷰',
     privateLabel: '비공개',
     publicLabel: '공개',
+    shareReady: '공개 노출 가능',
+    shareWaiting: '공개 조건 대기',
+    shareTitle: '공유 설정',
+    turnPrivate: '비공개로 전환',
+    turnPublic: '공개로 전환',
 } as const
 
 export const REVIEW_PHOTO_KIND_LABEL = {
     couple_private: '커플/비공개',
     place_food: '장소/음식',
 } as const
-

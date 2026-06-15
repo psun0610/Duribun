@@ -287,7 +287,50 @@ export type Database = {
                 Relationships: [];
             };
         };
-        Views: Record<string, never>;
+        Views: {
+            explore_couple_place_summaries: {
+                Row: {
+                    address: string | null;
+                    average_rating: number | null;
+                    category: Database['public']['Enums']['place_category'];
+                    couple_id: string;
+                    couple_name: string;
+                    couple_place_id: string;
+                    latitude: number | null;
+                    longitude: number | null;
+                    place_id: string;
+                    place_name: string;
+                    place_url: string | null;
+                    public_photo_paths: string[] | null;
+                    review_count: number;
+                    road_address: string | null;
+                    tags: string[] | null;
+                    updated_at: string | null;
+                };
+                Relationships: [];
+            };
+            friend_couple_place_summaries: {
+                Row: {
+                    address: string | null;
+                    average_rating: number | null;
+                    category: Database['public']['Enums']['place_category'];
+                    couple_id: string;
+                    couple_name: string;
+                    couple_place_id: string;
+                    latitude: number | null;
+                    longitude: number | null;
+                    place_id: string;
+                    place_name: string;
+                    place_url: string | null;
+                    public_photo_paths: string[] | null;
+                    review_count: number;
+                    road_address: string | null;
+                    tags: string[] | null;
+                    updated_at: string | null;
+                };
+                Relationships: [];
+            };
+        };
         Functions: {
             create_couple: {
                 Args: {

@@ -24,6 +24,10 @@ export interface PlaceRegistrationState {
     errorMessage: string
 }
 
+export interface PlaceSharingState {
+    errorMessage: string
+}
+
 export interface CouplePlaceListItem {
     address: string
     category: PlaceCategory

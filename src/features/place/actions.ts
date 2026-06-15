@@ -9,6 +9,7 @@ import type {
     KakaoPlaceSearchResult,
     PlaceCategory,
     PlaceRegistrationState,
+    PlaceSharingState,
     PlaceSearchState,
 } from './types/placeRegistration.types'
 import {
@@ -59,6 +60,10 @@ const parseNullableNumber = (value: string) => {
     const parsedValue = Number(value)
 
     return Number.isFinite(parsedValue) ? parsedValue : null
+}
+
+const parseBoolean = (value: FormDataEntryValue | null) => {
+    return normalizeText(value) === 'true'
 }
 
 const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
@@ -234,6 +239,95 @@ export const registerManualPlace = async (
                 error.message,
                 error.code
             ),
+        }
+    }
+
+    revalidatePath('/app')
+
+    return {
+        errorMessage: '',
+    }
+}
+
+export const updateCouplePlaceSharing = async (
+    previousState: PlaceSharingState,
+    formData: FormData
+): Promise<PlaceSharingState> => {
+    const supabase = await createServerSupabaseClient()
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
+    const couplePlaceId = normalizeText(formData.get('couplePlaceId'))
+    const isPublic = parseBoolean(formData.get('isPublic'))
+
+    if (!user) {
+        return {
+            ...previousState,
+            errorMessage: '로그인 세션이 필요해요.',
+        }
+    }
+
+    if (!couplePlaceId) {
+        return {
+            ...previousState,
+            errorMessage: '공유 설정을 변경할 장소를 찾지 못했어요.',
+        }
+    }
+
+    const { data: couplePlace } = await supabase
+        .from('couple_places')
+        .select('id, couple_id')
+        .eq('id', couplePlaceId)
+        .maybeSingle()
+
+    if (!couplePlace) {
+        return {
+            ...previousState,
+            errorMessage: '공유 설정을 변경할 장소를 찾지 못했어요.',
+        }
+    }
+
+    const { data: membership } = await supabase
+        .from('couple_members')
+        .select('couple_id')
+        .eq('couple_id', couplePlace.couple_id)
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+    if (!membership) {
+        return {
+            ...previousState,
+            errorMessage: '활성 커플만 공유 설정을 바꿀 수 있어요.',
+        }
+    }
+
+    const { data: couple } = await supabase
+        .from('couples')
+        .select('status')
+        .eq('id', couplePlace.couple_id)
+        .maybeSingle()
+
+    if (!couple || couple.status !== 'active') {
+        return {
+            ...previousState,
+            errorMessage: '활성 커플만 공유 설정을 바꿀 수 있어요.',
+        }
+    }
+
+    const { error } = await supabase
+        .from('couple_places')
+        .update({ is_public: isPublic })
+        .eq('id', couplePlaceId)
+
+    if (error) {
+        console.error('Failed to update couple place sharing', {
+            code: error.code,
+            message: error.message,
+        })
+
+        return {
+            ...previousState,
+            errorMessage: '공유 설정을 저장하지 못했어요. 다시 시도해 주세요.',
         }
     }
 

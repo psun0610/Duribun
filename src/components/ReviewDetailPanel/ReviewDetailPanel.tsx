@@ -1,6 +1,9 @@
 'use client'
 
+import { useActionState } from 'react'
 import { Star, X } from 'lucide-react'
+
+import { updateCouplePlaceSharing } from '@/features/place/actions'
 
 import {
     REVIEW_DETAIL_COPY,
@@ -13,6 +16,10 @@ import type {
 } from './types/reviewDetailPanel.types'
 
 import styles from './ReviewDetailPanel.module.scss'
+
+const INITIAL_SHARING_STATE = {
+    errorMessage: '',
+}
 
 const formatRating = (rating: number) => {
     const rounded = Math.round(rating * 10) / 10
@@ -77,6 +84,18 @@ export const ReviewDetailPanel = ({
     onClose,
     place,
 }: ReviewDetailPanelProps) => {
+    const [sharingState, updateSharingAction] = useActionState(
+        updateCouplePlaceSharing,
+        INITIAL_SHARING_STATE
+    )
+    const canShowPublicly = Boolean(
+        detail &&
+            detail.reviewCount >= 2 &&
+            detail.reviews.some(review =>
+                review.photos.some(photo => photo.kind === 'place_food')
+            )
+    )
+
     return (
         <section className={styles.panel}>
             <div className={styles.header}>
@@ -127,6 +146,46 @@ export const ReviewDetailPanel = ({
                     <p className={styles.statusCopy}>
                         {REVIEW_STATUS_LABEL[detail.reviewStatus]}
                     </p>
+
+                    <form
+                        action={updateSharingAction}
+                        className={styles.shareBox}
+                    >
+                        <input
+                            name="couplePlaceId"
+                            type="hidden"
+                            value={place.couplePlaceId}
+                        />
+                        <input
+                            name="isPublic"
+                            type="hidden"
+                            value={place.isPublic ? 'false' : 'true'}
+                        />
+                        <div className={styles.shareText}>
+                            <span className={styles.shareTitle}>
+                                {REVIEW_DETAIL_COPY.shareTitle}
+                            </span>
+                            <strong>
+                                {place.isPublic
+                                    ? REVIEW_DETAIL_COPY.publicLabel
+                                    : REVIEW_DETAIL_COPY.privateLabel}
+                                {' / '}
+                                {canShowPublicly
+                                    ? REVIEW_DETAIL_COPY.shareReady
+                                    : REVIEW_DETAIL_COPY.shareWaiting}
+                            </strong>
+                        </div>
+                        <button className={styles.shareButton} type="submit">
+                            {place.isPublic
+                                ? REVIEW_DETAIL_COPY.turnPrivate
+                                : REVIEW_DETAIL_COPY.turnPublic}
+                        </button>
+                        {sharingState.errorMessage ? (
+                            <p className={styles.errorMessage}>
+                                {sharingState.errorMessage}
+                            </p>
+                        ) : null}
+                    </form>
 
                     {detail.reviews.length > 0 ? (
                         <div className={styles.reviewList}>
