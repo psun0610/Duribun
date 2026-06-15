@@ -1,10 +1,20 @@
 import { redirect } from 'next/navigation'
 
+import { CoupleDisconnectPending } from '@/components/CoupleDisconnectPending'
 import { ProtectedSpace } from '@/components/ProtectedSpace'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
+import { getCouplePlaces } from '@/features/place/actions'
+import { getCouplePlaceReviewDetailsMap } from '@/features/review/actions'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
-const ProtectedAppPage = async () => {
+interface ProtectedAppPageProps {
+    searchParams?: Promise<{
+        disconnectError?: string
+    }>
+}
+
+const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
+    const resolvedSearchParams = await searchParams
     const supabase = await createServerSupabaseClient()
     const {
         data: { user },
@@ -37,7 +47,9 @@ const ProtectedAppPage = async () => {
 
     const { data: couple } = await supabase
         .from('couples')
-        .select('id, name, invite_code, friend_code')
+        .select(
+            'id, name, invite_code, friend_code, status, disconnect_requested_at, delete_after'
+        )
         .eq('id', membership.couple_id)
         .maybeSingle()
 
@@ -57,13 +69,37 @@ const ProtectedAppPage = async () => {
         name: couple.name,
     }
 
+    if (couple.status === 'disconnect_pending') {
+        if (!couple.disconnect_requested_at || !couple.delete_after) {
+            redirect('/couple/connect')
+        }
+
+        return (
+            <CoupleDisconnectPending
+                coupleName={coupleSummary.name}
+                deleteAfter={couple.delete_after}
+                errorMessage={resolvedSearchParams?.disconnectError}
+                requestedAt={couple.disconnect_requested_at}
+            />
+        )
+    }
+
     if ((memberCount ?? 0) < 2) {
         redirect('/couple/connect')
     }
 
+    const places = await getCouplePlaces(couple.id)
+    const reviewDetailsByPlaceId = await getCouplePlaceReviewDetailsMap(
+        places.map(place => place.couplePlaceId),
+        user.id
+    )
+
     return (
         <ProtectedSpace
             coupleName={coupleSummary.name}
+            currentUserId={user.id}
+            places={places}
+            reviewDetailsByPlaceId={reviewDetailsByPlaceId}
             userLabel={userLabel}
         />
     )

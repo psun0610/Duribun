@@ -1,0 +1,246 @@
+@use '../../styles/variables' as *;
+
+.panel {
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: $radius-surface;
+    box-shadow: $shadow-soft;
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+}
+
+.header {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.titleWrap {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.badge {
+    align-self: start;
+    background: rgba($color-primary, 0.1);
+    border-radius: 999px;
+    color: $color-primary;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.35rem 0.6rem;
+}
+
+.title {
+    color: $color-text;
+    font-size: 1.125rem;
+    font-weight: 800;
+}
+
+.subtitle {
+    color: $color-muted;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.closeButton {
+    background: $color-muted-surface;
+    border: 0;
+    border-radius: 999px;
+    color: $color-muted;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0.5rem 0.75rem;
+}
+
+.summaryGrid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.summaryCard {
+    background: $color-muted-surface;
+    border-radius: $radius-control;
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.875rem 1rem;
+}
+
+.summaryLabel {
+    color: $color-muted;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.summaryValue {
+    color: $color-text;
+    font-size: 1.125rem;
+    font-weight: 800;
+}
+
+.statusCopy {
+    color: $color-text;
+    font-size: 0.875rem;
+    font-weight: 800;
+}
+
+.shareBox {
+    align-items: center;
+    background: rgba($color-secondary, 0.18);
+    border-radius: $radius-control;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr auto;
+    padding: 0.875rem;
+}
+
+.shareText {
+    display: grid;
+    gap: 0.25rem;
+
+    strong {
+        color: $color-text;
+        font-size: 0.875rem;
+        font-weight: 800;
+    }
+}
+
+.shareTitle {
+    color: $color-muted;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.shareButton {
+    background: $color-primary;
+    border: 0;
+    border-radius: 999px;
+    color: $color-primary-foreground;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    padding: 0.65rem 0.85rem;
+}
+
+.reviewList {
+    display: grid;
+    gap: 0.875rem;
+}
+
+.reviewCard {
+    background: $color-muted-surface;
+    border-radius: $radius-control;
+    display: grid;
+    gap: 0.875rem;
+    padding: 0.875rem;
+}
+
+.reviewHeader {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.reviewLabel {
+    color: $color-text;
+    font-size: 0.875rem;
+    font-weight: 800;
+}
+
+.reviewMeta {
+    color: $color-muted;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.ratingPill {
+    align-items: center;
+    background: rgba($color-secondary, 0.26);
+    border-radius: 999px;
+    color: $color-text;
+    display: inline-flex;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.35rem 0.55rem;
+}
+
+.oneLineReview {
+    color: $color-text;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tagChip {
+    background: $color-surface;
+    border-radius: 999px;
+    color: $color-text;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.45rem 0.7rem;
+}
+
+.photoGrid {
+    display: grid;
+    gap: 0.625rem;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+}
+
+.photoCard {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.photo {
+    aspect-ratio: 1;
+    background: $color-muted-surface;
+    border-radius: 1rem;
+    object-fit: cover;
+    width: 100%;
+}
+
+.photoCaption {
+    color: $color-muted;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.emptyState {
+    background: $color-muted-surface;
+    border-radius: $radius-control;
+    color: $color-muted;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.875rem 1rem;
+}
+
+.errorMessage {
+    background: rgba($color-primary, 0.1);
+    border-radius: $radius-control;
+    color: $color-primary;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    grid-column: 1 / -1;
+    padding: 0.75rem 0.875rem;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .summaryGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .shareBox {
+        grid-template-columns: 1fr;
+    }
+}

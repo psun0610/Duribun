@@ -1,0 +1,142 @@
+@use '../../styles/variables' as *;
+
+.page {
+    min-height: calc(100vh - 4.25rem);
+    background:
+        radial-gradient(circle at top left, rgba($color-primary, 0.16), transparent 20rem),
+        $color-background;
+    padding: 2rem 1rem;
+}
+
+.panel {
+    align-items: center;
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: 2rem;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 0 auto;
+    max-width: 32rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.brand {
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    background-clip: text;
+    color: transparent;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.coupleName {
+    color: $color-muted;
+    font-size: 0.875rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+.lockIcon {
+    align-items: center;
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    border-radius: 2rem;
+    box-shadow: 0 18px 44px rgba($color-primary, 0.28);
+    color: $color-primary-foreground;
+    display: flex;
+    height: 7rem;
+    justify-content: center;
+    width: 7rem;
+
+    svg {
+        height: 3rem;
+        width: 3rem;
+    }
+}
+
+.copy {
+    h2 {
+        color: $color-text;
+        font-size: 1.375rem;
+        font-weight: 800;
+    }
+
+    p {
+        color: $color-muted;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        margin: 0.75rem auto 0;
+        max-width: 22rem;
+    }
+}
+
+.details {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    width: 100%;
+
+    div {
+        align-items: center;
+        background: $color-muted-surface;
+        border-radius: 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+    }
+
+    dt {
+        color: $color-muted;
+        font-size: 0.8125rem;
+        font-weight: 700;
+    }
+
+    dd {
+        color: $color-text;
+        font-size: 0.9375rem;
+        font-weight: 800;
+        margin: 0;
+    }
+}
+
+.errorMessage {
+    background: rgba($color-primary, 0.1);
+    border-radius: 1rem;
+    color: $color-primary;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.875rem 1rem;
+    width: 100%;
+}
+
+.actions {
+    display: grid;
+    gap: 0.75rem;
+    width: 100%;
+
+    form {
+        display: grid;
+    }
+}
+
+.primaryButton,
+.secondaryButton {
+    border: 0;
+    border-radius: 1.25rem;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    padding: 1rem;
+}
+
+.primaryButton {
+    background: $color-primary;
+    color: $color-primary-foreground;
+}
+
+.secondaryButton {
+    background: $color-muted-surface;
+    color: $color-text;
+}

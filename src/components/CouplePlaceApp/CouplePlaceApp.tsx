@@ -7,47 +7,37 @@ import {
     List,
     Lock,
     Plus,
+    Search,
     Star,
     Users,
     type LucideIcon,
 } from 'lucide-react'
 
+import { PlaceRegistrationPanel } from '@/components/PlaceRegistrationPanel'
+import { ReviewDetailPanel } from '@/components/ReviewDetailPanel'
+import { ReviewWriterPanel } from '@/components/ReviewWriterPanel'
 import { signOut } from '@/features/auth/actions'
+import { requestCoupleDisconnect } from '@/features/couple/actions'
+import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
 
 import {
     CATEGORY_LABEL,
+    COUPLE_PLACE_APP_COPY,
     MOCK_PLACES,
+    PROVIDER_LABEL,
     REVIEW_STATUS_LABEL,
     TAB_ITEMS,
 } from './const/couplePlaceApp.const'
 import type {
     CouplePlace,
     CouplePlaceAppProps,
+    ReviewDetailTargetPlace,
+    ReviewTargetPlace,
     ReviewStatus,
 } from './types/couplePlaceApp.types'
 import { useCouplePlaceApp } from './hooks/useCouplePlaceApp'
 
 import styles from './CouplePlaceApp.module.scss'
-
-const COPY = {
-    addPlace: '\uC7A5\uC18C \uCD94\uAC00',
-    appTitle: '\uB450\uB9AC\uBC88',
-    exploreDescription:
-        '\uB2E4\uB978 \uCEE4\uD50C\uB4E4\uC774 \uACF5\uAC1C\uD55C \uB370\uC774\uD2B8 \uC7A5\uC18C\uB97C \uBC1C\uACAC\uD558\uB294 \uACF5\uAC04\uC785\uB2C8\uB2E4.',
-    exploreTitle: '\uC0C8\uB85C\uC6B4 \uC7A5\uC18C \uD0D0\uC0C9',
-    feedView: '\uD53C\uB4DC \uBCF4\uAE30',
-    friendDescription:
-        '\uCE5C\uAD6C \uCF54\uB4DC\uB97C \uC5F0\uACB0\uD558\uBA74 \uC11C\uB85C\uC758 \uACF5\uAC1C \uAC00\uB2A5\uD55C \uCD94\uCC9C \uC7A5\uC18C\uB97C \uBCFC \uC218 \uC788\uC5B4\uC694.',
-    friendTitle: '\uCE5C\uAD6C \uCEE4\uD50C \uCD94\uCC9C',
-    listView: '\uB9AC\uC2A4\uD2B8 \uBCF4\uAE30',
-    logout: '\uB85C\uADF8\uC544\uC6C3',
-    private: '\uBE44\uACF5\uAC1C',
-    public: '\uACF5\uAC1C',
-    recordSuffix: '\uC758 \uB370\uC774\uD2B8 \uAE30\uB85D',
-    settingsDescription:
-        '\uD504\uB85C\uD544\uACFC \uCEE4\uD50C \uACF5\uAC04\uC744 \uAD00\uB9AC\uD569\uB2C8\uB2E4.',
-    settingsTitle: '\uC124\uC815',
-}
 
 const getStatusClassName = (status: ReviewStatus) => {
     const baseClassName =
@@ -92,14 +82,14 @@ const PlaceCardFeed = ({ place }: { place: CouplePlace }) => {
                         {place.isPublic ? (
                             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary shadow-lg">
                                 <Globe
-                                    aria-label={COPY.public}
+                                    aria-label={COUPLE_PLACE_APP_COPY.public}
                                     className="h-4 w-4 text-white"
                                 />
                             </span>
                         ) : (
                             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 shadow-lg backdrop-blur-md">
                                 <Lock
-                                    aria-label={COPY.private}
+                                    aria-label={COUPLE_PLACE_APP_COPY.private}
                                     className="h-4 w-4 text-white"
                                 />
                             </span>
@@ -154,12 +144,12 @@ const PlaceCardList = ({ place }: { place: CouplePlace }) => {
                             <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-muted">
                                 {place.isPublic ? (
                                     <Globe
-                                        aria-label={COPY.public}
+                                        aria-label={COUPLE_PLACE_APP_COPY.public}
                                         className="h-3.5 w-3.5 text-primary"
                                     />
                                 ) : (
                                     <Lock
-                                        aria-label={COPY.private}
+                                        aria-label={COUPLE_PLACE_APP_COPY.private}
                                         className="h-3.5 w-3.5 text-muted-foreground"
                                     />
                                 )}
@@ -182,6 +172,75 @@ const PlaceCardList = ({ place }: { place: CouplePlace }) => {
                     </span>
                 </div>
             </div>
+        </article>
+    )
+}
+
+const RegisteredPlaceCard = ({
+    place,
+    onOpenReviewDetail,
+    onOpenReviewWriter,
+}: {
+    onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
+    onOpenReviewWriter: (place: ReviewTargetPlace) => void
+    place: CouplePlaceListItem
+}) => {
+    return (
+        <article className={styles.registeredPlaceCard}>
+            <div className={styles.registeredPlaceIcon}>
+                <Search aria-hidden="true" />
+            </div>
+            <div className={styles.registeredPlaceBody}>
+                <div className={styles.registeredPlaceHeader}>
+                    <h3>{place.name}</h3>
+                    <span>{PROVIDER_LABEL[place.provider]}</span>
+                </div>
+                <p>
+                    {CATEGORY_LABEL[place.category]}
+                    {place.roadAddress || place.address
+                        ? ` / ${place.roadAddress || place.address}`
+                        : ''}
+                </p>
+                {place.provider === 'manual' && !place.isExploreApproved ? (
+                    <strong>
+                        {COUPLE_PLACE_APP_COPY.manualExplorePending}
+                    </strong>
+                ) : null}
+                <div className={styles.placeActionRow}>
+                    <button
+                        className={styles.detailButton}
+                        onClick={() =>
+                            onOpenReviewDetail({
+                                category: place.category,
+                                couplePlaceId: place.couplePlaceId,
+                                isPublic: place.isPublic,
+                                name: place.name,
+                            })
+                        }
+                        type="button"
+                    >
+                        상세 보기
+                    </button>
+                    <button
+                        className={styles.reviewButton}
+                        onClick={() =>
+                            onOpenReviewWriter({
+                                category: place.category,
+                                couplePlaceId: place.couplePlaceId,
+                                name: place.name,
+                            })
+                        }
+                        type="button"
+                    >
+                        리뷰 작성
+                    </button>
+                </div>
+            </div>
+            <span className={styles.privacyPill}>
+                {place.isPublic
+                    ? COUPLE_PLACE_APP_COPY.public
+                    : COUPLE_PLACE_APP_COPY.private}
+            </span>
         </article>
     )
 }
@@ -212,13 +271,25 @@ const EmptyTab = ({
 
 export const CouplePlaceApp = ({
     coupleName,
+    currentUserId,
+    places,
+    reviewDetailsByPlaceId,
     userLabel,
 }: CouplePlaceAppProps) => {
     const {
         activeTab,
+        handleCloseRegistrationPanel,
+        handleCloseReviewDetail,
+        handleCloseReviewWriter,
         handleFeedView,
         handleListView,
+        handleOpenRegistrationPanel,
+        handleOpenReviewDetail,
+        handleOpenReviewWriter,
         handleTabChange,
+        isRegistrationPanelOpen,
+        reviewDetailTargetPlace,
+        reviewTargetPlace,
         viewMode,
     } = useCouplePlaceApp()
 
@@ -228,16 +299,16 @@ export const CouplePlaceApp = ({
                 <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                         <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-[2rem] font-bold text-transparent">
-                            {COPY.appTitle}
+                            {COUPLE_PLACE_APP_COPY.appTitle}
                         </h1>
                         <p className="mt-1 text-[13px] font-medium text-muted-foreground">
                             {coupleName} / {userLabel}
-                            {COPY.recordSuffix}
+                            {COUPLE_PLACE_APP_COPY.recordSuffix}
                         </p>
                     </div>
                     <div className="flex items-center gap-2 rounded-full bg-muted p-1.5">
                         <button
-                            aria-label={COPY.feedView}
+                            aria-label={COUPLE_PLACE_APP_COPY.feedView}
                             className={`flex h-9 w-9 items-center justify-center rounded-full ${
                                 viewMode === 'feed'
                                     ? 'bg-primary text-white shadow-md'
@@ -249,7 +320,7 @@ export const CouplePlaceApp = ({
                             <LayoutGrid className="h-4 w-4" />
                         </button>
                         <button
-                            aria-label={COPY.listView}
+                            aria-label={COUPLE_PLACE_APP_COPY.listView}
                             className={`flex h-9 w-9 items-center justify-center rounded-full ${
                                 viewMode === 'list'
                                     ? 'bg-primary text-white shadow-md'
@@ -263,7 +334,46 @@ export const CouplePlaceApp = ({
                     </div>
                 </div>
 
-                {activeTab === 'places' ? (
+                {activeTab === 'places' && isRegistrationPanelOpen ? (
+                    <PlaceRegistrationPanel
+                        onClose={handleCloseRegistrationPanel}
+                    />
+                ) : null}
+
+                {activeTab === 'places' && reviewTargetPlace ? (
+                    <ReviewWriterPanel
+                        onClose={handleCloseReviewWriter}
+                        place={reviewTargetPlace}
+                    />
+                ) : null}
+
+                {activeTab === 'places' && reviewDetailTargetPlace ? (
+                    <ReviewDetailPanel
+                        currentUserId={currentUserId}
+                        detail={
+                            reviewDetailsByPlaceId[
+                                reviewDetailTargetPlace.couplePlaceId
+                            ] ?? null
+                        }
+                        onClose={handleCloseReviewDetail}
+                        place={reviewDetailTargetPlace}
+                    />
+                ) : null}
+
+                {activeTab === 'places' && places.length > 0 ? (
+                    <div className={styles.registeredPlaces}>
+                        {places.map(place => (
+                            <RegisteredPlaceCard
+                                key={place.couplePlaceId}
+                                onOpenReviewDetail={handleOpenReviewDetail}
+                                onOpenReviewWriter={handleOpenReviewWriter}
+                                place={place}
+                            />
+                        ))}
+                    </div>
+                ) : null}
+
+                {activeTab === 'places' && places.length === 0 ? (
                     <div
                         className={
                             viewMode === 'feed'
@@ -283,17 +393,17 @@ export const CouplePlaceApp = ({
 
                 {activeTab === 'friends' ? (
                     <EmptyTab
-                        description={COPY.friendDescription}
+                        description={COUPLE_PLACE_APP_COPY.friendDescription}
                         icon={Users}
-                        title={COPY.friendTitle}
+                        title={COUPLE_PLACE_APP_COPY.friendTitle}
                     />
                 ) : null}
 
                 {activeTab === 'explore' ? (
                     <EmptyTab
-                        description={COPY.exploreDescription}
+                        description={COUPLE_PLACE_APP_COPY.exploreDescription}
                         icon={Compass}
-                        title={COPY.exploreTitle}
+                        title={COUPLE_PLACE_APP_COPY.exploreTitle}
                     />
                 ) : null}
 
@@ -307,10 +417,10 @@ export const CouplePlaceApp = ({
                         </div>
                         <div className="space-y-2">
                             <h2 className="text-xl font-bold">
-                                {COPY.settingsTitle}
+                                {COUPLE_PLACE_APP_COPY.settingsTitle}
                             </h2>
                             <p className="mx-auto max-w-xs text-[15px] font-normal leading-6 text-muted-foreground">
-                                {COPY.settingsDescription}
+                                {COUPLE_PLACE_APP_COPY.settingsDescription}
                             </p>
                         </div>
                         <form action={signOut}>
@@ -318,7 +428,15 @@ export const CouplePlaceApp = ({
                                 className="rounded-2xl bg-muted px-5 py-3 text-[15px] font-semibold text-foreground transition hover:bg-primary hover:text-white"
                                 type="submit"
                             >
-                                {COPY.logout}
+                                {COUPLE_PLACE_APP_COPY.logout}
+                            </button>
+                        </form>
+                        <form action={requestCoupleDisconnect}>
+                            <button
+                                className="rounded-2xl bg-primary/10 px-5 py-3 text-[15px] font-semibold text-primary transition hover:bg-primary hover:text-white"
+                                type="submit"
+                            >
+                                {COUPLE_PLACE_APP_COPY.requestDisconnect}
                             </button>
                         </form>
                     </section>
@@ -362,8 +480,9 @@ export const CouplePlaceApp = ({
                     })}
 
                     <button
-                        aria-label={COPY.addPlace}
+                        aria-label={COUPLE_PLACE_APP_COPY.addPlace}
                         className={`${styles.centerAction} -mt-10 flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-gradient-to-br from-primary to-secondary text-white transition active:scale-95`}
+                        onClick={handleOpenRegistrationPanel}
                         type="button"
                     >
                         <Plus className="h-7 w-7" strokeWidth={3} />

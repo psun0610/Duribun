@@ -1,0 +1,1 @@
+export { ReviewDetailPanel } from './ReviewDetailPanel'
