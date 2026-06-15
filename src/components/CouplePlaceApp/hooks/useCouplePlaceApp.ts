@@ -4,7 +4,11 @@ import { useState } from 'react'
 
 import type { ReviewTargetPlace } from '@/features/review/types/reviewSubmission.types'
 
-import type { ActiveTab, ViewMode } from '../types/couplePlaceApp.types'
+import type {
+    ActiveTab,
+    ReviewDetailTargetPlace,
+    ViewMode,
+} from '../types/couplePlaceApp.types'
 
 export const useCouplePlaceApp = () => {
     const [viewMode, setViewMode] = useState<ViewMode>('feed')
@@ -13,6 +17,8 @@ export const useCouplePlaceApp = () => {
         useState(false)
     const [reviewTargetPlace, setReviewTargetPlace] =
         useState<ReviewTargetPlace | null>(null)
+    const [reviewDetailTargetPlace, setReviewDetailTargetPlace] =
+        useState<ReviewDetailTargetPlace | null>(null)
 
     const handleFeedView = () => {
         setViewMode('feed')
@@ -28,6 +34,8 @@ export const useCouplePlaceApp = () => {
 
     const handleOpenRegistrationPanel = () => {
         setActiveTab('places')
+        setReviewTargetPlace(null)
+        setReviewDetailTargetPlace(null)
         setIsRegistrationPanelOpen(true)
     }
 
@@ -37,6 +45,8 @@ export const useCouplePlaceApp = () => {
 
     const handleOpenReviewWriter = (place: ReviewTargetPlace) => {
         setActiveTab('places')
+        setReviewDetailTargetPlace(null)
+        setIsRegistrationPanelOpen(false)
         setReviewTargetPlace(place)
     }
 
@@ -44,16 +54,30 @@ export const useCouplePlaceApp = () => {
         setReviewTargetPlace(null)
     }
 
+    const handleOpenReviewDetail = (place: ReviewDetailTargetPlace) => {
+        setActiveTab('places')
+        setIsRegistrationPanelOpen(false)
+        setReviewTargetPlace(null)
+        setReviewDetailTargetPlace(place)
+    }
+
+    const handleCloseReviewDetail = () => {
+        setReviewDetailTargetPlace(null)
+    }
+
     return {
         activeTab,
         handleCloseRegistrationPanel,
+        handleCloseReviewDetail,
         handleCloseReviewWriter,
         handleFeedView,
         handleListView,
         handleOpenRegistrationPanel,
+        handleOpenReviewDetail,
         handleOpenReviewWriter,
         handleTabChange,
         isRegistrationPanelOpen,
+        reviewDetailTargetPlace,
         reviewTargetPlace,
         viewMode,
     }

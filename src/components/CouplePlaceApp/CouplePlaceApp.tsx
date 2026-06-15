@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 
 import { PlaceRegistrationPanel } from '@/components/PlaceRegistrationPanel'
+import { ReviewDetailPanel } from '@/components/ReviewDetailPanel'
 import { ReviewWriterPanel } from '@/components/ReviewWriterPanel'
 import { signOut } from '@/features/auth/actions'
 import { requestCoupleDisconnect } from '@/features/couple/actions'
@@ -30,6 +31,7 @@ import {
 import type {
     CouplePlace,
     CouplePlaceAppProps,
+    ReviewDetailTargetPlace,
     ReviewTargetPlace,
     ReviewStatus,
 } from './types/couplePlaceApp.types'
@@ -176,8 +178,10 @@ const PlaceCardList = ({ place }: { place: CouplePlace }) => {
 
 const RegisteredPlaceCard = ({
     place,
+    onOpenReviewDetail,
     onOpenReviewWriter,
 }: {
+    onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
     onOpenReviewWriter: (place: ReviewTargetPlace) => void
     place: CouplePlaceListItem
 }) => {
@@ -202,19 +206,35 @@ const RegisteredPlaceCard = ({
                         {COUPLE_PLACE_APP_COPY.manualExplorePending}
                     </strong>
                 ) : null}
-                <button
-                    className={styles.reviewButton}
-                    onClick={() =>
-                        onOpenReviewWriter({
-                            category: place.category,
-                            couplePlaceId: place.couplePlaceId,
-                            name: place.name,
-                        })
-                    }
-                    type="button"
-                >
-                    리뷰 작성
-                </button>
+                <div className={styles.placeActionRow}>
+                    <button
+                        className={styles.detailButton}
+                        onClick={() =>
+                            onOpenReviewDetail({
+                                category: place.category,
+                                couplePlaceId: place.couplePlaceId,
+                                isPublic: place.isPublic,
+                                name: place.name,
+                            })
+                        }
+                        type="button"
+                    >
+                        상세 보기
+                    </button>
+                    <button
+                        className={styles.reviewButton}
+                        onClick={() =>
+                            onOpenReviewWriter({
+                                category: place.category,
+                                couplePlaceId: place.couplePlaceId,
+                                name: place.name,
+                            })
+                        }
+                        type="button"
+                    >
+                        리뷰 작성
+                    </button>
+                </div>
             </div>
             <span className={styles.privacyPill}>
                 {place.isPublic
@@ -251,19 +271,24 @@ const EmptyTab = ({
 
 export const CouplePlaceApp = ({
     coupleName,
+    currentUserId,
     places,
+    reviewDetailsByPlaceId,
     userLabel,
 }: CouplePlaceAppProps) => {
     const {
         activeTab,
         handleCloseRegistrationPanel,
+        handleCloseReviewDetail,
         handleCloseReviewWriter,
         handleFeedView,
         handleListView,
         handleOpenRegistrationPanel,
+        handleOpenReviewDetail,
         handleOpenReviewWriter,
         handleTabChange,
         isRegistrationPanelOpen,
+        reviewDetailTargetPlace,
         reviewTargetPlace,
         viewMode,
     } = useCouplePlaceApp()
@@ -322,11 +347,25 @@ export const CouplePlaceApp = ({
                     />
                 ) : null}
 
+                {activeTab === 'places' && reviewDetailTargetPlace ? (
+                    <ReviewDetailPanel
+                        currentUserId={currentUserId}
+                        detail={
+                            reviewDetailsByPlaceId[
+                                reviewDetailTargetPlace.couplePlaceId
+                            ] ?? null
+                        }
+                        onClose={handleCloseReviewDetail}
+                        place={reviewDetailTargetPlace}
+                    />
+                ) : null}
+
                 {activeTab === 'places' && places.length > 0 ? (
                     <div className={styles.registeredPlaces}>
                         {places.map(place => (
                             <RegisteredPlaceCard
                                 key={place.couplePlaceId}
+                                onOpenReviewDetail={handleOpenReviewDetail}
                                 onOpenReviewWriter={handleOpenReviewWriter}
                                 place={place}
                             />

@@ -4,6 +4,7 @@ import { CoupleDisconnectPending } from '@/components/CoupleDisconnectPending'
 import { ProtectedSpace } from '@/components/ProtectedSpace'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
 import { getCouplePlaces } from '@/features/place/actions'
+import { getCouplePlaceReviewDetailsMap } from '@/features/review/actions'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 interface ProtectedAppPageProps {
@@ -88,11 +89,17 @@ const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
     }
 
     const places = await getCouplePlaces(couple.id)
+    const reviewDetailsByPlaceId = await getCouplePlaceReviewDetailsMap(
+        places.map(place => place.couplePlaceId),
+        user.id
+    )
 
     return (
         <ProtectedSpace
             coupleName={coupleSummary.name}
+            currentUserId={user.id}
             places={places}
+            reviewDetailsByPlaceId={reviewDetailsByPlaceId}
             userLabel={userLabel}
         />
     )

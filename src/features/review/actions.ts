@@ -5,6 +5,12 @@ import { revalidatePath } from 'next/cache'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 import type { ReviewSubmissionState } from './types/reviewSubmission.types'
+import type {
+    CouplePlaceReviewDetail,
+    ReviewDetailItem,
+    ReviewDetailPhoto,
+    ReviewStatus,
+} from './types/reviewDetail.types'
 import {
     buildReviewPhotoInputs,
     getFileExtension,
@@ -68,6 +74,23 @@ const getAuthenticatedSupabase = async () => {
 
 const getReviewPhotoPath = (userId: string, reviewId: string, file: File) => {
     return `${userId}/${reviewId}/${crypto.randomUUID()}.${getFileExtension(file)}`
+}
+
+const resolveReviewStatus = (
+    reviewRows: Array<{ authorId: string }>,
+    currentUserId: string
+): ReviewStatus => {
+    if (reviewRows.length === 0) {
+        return 'none'
+    }
+
+    if (reviewRows.length === 1) {
+        return reviewRows[0].authorId === currentUserId
+            ? 'waiting-partner'
+            : 'partner-waiting'
+    }
+
+    return 'complete'
 }
 
 const parseRating = (value: FormDataEntryValue | null) => {
@@ -356,4 +379,138 @@ export const submitReview = async (
             errorMessage: '리뷰를 저장하지 못했어요. 다시 시도해 주세요.',
         }
     }
+}
+
+export const getCouplePlaceReviewDetailsMap = async (
+    couplePlaceIds: string[],
+    currentUserId: string
+): Promise<Record<string, CouplePlaceReviewDetail>> => {
+    if (couplePlaceIds.length === 0) {
+        return {}
+    }
+
+    const supabase = await createServerSupabaseClient()
+    const { data: reviewRows, error: reviewError } = await supabase
+        .from('reviews')
+        .select('id, author_id, couple_place_id, one_line_review, rating')
+        .in('couple_place_id', couplePlaceIds)
+
+    if (reviewError || !reviewRows) {
+        console.error('Failed to load couple place review details', {
+            code: reviewError?.code,
+            message: reviewError?.message,
+        })
+
+        return {}
+    }
+
+    const reviewIds = reviewRows.map(reviewRow => reviewRow.id)
+
+    const [tagResult, photoResult] = await Promise.all([
+        reviewIds.length > 0
+            ? supabase
+                  .from('review_tags')
+                  .select('review_id, tags(label, sort_order)')
+                  .in('review_id', reviewIds)
+            : Promise.resolve({ data: [], error: null }),
+        reviewIds.length > 0
+            ? supabase
+                  .from('review_photos')
+                  .select('review_id, kind, storage_path')
+                  .in('review_id', reviewIds)
+            : Promise.resolve({ data: [], error: null }),
+    ])
+
+    if (tagResult.error) {
+        console.error('Failed to load review tags', {
+            code: tagResult.error.code,
+            message: tagResult.error.message,
+        })
+    }
+
+    if (photoResult.error) {
+        console.error('Failed to load review photos', {
+            code: photoResult.error.code,
+            message: photoResult.error.message,
+        })
+    }
+
+    const tagsByReviewId = new Map<string, Array<{ label: string; sort_order: number }>>()
+
+    for (const tagRow of tagResult.data ?? []) {
+        const reviewId = tagRow.review_id as string
+        const tag = tagRow.tags as { label?: string; sort_order?: number } | null
+
+        if (!tag?.label) {
+            continue
+        }
+
+        const nextTags = tagsByReviewId.get(reviewId) ?? []
+        nextTags.push({
+            label: tag.label,
+            sort_order: tag.sort_order ?? 0,
+        })
+        tagsByReviewId.set(reviewId, nextTags)
+    }
+
+    const photosByReviewId = new Map<string, ReviewDetailPhoto[]>()
+
+    for (const photoRow of photoResult.data ?? []) {
+        const { data: signedUrlResult, error: signedUrlError } =
+            await supabase.storage
+                .from('review-photos')
+                .createSignedUrl(photoRow.storage_path as string, 60 * 60)
+
+        if (signedUrlError || !signedUrlResult?.signedUrl) {
+            continue
+        }
+
+        const reviewId = photoRow.review_id as string
+        const nextPhotos = photosByReviewId.get(reviewId) ?? []
+        nextPhotos.push({
+            kind: photoRow.kind as ReviewDetailPhoto['kind'],
+            signedUrl: signedUrlResult.signedUrl,
+            storagePath: photoRow.storage_path as string,
+        })
+        photosByReviewId.set(reviewId, nextPhotos)
+    }
+
+    const reviewsByPlaceId = new Map<string, ReviewDetailItem[]>()
+
+    for (const reviewRow of reviewRows) {
+        const nextReviews = reviewsByPlaceId.get(reviewRow.couple_place_id) ?? []
+        const sortedTags = (tagsByReviewId.get(reviewRow.id) ?? []).sort(
+            (left, right) => left.sort_order - right.sort_order
+        )
+
+        nextReviews.push({
+            authorId: reviewRow.author_id,
+            id: reviewRow.id,
+            oneLineReview: reviewRow.one_line_review,
+            photos: photosByReviewId.get(reviewRow.id) ?? [],
+            rating: Number(reviewRow.rating),
+            tags: sortedTags.map(tagRow => tagRow.label),
+        })
+        reviewsByPlaceId.set(reviewRow.couple_place_id, nextReviews)
+    }
+
+    const detailMap: Record<string, CouplePlaceReviewDetail> = {}
+
+    for (const couplePlaceId of couplePlaceIds) {
+        const reviews = reviewsByPlaceId.get(couplePlaceId) ?? []
+
+        detailMap[couplePlaceId] = {
+            averageRating:
+                reviews.length > 0
+                    ? reviews.reduce((sum, review) => sum + review.rating, 0) /
+                      reviews.length
+                    : null,
+            couplePlaceId,
+            reviewCount: reviews.length,
+            reviewStatus: resolveReviewStatus(reviews, currentUserId),
+            reviews,
+        }
+    }
+
+    return detailMap
 }

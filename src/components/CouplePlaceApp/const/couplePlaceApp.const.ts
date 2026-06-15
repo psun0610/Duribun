@@ -55,7 +55,7 @@ export const MOCK_PLACES: CouplePlace[] = [
 export const REVIEW_STATUS_LABEL: Record<ReviewStatus, string> = {
     complete: '리뷰 완료',
     none: '이 장소는 어땠나요?',
-    'partner-waiting': '상대가 기다리고 있어요',
+    'partner-waiting': '상대가 기다리고 있어요.',
     'waiting-partner': '상대를 기다리는 중...',
 }
 

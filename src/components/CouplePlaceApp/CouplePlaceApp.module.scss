@@ -72,18 +72,39 @@
 
     .reviewButton {
         align-items: center;
-        background: rgba($color-primary, 0.1);
+        background: $color-primary;
         border: 0;
         border-radius: 999px;
-        color: $color-primary;
+        color: $color-primary-foreground;
         cursor: pointer;
         display: inline-flex;
         font-size: 0.75rem;
         font-weight: 800;
         justify-content: center;
-        margin-top: 0.75rem;
+        min-width: 5.75rem;
         padding: 0.5rem 0.75rem;
-        width: fit-content;
+    }
+
+    .detailButton {
+        align-items: center;
+        background: $color-muted-surface;
+        border: 0;
+        border-radius: 999px;
+        color: $color-text;
+        cursor: pointer;
+        display: inline-flex;
+        font-size: 0.75rem;
+        font-weight: 800;
+        justify-content: center;
+        min-width: 5.75rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .placeActionRow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
     }
 
     .registeredPlaceHeader {
@@ -128,6 +149,10 @@
         .registeredPlaceCard {
             align-items: start;
             grid-template-columns: auto 1fr;
+        }
+
+        .placeActionRow {
+            grid-column: 1 / -1;
         }
 
         .privacyPill {

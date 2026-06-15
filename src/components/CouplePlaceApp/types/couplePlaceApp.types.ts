@@ -1,4 +1,5 @@
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
+import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
 
 export type ViewMode = 'feed' | 'list'
 
@@ -26,12 +27,21 @@ export interface CouplePlace {
 
 export interface CouplePlaceAppProps {
     coupleName: string
+    currentUserId: string
     places: CouplePlaceListItem[]
+    reviewDetailsByPlaceId: Record<string, CouplePlaceReviewDetail>
     userLabel: string
 }
 
 export interface ReviewTargetPlace {
     category: PlaceCategory
     couplePlaceId: string
+    name: string
+}
+
+export interface ReviewDetailTargetPlace {
+    category: PlaceCategory
+    couplePlaceId: string
+    isPublic: boolean
     name: string
 }
