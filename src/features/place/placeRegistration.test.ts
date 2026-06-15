@@ -67,7 +67,8 @@ describe('place registration', () => {
             'on conflict (couple_id, place_id) do update'
         )
         expect(appPageSource).toContain('getCouplePlaces(couple.id)')
-        expect(couplePlaceAppSource).toContain('RegisteredPlaceCard')
+        expect(couplePlaceAppSource).toContain('RegisteredPlaceFeedCard')
+        expect(couplePlaceAppSource).toContain('RegisteredPlaceListCard')
     })
 
     it('supports manual places without immediate explore approval', () => {
@@ -76,7 +77,8 @@ describe('place registration', () => {
         )
         expect(placeRegistrationSql).toContain("'manual'")
         expect(placeRegistrationSql).toContain('false')
-        expect(couplePlaceAppSource).toContain('manualExplorePending')
+        expect(placeActionsSource).toContain('registerManualPlace')
+        expect(couplePlaceAppSource).toContain('viewMode ===')
     })
 
     it('grants authenticated users registration RPC access', () => {

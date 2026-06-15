@@ -5,13 +5,40 @@ import type {
 } from '../types/placeRegistration.types'
 
 const CATEGORY_KEYWORDS: Record<PlaceCategory, string[]> = {
-    activity: ['관광', '문화', '여행', '레저', '스포츠', '전시', '공연', '영화'],
-    cafe: ['카페', '커피', '디저트'],
-    restaurant: ['음식점', '식당', '맛집', '한식', '양식', '일식', '중식'],
+    activity: [
+        '관광',
+        '문화',
+        '여행',
+        '레저',
+        '스포츠',
+        '전시',
+        '공연',
+        '영화',
+        '놀이',
+        '방탈출',
+        '볼링',
+    ],
+    cafe: ['카페', '커피', '디저트', '베이커리'],
+    restaurant: [
+        '음식점',
+        '식당',
+        '맛집',
+        '한식',
+        '양식',
+        '일식',
+        '중식',
+        '분식',
+        '고기',
+        '술집',
+    ],
 }
+
+const EXCLUDED_CATEGORY_GROUP_CODES = new Set(['OL7'])
+const EXCLUDED_PLACE_KEYWORDS = ['주유소', '충전소', 'LPG', '가스충전소']
 
 interface KakaoLocalDocument {
     address_name?: string
+    category_group_code?: string
     category_group_name?: string
     category_name?: string
     id?: string
@@ -46,6 +73,28 @@ const parseCoordinate = (value?: string) => {
     return Number.isFinite(coordinate) ? coordinate : null
 }
 
+const shouldExcludeKakaoPlace = (document: KakaoLocalDocument) => {
+    if (
+        document.category_group_code &&
+        EXCLUDED_CATEGORY_GROUP_CODES.has(document.category_group_code)
+    ) {
+        return true
+    }
+
+    const searchableText = [
+        document.place_name,
+        document.category_name,
+        document.category_group_name,
+    ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+
+    return EXCLUDED_PLACE_KEYWORDS.some(keyword =>
+        searchableText.includes(keyword.toLowerCase())
+    )
+}
+
 export const inferPlaceCategory = (categoryName: string): PlaceCategory => {
     const normalizedCategory = categoryName.toLowerCase()
 
@@ -71,7 +120,7 @@ export const inferPlaceCategory = (categoryName: string): PlaceCategory => {
 export const mapKakaoPlaceDocument = (
     document: KakaoLocalDocument
 ): KakaoPlaceSearchResult | null => {
-    if (!document.id || !document.place_name) {
+    if (!document.id || !document.place_name || shouldExcludeKakaoPlace(document)) {
         return null
     }
 

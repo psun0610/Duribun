@@ -8,9 +8,17 @@ export interface PlaceRegistrationPanelProps {
 }
 
 export interface KakaoPlaceResultCardProps {
+    isSelected: boolean
+    onSelect: (place: KakaoPlaceSearchResult) => void
     place: KakaoPlaceSearchResult
 }
 
 export interface RegisteredPlaceListProps {
     places: CouplePlaceListItem[]
+}
+
+export interface UsePlaceRegistrationPanelParams {
+    hasKakaoRegistrationSucceeded: boolean
+    hasManualRegistrationSucceeded: boolean
+    onClose: () => void
 }

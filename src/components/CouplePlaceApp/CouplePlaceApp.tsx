@@ -6,8 +6,8 @@ import {
     LayoutGrid,
     List,
     Lock,
+    MapPin,
     Plus,
-    Search,
     Star,
     Users,
     type LucideIcon,
@@ -19,12 +19,12 @@ import { ReviewWriterPanel } from '@/components/ReviewWriterPanel'
 import { signOut } from '@/features/auth/actions'
 import { requestCoupleDisconnect } from '@/features/couple/actions'
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
+import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
 
 import {
     CATEGORY_LABEL,
     COUPLE_PLACE_APP_COPY,
     MOCK_PLACES,
-    PROVIDER_LABEL,
     REVIEW_STATUS_LABEL,
     TAB_ITEMS,
 } from './const/couplePlaceApp.const'
@@ -32,7 +32,6 @@ import type {
     CouplePlace,
     CouplePlaceAppProps,
     ReviewDetailTargetPlace,
-    ReviewTargetPlace,
     ReviewStatus,
 } from './types/couplePlaceApp.types'
 import { useCouplePlaceApp } from './hooks/useCouplePlaceApp'
@@ -41,7 +40,7 @@ import styles from './CouplePlaceApp.module.scss'
 
 const getStatusClassName = (status: ReviewStatus) => {
     const baseClassName =
-        'inline-flex self-start rounded-full px-2.5 py-1 text-[11px] font-semibold'
+        'inline-flex self-start rounded-full px-2 py-0.5 text-[11px] font-medium'
 
     if (status === 'complete') {
         return `${baseClassName} bg-secondary text-foreground`
@@ -58,6 +57,31 @@ const getStatusClassName = (status: ReviewStatus) => {
     return `${baseClassName} bg-muted text-muted-foreground`
 }
 
+const getListStatusClassName = (status: ReviewStatus) => {
+    const baseClassName =
+        'inline-flex self-start rounded-full px-2.5 py-1 text-[11px] font-medium'
+
+    if (status === 'complete') {
+        return `${baseClassName} bg-secondary text-foreground`
+    }
+
+    if (status === 'partner-waiting') {
+        return `${baseClassName} bg-primary text-primary-foreground`
+    }
+
+    if (status === 'waiting-partner') {
+        return `${baseClassName} bg-primary/20 text-primary`
+    }
+
+    return `${baseClassName} bg-muted text-muted-foreground`
+}
+
+const formatRating = (rating: number) => {
+    const rounded = Math.round(rating * 10) / 10
+
+    return Number.isInteger(rounded) ? rounded.toFixed(1) : `${rounded}`
+}
+
 const PlacePhoto = ({ place }: { place: CouplePlace }) => {
     return (
         <div
@@ -72,44 +96,44 @@ const PlacePhoto = ({ place }: { place: CouplePlace }) => {
 const PlaceCardFeed = ({ place }: { place: CouplePlace }) => {
     return (
         <article className="group cursor-pointer">
-            <div className="mb-3 overflow-hidden rounded-[2rem] border-2 border-transparent shadow-md transition-all duration-300 group-hover:border-primary/30 group-hover:shadow-2xl">
-                <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20">
-                    <div className="h-full w-full transition-transform duration-500 group-hover:scale-110">
+            <div className="mb-2 overflow-hidden rounded-[1.25rem] border border-border shadow-sm transition-all duration-300 group-hover:shadow-md">
+                <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary/15 to-secondary/15">
+                    <div className="h-full w-full transition-transform duration-500 group-hover:scale-105">
                         <PlacePhoto place={place} />
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute right-3 top-3">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    <div className="absolute right-2 top-2">
                         {place.isPublic ? (
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary shadow-lg">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/90 shadow">
                                 <Globe
                                     aria-label={COUPLE_PLACE_APP_COPY.public}
-                                    className="h-4 w-4 text-white"
+                                    className="h-3 w-3 text-white"
                                 />
                             </span>
                         ) : (
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 shadow-lg backdrop-blur-md">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/35 shadow backdrop-blur-sm">
                                 <Lock
                                     aria-label={COUPLE_PLACE_APP_COPY.private}
-                                    className="h-4 w-4 text-white"
+                                    className="h-3 w-3 text-white"
                                 />
                             </span>
                         )}
                     </div>
                     {place.rating ? (
-                        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 shadow-lg">
+                        <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 shadow">
                             <Star
                                 aria-hidden="true"
-                                className="h-3.5 w-3.5 fill-secondary text-secondary"
+                                className="h-2.5 w-2.5 fill-secondary text-secondary"
                             />
-                            <span className="text-[15px] font-bold text-foreground">
+                            <span className="text-[11px] font-medium text-foreground">
                                 {place.rating}
                             </span>
                         </div>
                     ) : null}
                 </div>
             </div>
-            <div className="space-y-2 px-1">
-                <h3 className="truncate text-[15px] font-bold text-foreground">
+            <div className="space-y-1 px-0.5">
+                <h3 className="truncate text-[13px] font-medium text-foreground">
                     {place.name}
                 </h3>
                 <span className={getStatusClassName(place.reviewStatus)}>
@@ -122,52 +146,52 @@ const PlaceCardFeed = ({ place }: { place: CouplePlace }) => {
 
 const PlaceCardList = ({ place }: { place: CouplePlace }) => {
     return (
-        <article className="rounded-[1.5rem] border-2 border-border bg-white p-4 transition-all hover:border-primary/20 hover:shadow-lg">
-            <div className="flex gap-4">
-                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20">
+        <article className="rounded-[1.25rem] border border-border bg-white p-3.5 transition-all hover:shadow-md">
+            <div className="flex gap-3.5">
+                <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-primary/15 to-secondary/15">
                     <PlacePhoto place={place} />
                 </div>
-                <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
-                    <div className="space-y-1.5">
+                <div className="flex min-w-0 flex-1 flex-col justify-between gap-1.5">
+                    <div className="space-y-1">
                         <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                                <h3 className="truncate text-[17px] font-bold">
+                                <h3 className="truncate text-[15px] font-medium">
                                     {place.name}
                                 </h3>
-                                <p className="text-[13px] font-medium text-muted-foreground">
+                                <p className="text-[13px] font-normal text-muted-foreground">
                                     {CATEGORY_LABEL[place.category]}
                                     {place.visitDate
                                         ? ` / ${place.visitDate}`
                                         : ''}
                                 </p>
                             </div>
-                            <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-muted">
+                            <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-muted">
                                 {place.isPublic ? (
                                     <Globe
                                         aria-label={COUPLE_PLACE_APP_COPY.public}
-                                        className="h-3.5 w-3.5 text-primary"
+                                        className="h-3 w-3 text-primary"
                                     />
                                 ) : (
                                     <Lock
                                         aria-label={COUPLE_PLACE_APP_COPY.private}
-                                        className="h-3.5 w-3.5 text-muted-foreground"
+                                        className="h-3 w-3 text-muted-foreground"
                                     />
                                 )}
                             </span>
                         </div>
                         {place.rating ? (
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1">
                                 <Star
                                     aria-hidden="true"
-                                    className="h-3.5 w-3.5 fill-secondary text-secondary"
+                                    className="h-3 w-3 fill-secondary text-secondary"
                                 />
-                                <span className="text-[15px] font-bold">
+                                <span className="text-[13px] font-medium">
                                     {place.rating}
                                 </span>
                             </div>
                         ) : null}
                     </div>
-                    <span className={getStatusClassName(place.reviewStatus)}>
+                    <span className={getListStatusClassName(place.reviewStatus)}>
                         {REVIEW_STATUS_LABEL[place.reviewStatus]}
                     </span>
                 </div>
@@ -176,72 +200,146 @@ const PlaceCardList = ({ place }: { place: CouplePlace }) => {
     )
 }
 
-const RegisteredPlaceCard = ({
-    place,
+const getRegisteredPlaceStatus = (
+    detail: CouplePlaceReviewDetail | undefined
+): ReviewStatus => {
+    return detail?.reviewStatus ?? 'none'
+}
+
+const getRegisteredPlaceRating = (
+    detail: CouplePlaceReviewDetail | undefined
+) => {
+    if (detail?.averageRating === null || detail?.averageRating === undefined) {
+        return null
+    }
+
+    return formatRating(detail.averageRating)
+}
+
+const getReviewDetailTargetPlace = (
+    place: CouplePlaceListItem
+): ReviewDetailTargetPlace => ({
+    category: place.category,
+    couplePlaceId: place.couplePlaceId,
+    isPublic: place.isPublic,
+    name: place.name,
+})
+
+const getFallbackReviewDetail = (
+    place: ReviewDetailTargetPlace
+): CouplePlaceReviewDetail => ({
+    averageRating: null,
+    couplePlaceId: place.couplePlaceId,
+    reviewCount: 0,
+    reviewStatus: 'none',
+    reviews: [],
+})
+
+const RegisteredPlaceFeedCard = ({
+    detail,
     onOpenReviewDetail,
-    onOpenReviewWriter,
+    place,
 }: {
+    detail: CouplePlaceReviewDetail | undefined
     onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
-    onOpenReviewWriter: (place: ReviewTargetPlace) => void
     place: CouplePlaceListItem
 }) => {
+    const status = getRegisteredPlaceStatus(detail)
+    const rating = getRegisteredPlaceRating(detail)
+
     return (
-        <article className={styles.registeredPlaceCard}>
-            <div className={styles.registeredPlaceIcon}>
-                <Search aria-hidden="true" />
-            </div>
-            <div className={styles.registeredPlaceBody}>
-                <div className={styles.registeredPlaceHeader}>
-                    <h3>{place.name}</h3>
-                    <span>{PROVIDER_LABEL[place.provider]}</span>
-                </div>
-                <p>
+        <button
+            className={styles.registeredFeedCard}
+            onClick={() => onOpenReviewDetail(getReviewDetailTargetPlace(place))}
+            type="button"
+        >
+            <span className={styles.registeredFeedVisual}>
+                <MapPin aria-hidden="true" />
+                <span className={styles.registeredPrivacyIcon}>
+                    {place.isPublic ? (
+                        <Globe
+                            aria-label={COUPLE_PLACE_APP_COPY.public}
+                            size={13}
+                        />
+                    ) : (
+                        <Lock
+                            aria-label={COUPLE_PLACE_APP_COPY.private}
+                            size={13}
+                        />
+                    )}
+                </span>
+                {rating ? (
+                    <span className={styles.registeredRating}>
+                        <Star aria-hidden="true" size={12} />
+                        {rating}
+                    </span>
+                ) : null}
+            </span>
+            <span className={styles.registeredFeedBody}>
+                <strong>{place.name}</strong>
+                <span className={getStatusClassName(status)}>
+                    {REVIEW_STATUS_LABEL[status]}
+                </span>
+            </span>
+        </button>
+    )
+}
+
+const RegisteredPlaceListCard = ({
+    detail,
+    onOpenReviewDetail,
+    place,
+}: {
+    detail: CouplePlaceReviewDetail | undefined
+    onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
+    place: CouplePlaceListItem
+}) => {
+    const status = getRegisteredPlaceStatus(detail)
+    const rating = getRegisteredPlaceRating(detail)
+
+    return (
+        <button
+            className={styles.registeredListCard}
+            onClick={() => onOpenReviewDetail(getReviewDetailTargetPlace(place))}
+            type="button"
+        >
+            <span className={styles.registeredListVisual}>
+                <MapPin aria-hidden="true" />
+            </span>
+            <span className={styles.registeredListBody}>
+                <span className={styles.registeredListHeader}>
+                    <strong>{place.name}</strong>
+                    <span className={styles.registeredPrivacyIconInline}>
+                        {place.isPublic ? (
+                            <Globe
+                                aria-label={COUPLE_PLACE_APP_COPY.public}
+                                size={13}
+                            />
+                        ) : (
+                            <Lock
+                                aria-label={COUPLE_PLACE_APP_COPY.private}
+                                size={13}
+                            />
+                        )}
+                    </span>
+                </span>
+                <span className={styles.registeredMeta}>
                     {CATEGORY_LABEL[place.category]}
                     {place.roadAddress || place.address
                         ? ` / ${place.roadAddress || place.address}`
                         : ''}
-                </p>
-                {place.provider === 'manual' && !place.isExploreApproved ? (
-                    <strong>
-                        {COUPLE_PLACE_APP_COPY.manualExplorePending}
-                    </strong>
+                </span>
+                {rating ? (
+                    <span className={styles.registeredListRating}>
+                        <Star aria-hidden="true" size={12} />
+                        {rating}
+                    </span>
                 ) : null}
-                <div className={styles.placeActionRow}>
-                    <button
-                        className={styles.detailButton}
-                        onClick={() =>
-                            onOpenReviewDetail({
-                                category: place.category,
-                                couplePlaceId: place.couplePlaceId,
-                                isPublic: place.isPublic,
-                                name: place.name,
-                            })
-                        }
-                        type="button"
-                    >
-                        상세 보기
-                    </button>
-                    <button
-                        className={styles.reviewButton}
-                        onClick={() =>
-                            onOpenReviewWriter({
-                                category: place.category,
-                                couplePlaceId: place.couplePlaceId,
-                                name: place.name,
-                            })
-                        }
-                        type="button"
-                    >
-                        리뷰 작성
-                    </button>
-                </div>
-            </div>
-            <span className={styles.privacyPill}>
-                {place.isPublic
-                    ? COUPLE_PLACE_APP_COPY.public
-                    : COUPLE_PLACE_APP_COPY.private}
+                <span className={getListStatusClassName(status)}>
+                    {REVIEW_STATUS_LABEL[status]}
+                </span>
             </span>
-        </article>
+        </button>
     )
 }
 
@@ -274,7 +372,6 @@ export const CouplePlaceApp = ({
     currentUserId,
     places,
     reviewDetailsByPlaceId,
-    userLabel,
 }: CouplePlaceAppProps) => {
     const {
         activeTab,
@@ -285,51 +382,53 @@ export const CouplePlaceApp = ({
         handleListView,
         handleOpenRegistrationPanel,
         handleOpenReviewDetail,
-        handleOpenReviewWriter,
         handleTabChange,
         isRegistrationPanelOpen,
         reviewDetailTargetPlace,
         reviewTargetPlace,
         viewMode,
     } = useCouplePlaceApp()
+    const reviewDetail =
+        reviewDetailTargetPlace &&
+        (reviewDetailsByPlaceId[reviewDetailTargetPlace.couplePlaceId] ??
+            getFallbackReviewDetail(reviewDetailTargetPlace))
 
     return (
         <main className={`${styles.app} flex flex-col`}>
             <section className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
-                <div className="mb-6 flex items-center justify-between gap-4">
+                <div className="mb-5 flex items-center justify-between gap-3">
                     <div>
-                        <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-[2rem] font-bold text-transparent">
+                        <p className="text-[12px] font-medium tracking-widest text-muted-foreground uppercase">
                             {COUPLE_PLACE_APP_COPY.appTitle}
-                        </h1>
-                        <p className="mt-1 text-[13px] font-medium text-muted-foreground">
-                            {coupleName} / {userLabel}
-                            {COUPLE_PLACE_APP_COPY.recordSuffix}
                         </p>
+                        <h1 className="mt-0.5 text-[1.375rem] font-semibold leading-tight text-foreground">
+                            {coupleName}
+                        </h1>
                     </div>
-                    <div className="flex items-center gap-2 rounded-full bg-muted p-1.5">
+                    <div className="flex items-center gap-1 rounded-full bg-muted p-1">
                         <button
                             aria-label={COUPLE_PLACE_APP_COPY.feedView}
-                            className={`flex h-9 w-9 items-center justify-center rounded-full ${
+                            className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
                                 viewMode === 'feed'
-                                    ? 'bg-primary text-white shadow-md'
+                                    ? 'bg-white text-primary shadow-sm'
                                     : 'text-muted-foreground'
                             }`}
                             onClick={handleFeedView}
                             type="button"
                         >
-                            <LayoutGrid className="h-4 w-4" />
+                            <LayoutGrid className="h-3.5 w-3.5" />
                         </button>
                         <button
                             aria-label={COUPLE_PLACE_APP_COPY.listView}
-                            className={`flex h-9 w-9 items-center justify-center rounded-full ${
+                            className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
                                 viewMode === 'list'
-                                    ? 'bg-primary text-white shadow-md'
+                                    ? 'bg-white text-primary shadow-sm'
                                     : 'text-muted-foreground'
                             }`}
                             onClick={handleListView}
                             type="button"
                         >
-                            <List className="h-4 w-4" />
+                            <List className="h-3.5 w-3.5" />
                         </button>
                     </div>
                 </div>
@@ -350,26 +449,45 @@ export const CouplePlaceApp = ({
                 {activeTab === 'places' && reviewDetailTargetPlace ? (
                     <ReviewDetailPanel
                         currentUserId={currentUserId}
-                        detail={
-                            reviewDetailsByPlaceId[
-                                reviewDetailTargetPlace.couplePlaceId
-                            ] ?? null
-                        }
+                        detail={reviewDetail}
                         onClose={handleCloseReviewDetail}
                         place={reviewDetailTargetPlace}
                     />
                 ) : null}
 
                 {activeTab === 'places' && places.length > 0 ? (
-                    <div className={styles.registeredPlaces}>
-                        {places.map(place => (
-                            <RegisteredPlaceCard
-                                key={place.couplePlaceId}
-                                onOpenReviewDetail={handleOpenReviewDetail}
-                                onOpenReviewWriter={handleOpenReviewWriter}
-                                place={place}
-                            />
-                        ))}
+                    <div
+                        className={
+                            viewMode === 'feed'
+                                ? styles.registeredFeedGrid
+                                : styles.registeredList
+                        }
+                    >
+                        {places.map(place =>
+                            viewMode === 'feed' ? (
+                                <RegisteredPlaceFeedCard
+                                    detail={
+                                        reviewDetailsByPlaceId[
+                                            place.couplePlaceId
+                                        ]
+                                    }
+                                    key={place.couplePlaceId}
+                                    onOpenReviewDetail={handleOpenReviewDetail}
+                                    place={place}
+                                />
+                            ) : (
+                                <RegisteredPlaceListCard
+                                    detail={
+                                        reviewDetailsByPlaceId[
+                                            place.couplePlaceId
+                                        ]
+                                    }
+                                    key={place.couplePlaceId}
+                                    onOpenReviewDetail={handleOpenReviewDetail}
+                                    place={place}
+                                />
+                            )
+                        )}
                     </div>
                 ) : null}
 
@@ -377,7 +495,7 @@ export const CouplePlaceApp = ({
                     <div
                         className={
                             viewMode === 'feed'
-                                ? 'grid grid-cols-2 gap-3'
+                                ? 'grid grid-cols-3 gap-2'
                                 : 'space-y-3'
                         }
                     >

@@ -1,6 +1,7 @@
 @use '../../styles/variables' as *;
 
 .panel {
+    animation: panelIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     background: $color-surface;
     border: 1px solid $color-line;
     border-radius: $radius-surface;
@@ -220,5 +221,23 @@
 @media (max-width: $breakpoint-sm) {
     .photoRow {
         grid-template-columns: 1fr;
+    }
+}
+
+@keyframes panelIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem) scale(0.99);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .panel {
+        animation: none;
     }
 }

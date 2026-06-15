@@ -1,11 +1,12 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect, useRef, useState } from 'react'
 import { Star, X } from 'lucide-react'
 
 import { updateCouplePlaceSharing } from '@/features/place/actions'
 
 import {
+    MODAL_CLOSE_ANIMATION_MS,
     REVIEW_DETAIL_COPY,
     REVIEW_PHOTO_KIND_LABEL,
     REVIEW_STATUS_LABEL,
@@ -40,7 +41,8 @@ const ReviewCard = ({ currentUserId, review }: ReviewDetailCardProps) => {
                             : REVIEW_DETAIL_COPY.partnerReview}
                     </p>
                     <p className={styles.reviewMeta}>
-                        {REVIEW_DETAIL_COPY.ratingLabel} {formatRating(review.rating)}
+                        {REVIEW_DETAIL_COPY.ratingLabel}{' '}
+                        {formatRating(review.rating)}
                     </p>
                 </div>
                 <span className={styles.ratingPill}>
@@ -84,6 +86,8 @@ export const ReviewDetailPanel = ({
     onClose,
     place,
 }: ReviewDetailPanelProps) => {
+    const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const [isClosing, setIsClosing] = useState(false)
     const [sharingState, updateSharingAction] = useActionState(
         updateCouplePlaceSharing,
         INITIAL_SHARING_STATE
@@ -96,116 +100,158 @@ export const ReviewDetailPanel = ({
             )
     )
 
+    useEffect(() => {
+        return () => {
+            if (closeTimerRef.current) {
+                clearTimeout(closeTimerRef.current)
+            }
+        }
+    }, [])
+
+    const handleClosePanel = () => {
+        if (closeTimerRef.current) {
+            return
+        }
+
+        setIsClosing(true)
+        closeTimerRef.current = setTimeout(() => {
+            closeTimerRef.current = null
+            onClose()
+        }, MODAL_CLOSE_ANIMATION_MS)
+    }
+
     return (
-        <section className={styles.panel}>
-            <div className={styles.header}>
-                <div className={styles.titleWrap}>
-                    <span className={styles.badge}>
-                        {place.isPublic
-                            ? REVIEW_DETAIL_COPY.publicBadge
-                            : REVIEW_DETAIL_COPY.privateBadge}
-                    </span>
-                    <h2 className={styles.title}>{REVIEW_DETAIL_COPY.reviewTitle}</h2>
-                    <p className={styles.subtitle}>
-                        {place.name} / {REVIEW_STATUS_LABEL[detail?.reviewStatus ?? 'none']}
-                    </p>
-                </div>
-                <button
-                    aria-label={REVIEW_DETAIL_COPY.close}
-                    className={styles.closeButton}
-                    onClick={onClose}
-                    type="button"
-                >
-                    <X aria-hidden="true" size={16} />
-                </button>
-            </div>
-
-            {detail ? (
-                <>
-                    <div className={styles.summaryGrid}>
-                        <div className={styles.summaryCard}>
-                            <span className={styles.summaryLabel}>
-                                {REVIEW_DETAIL_COPY.averageRating}
-                            </span>
-                            <strong className={styles.summaryValue}>
-                                {detail.averageRating === null
-                                    ? '-'
-                                    : formatRating(detail.averageRating)}
-                            </strong>
-                        </div>
-                        <div className={styles.summaryCard}>
-                            <span className={styles.summaryLabel}>
-                                {REVIEW_DETAIL_COPY.reviewCount}
-                            </span>
-                            <strong className={styles.summaryValue}>
-                                {detail.reviewCount} / 2
-                            </strong>
-                        </div>
-                    </div>
-
-                    <p className={styles.statusCopy}>
-                        {REVIEW_STATUS_LABEL[detail.reviewStatus]}
-                    </p>
-
-                    <form
-                        action={updateSharingAction}
-                        className={styles.shareBox}
-                    >
-                        <input
-                            name="couplePlaceId"
-                            type="hidden"
-                            value={place.couplePlaceId}
-                        />
-                        <input
-                            name="isPublic"
-                            type="hidden"
-                            value={place.isPublic ? 'false' : 'true'}
-                        />
-                        <div className={styles.shareText}>
-                            <span className={styles.shareTitle}>
-                                {REVIEW_DETAIL_COPY.shareTitle}
-                            </span>
-                            <strong>
-                                {place.isPublic
-                                    ? REVIEW_DETAIL_COPY.publicLabel
-                                    : REVIEW_DETAIL_COPY.privateLabel}
-                                {' / '}
-                                {canShowPublicly
-                                    ? REVIEW_DETAIL_COPY.shareReady
-                                    : REVIEW_DETAIL_COPY.shareWaiting}
-                            </strong>
-                        </div>
-                        <button className={styles.shareButton} type="submit">
+        <section
+            aria-labelledby="review-detail-title"
+            aria-modal="true"
+            className={`${styles.overlay} ${isClosing ? styles.closing : ''}`}
+            role="dialog"
+        >
+            <div className={styles.backdrop} onClick={handleClosePanel} />
+            <div className={styles.panel}>
+                <div className={styles.header}>
+                    <div className={styles.titleWrap}>
+                        <span className={styles.badge}>
                             {place.isPublic
-                                ? REVIEW_DETAIL_COPY.turnPrivate
-                                : REVIEW_DETAIL_COPY.turnPublic}
-                        </button>
-                        {sharingState.errorMessage ? (
-                            <p className={styles.errorMessage}>
-                                {sharingState.errorMessage}
-                            </p>
-                        ) : null}
-                    </form>
+                                ? REVIEW_DETAIL_COPY.publicBadge
+                                : REVIEW_DETAIL_COPY.privateBadge}
+                        </span>
+                        <h2 className={styles.title} id="review-detail-title">
+                            {REVIEW_DETAIL_COPY.reviewTitle}
+                        </h2>
+                        <p className={styles.subtitle}>
+                            {place.name} /{' '}
+                            {
+                                REVIEW_STATUS_LABEL[
+                                    detail?.reviewStatus ?? 'none'
+                                ]
+                            }
+                        </p>
+                    </div>
+                    <button
+                        aria-label={REVIEW_DETAIL_COPY.close}
+                        className={styles.closeButton}
+                        onClick={handleClosePanel}
+                        type="button"
+                    >
+                        <X aria-hidden="true" size={16} />
+                    </button>
+                </div>
 
-                    {detail.reviews.length > 0 ? (
-                        <div className={styles.reviewList}>
-                            {detail.reviews.map(review => (
-                                <ReviewCard
-                                    currentUserId={currentUserId}
-                                    key={review.id}
-                                    review={review}
+                <div className={styles.content}>
+                    {detail ? (
+                        <>
+                            <div className={styles.summaryGrid}>
+                                <div className={styles.summaryCard}>
+                                    <span className={styles.summaryLabel}>
+                                        {REVIEW_DETAIL_COPY.averageRating}
+                                    </span>
+                                    <strong className={styles.summaryValue}>
+                                        {detail.averageRating === null
+                                            ? '-'
+                                            : formatRating(detail.averageRating)}
+                                    </strong>
+                                </div>
+                                <div className={styles.summaryCard}>
+                                    <span className={styles.summaryLabel}>
+                                        {REVIEW_DETAIL_COPY.reviewCount}
+                                    </span>
+                                    <strong className={styles.summaryValue}>
+                                        {detail.reviewCount} / 2
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <p className={styles.statusCopy}>
+                                {REVIEW_STATUS_LABEL[detail.reviewStatus]}
+                            </p>
+
+                            <form
+                                action={updateSharingAction}
+                                className={styles.shareBox}
+                            >
+                                <input
+                                    name="couplePlaceId"
+                                    type="hidden"
+                                    value={place.couplePlaceId}
                                 />
-                            ))}
-                        </div>
+                                <input
+                                    name="isPublic"
+                                    type="hidden"
+                                    value={place.isPublic ? 'false' : 'true'}
+                                />
+                                <div className={styles.shareText}>
+                                    <span className={styles.shareTitle}>
+                                        {REVIEW_DETAIL_COPY.shareTitle}
+                                    </span>
+                                    <strong>
+                                        {place.isPublic
+                                            ? REVIEW_DETAIL_COPY.publicLabel
+                                            : REVIEW_DETAIL_COPY.privateLabel}
+                                        {' / '}
+                                        {canShowPublicly
+                                            ? REVIEW_DETAIL_COPY.shareReady
+                                            : REVIEW_DETAIL_COPY.shareWaiting}
+                                    </strong>
+                                </div>
+                                <button
+                                    className={styles.shareButton}
+                                    type="submit"
+                                >
+                                    {place.isPublic
+                                        ? REVIEW_DETAIL_COPY.turnPrivate
+                                        : REVIEW_DETAIL_COPY.turnPublic}
+                                </button>
+                                {sharingState.errorMessage ? (
+                                    <p className={styles.errorMessage}>
+                                        {sharingState.errorMessage}
+                                    </p>
+                                ) : null}
+                            </form>
+
+                            {detail.reviews.length > 0 ? (
+                                <div className={styles.reviewList}>
+                                    {detail.reviews.map(review => (
+                                        <ReviewCard
+                                            currentUserId={currentUserId}
+                                            key={review.id}
+                                            review={review}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className={styles.emptyState}>
+                                    {REVIEW_DETAIL_COPY.noReview}
+                                </p>
+                            )}
+                        </>
                     ) : (
                         <p className={styles.emptyState}>
-                            {REVIEW_DETAIL_COPY.noReview}
+                            {REVIEW_DETAIL_COPY.noDetail}
                         </p>
                     )}
-                </>
-            ) : (
-                <p className={styles.emptyState}>{REVIEW_DETAIL_COPY.noDetail}</p>
-            )}
+                </div>
+            </div>
         </section>
     )
 }
