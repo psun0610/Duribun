@@ -16,4 +16,107 @@
     .bottomNav {
         padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
     }
+
+    .registeredPlaces {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .registeredPlaceCard {
+        align-items: center;
+        background: $color-surface;
+        border: 1px solid $color-line;
+        border-radius: $radius-surface;
+        box-shadow: $shadow-soft;
+        display: grid;
+        gap: 0.875rem;
+        grid-template-columns: auto 1fr auto;
+        padding: 1rem;
+    }
+
+    .registeredPlaceIcon {
+        align-items: center;
+        background: linear-gradient(135deg, $color-primary, $color-secondary);
+        border-radius: 1.25rem;
+        color: $color-primary-foreground;
+        display: flex;
+        height: 3rem;
+        justify-content: center;
+        width: 3rem;
+
+        svg {
+            height: 1.25rem;
+            width: 1.25rem;
+        }
+    }
+
+    .registeredPlaceBody {
+        min-width: 0;
+
+        p {
+            color: $color-muted;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-top: 0.25rem;
+        }
+
+        strong {
+            color: $color-primary;
+            display: inline-flex;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-top: 0.35rem;
+        }
+    }
+
+    .registeredPlaceHeader {
+        align-items: center;
+        display: flex;
+        gap: 0.5rem;
+        min-width: 0;
+
+        h3 {
+            color: $color-text;
+            font-size: 1rem;
+            font-weight: 800;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        span {
+            background: rgba($color-secondary, 0.28);
+            border-radius: 999px;
+            color: $color-text;
+            flex-shrink: 0;
+            font-size: 0.6875rem;
+            font-weight: 800;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+
+    .privacyPill {
+        background: $color-muted-surface;
+        border-radius: 999px;
+        color: $color-muted;
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 0.5rem 0.625rem;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .app {
+        .registeredPlaceCard {
+            align-items: start;
+            grid-template-columns: auto 1fr;
+        }
+
+        .privacyPill {
+            grid-column: 2;
+            justify-self: start;
+        }
+    }
 }

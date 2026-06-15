@@ -9,6 +9,43 @@ export type Json =
 export type Database = {
     public: {
         Tables: {
+            couple_places: {
+                Row: {
+                    couple_id: string;
+                    created_at: string;
+                    created_by: string;
+                    id: string;
+                    is_public: boolean;
+                    place_id: string;
+                    updated_at: string;
+                };
+                Insert: {
+                    couple_id: string;
+                    created_at?: string;
+                    created_by: string;
+                    id?: string;
+                    is_public?: boolean;
+                    place_id: string;
+                    updated_at?: string;
+                };
+                Update: {
+                    couple_id?: string;
+                    created_at?: string;
+                    created_by?: string;
+                    id?: string;
+                    is_public?: boolean;
+                    place_id?: string;
+                    updated_at?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'couple_places_place_id_fkey';
+                        columns: ['place_id'];
+                        referencedRelation: 'places';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
             couple_members: {
                 Row: {
                     couple_id: string;
@@ -65,6 +102,60 @@ export type Database = {
                     invite_code?: string;
                     name?: string;
                     status?: Database['public']['Enums']['couple_status'];
+                    updated_at?: string;
+                };
+                Relationships: [];
+            };
+            places: {
+                Row: {
+                    address: string | null;
+                    category: Database['public']['Enums']['place_category'];
+                    created_at: string;
+                    created_by: string | null;
+                    id: string;
+                    is_explore_approved: boolean;
+                    latitude: number | null;
+                    longitude: number | null;
+                    name: string;
+                    place_url: string | null;
+                    provider: Database['public']['Enums']['place_provider'];
+                    provider_category_name: string | null;
+                    provider_place_id: string | null;
+                    road_address: string | null;
+                    updated_at: string;
+                };
+                Insert: {
+                    address?: string | null;
+                    category: Database['public']['Enums']['place_category'];
+                    created_at?: string;
+                    created_by?: string | null;
+                    id?: string;
+                    is_explore_approved?: boolean;
+                    latitude?: number | null;
+                    longitude?: number | null;
+                    name: string;
+                    place_url?: string | null;
+                    provider: Database['public']['Enums']['place_provider'];
+                    provider_category_name?: string | null;
+                    provider_place_id?: string | null;
+                    road_address?: string | null;
+                    updated_at?: string;
+                };
+                Update: {
+                    address?: string | null;
+                    category?: Database['public']['Enums']['place_category'];
+                    created_at?: string;
+                    created_by?: string | null;
+                    id?: string;
+                    is_explore_approved?: boolean;
+                    latitude?: number | null;
+                    longitude?: number | null;
+                    name?: string;
+                    place_url?: string | null;
+                    provider?: Database['public']['Enums']['place_provider'];
+                    provider_category_name?: string | null;
+                    provider_place_id?: string | null;
+                    road_address?: string | null;
                     updated_at?: string;
                 };
                 Relationships: [];
@@ -126,6 +217,29 @@ export type Database = {
             delete_expired_disconnected_couples: {
                 Args: Record<PropertyKey, never>;
                 Returns: number;
+            };
+            register_kakao_couple_place: {
+                Args: {
+                    p_address?: string | null;
+                    p_category: Database['public']['Enums']['place_category'];
+                    p_latitude?: number | null;
+                    p_longitude?: number | null;
+                    p_name: string;
+                    p_place_url?: string | null;
+                    p_provider_category_name?: string | null;
+                    p_provider_place_id: string;
+                    p_road_address?: string | null;
+                };
+                Returns: string;
+            };
+            register_manual_couple_place: {
+                Args: {
+                    p_address?: string | null;
+                    p_category: Database['public']['Enums']['place_category'];
+                    p_name: string;
+                    p_road_address?: string | null;
+                };
+                Returns: string;
             };
         };
         Enums: {

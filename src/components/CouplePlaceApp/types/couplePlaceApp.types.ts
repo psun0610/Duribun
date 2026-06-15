@@ -1,3 +1,5 @@
+import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
+
 export type ViewMode = 'feed' | 'list'
 
 export type ActiveTab = 'places' | 'friends' | 'explore' | 'settings'
@@ -24,5 +26,6 @@ export interface CouplePlace {
 
 export interface CouplePlaceAppProps {
     coupleName: string
+    places: CouplePlaceListItem[]
     userLabel: string
 }

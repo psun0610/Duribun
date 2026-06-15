@@ -4,7 +4,14 @@ import type { ProtectedSpaceProps } from './types/protectedSpace.types'
 
 export const ProtectedSpace = ({
     coupleName,
+    places,
     userLabel,
 }: ProtectedSpaceProps) => {
-    return <CouplePlaceApp coupleName={coupleName} userLabel={userLabel} />
+    return (
+        <CouplePlaceApp
+            coupleName={coupleName}
+            places={places}
+            userLabel={userLabel}
+        />
+    )
 }

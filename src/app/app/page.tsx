@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { CoupleDisconnectPending } from '@/components/CoupleDisconnectPending'
 import { ProtectedSpace } from '@/components/ProtectedSpace'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
+import { getCouplePlaces } from '@/features/place/actions'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 interface ProtectedAppPageProps {
@@ -86,9 +87,12 @@ const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
         redirect('/couple/connect')
     }
 
+    const places = await getCouplePlaces(couple.id)
+
     return (
         <ProtectedSpace
             coupleName={coupleSummary.name}
+            places={places}
             userLabel={userLabel}
         />
     )
