@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 
 import { PlaceRegistrationPanel } from '@/components/PlaceRegistrationPanel'
+import { ReviewWriterPanel } from '@/components/ReviewWriterPanel'
 import { signOut } from '@/features/auth/actions'
 import { requestCoupleDisconnect } from '@/features/couple/actions'
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
@@ -29,6 +30,7 @@ import {
 import type {
     CouplePlace,
     CouplePlaceAppProps,
+    ReviewTargetPlace,
     ReviewStatus,
 } from './types/couplePlaceApp.types'
 import { useCouplePlaceApp } from './hooks/useCouplePlaceApp'
@@ -172,7 +174,13 @@ const PlaceCardList = ({ place }: { place: CouplePlace }) => {
     )
 }
 
-const RegisteredPlaceCard = ({ place }: { place: CouplePlaceListItem }) => {
+const RegisteredPlaceCard = ({
+    place,
+    onOpenReviewWriter,
+}: {
+    onOpenReviewWriter: (place: ReviewTargetPlace) => void
+    place: CouplePlaceListItem
+}) => {
     return (
         <article className={styles.registeredPlaceCard}>
             <div className={styles.registeredPlaceIcon}>
@@ -194,6 +202,19 @@ const RegisteredPlaceCard = ({ place }: { place: CouplePlaceListItem }) => {
                         {COUPLE_PLACE_APP_COPY.manualExplorePending}
                     </strong>
                 ) : null}
+                <button
+                    className={styles.reviewButton}
+                    onClick={() =>
+                        onOpenReviewWriter({
+                            category: place.category,
+                            couplePlaceId: place.couplePlaceId,
+                            name: place.name,
+                        })
+                    }
+                    type="button"
+                >
+                    리뷰 작성
+                </button>
             </div>
             <span className={styles.privacyPill}>
                 {place.isPublic
@@ -236,11 +257,14 @@ export const CouplePlaceApp = ({
     const {
         activeTab,
         handleCloseRegistrationPanel,
+        handleCloseReviewWriter,
         handleFeedView,
         handleListView,
         handleOpenRegistrationPanel,
+        handleOpenReviewWriter,
         handleTabChange,
         isRegistrationPanelOpen,
+        reviewTargetPlace,
         viewMode,
     } = useCouplePlaceApp()
 
@@ -291,11 +315,19 @@ export const CouplePlaceApp = ({
                     />
                 ) : null}
 
+                {activeTab === 'places' && reviewTargetPlace ? (
+                    <ReviewWriterPanel
+                        onClose={handleCloseReviewWriter}
+                        place={reviewTargetPlace}
+                    />
+                ) : null}
+
                 {activeTab === 'places' && places.length > 0 ? (
                     <div className={styles.registeredPlaces}>
                         {places.map(place => (
                             <RegisteredPlaceCard
                                 key={place.couplePlaceId}
+                                onOpenReviewWriter={handleOpenReviewWriter}
                                 place={place}
                             />
                         ))}

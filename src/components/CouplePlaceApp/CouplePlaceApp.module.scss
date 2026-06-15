@@ -70,6 +70,22 @@
         }
     }
 
+    .reviewButton {
+        align-items: center;
+        background: rgba($color-primary, 0.1);
+        border: 0;
+        border-radius: 999px;
+        color: $color-primary;
+        cursor: pointer;
+        display: inline-flex;
+        font-size: 0.75rem;
+        font-weight: 800;
+        justify-content: center;
+        margin-top: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        width: fit-content;
+    }
+
     .registeredPlaceHeader {
         align-items: center;
         display: flex;

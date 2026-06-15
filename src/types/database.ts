@@ -9,6 +9,105 @@ export type Json =
 export type Database = {
     public: {
         Tables: {
+            review_photos: {
+                Row: {
+                    created_at: string;
+                    height: number | null;
+                    id: string;
+                    kind: Database['public']['Enums']['photo_kind'];
+                    review_id: string;
+                    storage_path: string;
+                    width: number | null;
+                };
+                Insert: {
+                    created_at?: string;
+                    height?: number | null;
+                    id?: string;
+                    kind: Database['public']['Enums']['photo_kind'];
+                    review_id: string;
+                    storage_path: string;
+                    width?: number | null;
+                };
+                Update: {
+                    created_at?: string;
+                    height?: number | null;
+                    id?: string;
+                    kind?: Database['public']['Enums']['photo_kind'];
+                    review_id?: string;
+                    storage_path?: string;
+                    width?: number | null;
+                };
+                Relationships: [];
+            };
+            review_tags: {
+                Row: {
+                    review_id: string;
+                    tag_id: string;
+                };
+                Insert: {
+                    review_id: string;
+                    tag_id: string;
+                };
+                Update: {
+                    review_id?: string;
+                    tag_id?: string;
+                };
+                Relationships: [];
+            };
+            reviews: {
+                Row: {
+                    author_id: string;
+                    couple_place_id: string;
+                    created_at: string;
+                    id: string;
+                    one_line_review: string;
+                    rating: number;
+                    updated_at: string;
+                };
+                Insert: {
+                    author_id: string;
+                    couple_place_id: string;
+                    created_at?: string;
+                    id?: string;
+                    one_line_review: string;
+                    rating: number;
+                    updated_at?: string;
+                };
+                Update: {
+                    author_id?: string;
+                    couple_place_id?: string;
+                    created_at?: string;
+                    id?: string;
+                    one_line_review?: string;
+                    rating?: number;
+                    updated_at?: string;
+                };
+                Relationships: [];
+            };
+            tags: {
+                Row: {
+                    category: Database['public']['Enums']['place_category'] | null;
+                    created_at: string;
+                    id: string;
+                    label: string;
+                    sort_order: number;
+                };
+                Insert: {
+                    category?: Database['public']['Enums']['place_category'] | null;
+                    created_at?: string;
+                    id?: string;
+                    label: string;
+                    sort_order?: number;
+                };
+                Update: {
+                    category?: Database['public']['Enums']['place_category'] | null;
+                    created_at?: string;
+                    id?: string;
+                    label?: string;
+                    sort_order?: number;
+                };
+                Relationships: [];
+            };
             couple_places: {
                 Row: {
                     couple_id: string;

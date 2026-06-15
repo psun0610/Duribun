@@ -29,3 +29,9 @@ export interface CouplePlaceAppProps {
     places: CouplePlaceListItem[]
     userLabel: string
 }
+
+export interface ReviewTargetPlace {
+    category: PlaceCategory
+    couplePlaceId: string
+    name: string
+}

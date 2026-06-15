@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import type { ReviewTargetPlace } from '@/features/review/types/reviewSubmission.types'
+
 import type { ActiveTab, ViewMode } from '../types/couplePlaceApp.types'
 
 export const useCouplePlaceApp = () => {
@@ -9,6 +11,8 @@ export const useCouplePlaceApp = () => {
     const [activeTab, setActiveTab] = useState<ActiveTab>('places')
     const [isRegistrationPanelOpen, setIsRegistrationPanelOpen] =
         useState(false)
+    const [reviewTargetPlace, setReviewTargetPlace] =
+        useState<ReviewTargetPlace | null>(null)
 
     const handleFeedView = () => {
         setViewMode('feed')
@@ -31,14 +35,26 @@ export const useCouplePlaceApp = () => {
         setIsRegistrationPanelOpen(false)
     }
 
+    const handleOpenReviewWriter = (place: ReviewTargetPlace) => {
+        setActiveTab('places')
+        setReviewTargetPlace(place)
+    }
+
+    const handleCloseReviewWriter = () => {
+        setReviewTargetPlace(null)
+    }
+
     return {
         activeTab,
         handleCloseRegistrationPanel,
+        handleCloseReviewWriter,
         handleFeedView,
         handleListView,
         handleOpenRegistrationPanel,
+        handleOpenReviewWriter,
         handleTabChange,
         isRegistrationPanelOpen,
+        reviewTargetPlace,
         viewMode,
     }
 }
