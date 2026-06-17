@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { LoginPanel } from '@/components/LoginPanel'
+import { LoginPanel } from '@/features/auth/components/LoginPanel'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 interface LoginPageProps {

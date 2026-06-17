@@ -8,20 +8,37 @@ const appPageSource = readFileSync(
     'utf8'
 )
 const couplePlaceAppSource = readFileSync(
-    path.resolve(process.cwd(), 'src/components/CouplePlaceApp/CouplePlaceApp.tsx'),
+    path.resolve(
+        process.cwd(),
+        'src/features/place/components/CouplePlaceApp/CouplePlaceApp.tsx'
+    ),
     'utf8'
 )
 const reviewDetailPanelSource = readFileSync(
     path.resolve(
         process.cwd(),
-        'src/components/ReviewDetailPanel/ReviewDetailPanel.tsx'
+        'src/features/review/components/ReviewDetailPanel/ReviewDetailPanel.tsx'
+    ),
+    'utf8'
+)
+const registeredPlaceCardsSource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/features/place/components/CouplePlaceApp/components/RegisteredPlaceCards.tsx'
+    ),
+    'utf8'
+)
+const reviewCardSource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/features/review/components/ReviewDetailPanel/components/ReviewCard.tsx'
     ),
     'utf8'
 )
 const reviewDetailCopySource = readFileSync(
     path.resolve(
         process.cwd(),
-        'src/components/ReviewDetailPanel/const/reviewDetailPanel.const.ts'
+        'src/features/review/components/ReviewDetailPanel/const/reviewDetailPanel.const.ts'
     ),
     'utf8'
 )
@@ -36,7 +53,9 @@ describe('review detail', () => {
     it('opens a private detail panel with review state copy', () => {
         expect(couplePlaceAppSource).toContain('ReviewDetailPanel')
         expect(couplePlaceAppSource).toContain('onOpenReviewDetail')
-        expect(couplePlaceAppSource).toContain('getReviewDetailTargetPlace')
+        expect(registeredPlaceCardsSource).toContain(
+            'getReviewDetailTargetPlace'
+        )
         expect(reviewDetailCopySource).toContain(
             "'partner-waiting': '상대가 리뷰를 기다리고 있어요'"
         )
@@ -49,10 +68,10 @@ describe('review detail', () => {
     })
 
     it('shows private one-line reviews, ratings, tags, and photos only inside the couple space', () => {
-        expect(reviewDetailPanelSource).toContain('oneLineReview')
-        expect(reviewDetailPanelSource).toContain('rating')
-        expect(reviewDetailPanelSource).toContain('photoGrid')
-        expect(reviewDetailPanelSource).toContain('REVIEW_PHOTO_KIND_LABEL')
+        expect(reviewCardSource).toContain('oneLineReview')
+        expect(reviewCardSource).toContain('rating')
+        expect(reviewCardSource).toContain('photoGrid')
+        expect(reviewCardSource).toContain('REVIEW_PHOTO_KIND_LABEL')
         expect(reviewDetailCopySource).toContain("myReview: '내 리뷰'")
         expect(reviewDetailCopySource).toContain("partnerReview: '상대 리뷰'")
     })

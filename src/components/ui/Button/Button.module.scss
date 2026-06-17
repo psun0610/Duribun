@@ -1,0 +1,83 @@
+@use '../../../styles/variables' as *;
+
+.button {
+    align-items: center;
+    border: 0;
+    border-radius: $radius-control;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    font-weight: 800;
+    gap: 0.5rem;
+    justify-content: center;
+    letter-spacing: 0;
+    min-width: 0;
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        background 160ms ease,
+        opacity 160ms ease;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($color-primary, 0.34);
+        outline-offset: 3px;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.58;
+        transform: none;
+    }
+}
+
+.primary {
+    background: linear-gradient(90deg, $color-primary, $color-secondary);
+    box-shadow: 0 14px 30px rgba($color-primary, 0.2);
+    color: $color-primary-foreground;
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 18px 34px rgba($color-primary, 0.24);
+    }
+}
+
+.secondary {
+    background: $color-muted-surface;
+    color: $color-text;
+
+    &:hover:not(:disabled) {
+        background: darken(#f5f5f5, 5%);
+    }
+}
+
+.ghost {
+    background: transparent;
+    color: $color-primary;
+    padding-inline: 0.25rem;
+
+    &:hover:not(:disabled) {
+        opacity: 0.75;
+        transform: none;
+    }
+}
+
+.sm {
+    min-height: 2.5rem;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.875rem;
+}
+
+.md {
+    min-height: 3.25rem;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.9375rem;
+}
+
+.icon {
+    height: 2.25rem;
+    width: 2.25rem;
+    padding: 0;
+}

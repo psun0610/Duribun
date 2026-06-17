@@ -28,7 +28,21 @@ const appPageSource = readFileSync(
 const couplePlaceAppSource = readFileSync(
     path.resolve(
         process.cwd(),
-        'src/components/CouplePlaceApp/CouplePlaceApp.tsx'
+        'src/features/place/components/CouplePlaceApp/CouplePlaceApp.tsx'
+    ),
+    'utf8'
+)
+const registeredPlaceCardsSource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/features/place/components/CouplePlaceApp/components/RegisteredPlaceCards.tsx'
+    ),
+    'utf8'
+)
+const placesTabPanelSource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/features/place/components/CouplePlaceApp/components/PlacesTabPanel.tsx'
     ),
     'utf8'
 )
@@ -67,8 +81,9 @@ describe('place registration', () => {
             'on conflict (couple_id, place_id) do update'
         )
         expect(appPageSource).toContain('getCouplePlaces(couple.id)')
-        expect(couplePlaceAppSource).toContain('RegisteredPlaceFeedCard')
-        expect(couplePlaceAppSource).toContain('RegisteredPlaceListCard')
+        expect(registeredPlaceCardsSource).toContain('RegisteredPlaceFeedCard')
+        expect(registeredPlaceCardsSource).toContain('RegisteredPlaceListCard')
+        expect(couplePlaceAppSource).toContain('PlacesTabPanel')
     })
 
     it('supports manual places without immediate explore approval', () => {
@@ -78,7 +93,7 @@ describe('place registration', () => {
         expect(placeRegistrationSql).toContain("'manual'")
         expect(placeRegistrationSql).toContain('false')
         expect(placeActionsSource).toContain('registerManualPlace')
-        expect(couplePlaceAppSource).toContain('viewMode ===')
+        expect(placesTabPanelSource).toContain('viewMode ===')
     })
 
     it('grants authenticated users registration RPC access', () => {

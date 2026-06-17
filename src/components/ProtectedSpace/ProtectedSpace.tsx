@@ -1,4 +1,4 @@
-import { CouplePlaceApp } from '@/components/CouplePlaceApp'
+import { CouplePlaceApp } from '@/features/place/components/CouplePlaceApp'
 
 import type { ProtectedSpaceProps } from './types/protectedSpace.types'
 

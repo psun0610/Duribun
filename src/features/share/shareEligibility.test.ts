@@ -24,14 +24,14 @@ const placeActionsSource = readFileSync(
 const reviewDetailPanelSource = readFileSync(
     path.resolve(
         process.cwd(),
-        'src/components/ReviewDetailPanel/ReviewDetailPanel.tsx'
+        'src/features/review/components/ReviewDetailPanel/ReviewDetailPanel.tsx'
     ),
     'utf8'
 )
 const reviewDetailCopySource = readFileSync(
     path.resolve(
         process.cwd(),
-        'src/components/ReviewDetailPanel/const/reviewDetailPanel.const.ts'
+        'src/features/review/components/ReviewDetailPanel/const/reviewDetailPanel.const.ts'
     ),
     'utf8'
 )

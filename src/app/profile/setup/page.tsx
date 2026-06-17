@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { ProfileSetupForm } from '@/components/ProfileSetupForm'
+import { ProfileSetupForm } from '@/features/profile/components/ProfileSetupForm'
 import { getProfileInitialValues } from '@/features/profile/utils/profileMetadata.utils'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 

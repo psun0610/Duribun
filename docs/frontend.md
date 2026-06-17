@@ -80,6 +80,9 @@
 ## File Structure
 
 - One main component per file.
+- Keep shared UI primitives in `src/components/ui`.
+- Keep domain-specific UI in `src/features/{domain}/components`.
+- Keep app shell or cross-domain layout components in `src/components`.
 - Co-locate small helper functions if they are only used in one file.
 - Move shared utilities to a common utility folder.
 - Keep barrel exports consistent with the existing project.

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { CoupleOnboarding } from '@/components/CoupleOnboarding'
+import { CoupleOnboarding } from '@/features/couple/components/CoupleOnboarding'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
