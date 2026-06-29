@@ -1,4 +1,4 @@
-import { Globe, Lock, MapPin, Star } from 'lucide-react'
+import { Ellipsis, Globe, Lock, MapPin, Star } from 'lucide-react'
 
 import { Badge, Pill } from '@/components/ui'
 
@@ -17,6 +17,18 @@ import {
 
 import styles from '../CouplePlaceApp.module.scss'
 
+const getRegisteredPlacePhotoUrl = (
+    detail: RegisteredPlaceCardProps['detail']
+) => {
+    return (
+        detail?.reviews
+            .flatMap(review => review.photos)
+            .find(photo => photo.kind === 'place_food')?.signedUrl ??
+        detail?.reviews.flatMap(review => review.photos)[0]?.signedUrl ??
+        null
+    )
+}
+
 export const RegisteredPlaceFeedCard = ({
     detail,
     onOpenReviewDetail,
@@ -24,6 +36,7 @@ export const RegisteredPlaceFeedCard = ({
 }: RegisteredPlaceCardProps) => {
     const status = getRegisteredPlaceStatus(detail)
     const rating = getRegisteredPlaceRating(detail)
+    const photoUrl = getRegisteredPlacePhotoUrl(detail)
 
     return (
         <button
@@ -32,38 +45,49 @@ export const RegisteredPlaceFeedCard = ({
             type="button"
         >
             <span className={styles.registeredFeedVisual}>
-                <MapPin aria-hidden="true" />
+                {photoUrl ? (
+                    <span
+                        aria-label={place.name}
+                        className={styles.feedPhoto}
+                        role="img"
+                        style={{ backgroundImage: `url(${photoUrl})` }}
+                    />
+                ) : (
+                    <MapPin aria-hidden="true" />
+                )}
                 <span className={styles.registeredPrivacyIcon}>
-                    {place.isPublic ? (
-                        <Globe
-                            aria-label={COUPLE_PLACE_APP_COPY.public}
-                            size={13}
-                        />
-                    ) : (
-                        <Lock
-                            aria-label={COUPLE_PLACE_APP_COPY.private}
-                            size={13}
-                        />
-                    )}
+                    <Ellipsis aria-hidden="true" size={13} />
                 </span>
-                {rating ? (
-                    <Pill
-                        className={styles.registeredRating}
-                        icon={<Star aria-hidden="true" size={12} />}
-                        tone="rating"
-                    >
-                        {rating}
-                    </Pill>
-                ) : null}
             </span>
             <span className={styles.registeredFeedBody}>
                 <strong>{place.name}</strong>
-                <Badge
-                    size="sm"
-                    variant={getReviewStatusBadgeVariant(status)}
-                >
-                    {REVIEW_STATUS_LABEL[status]}
-                </Badge>
+                <span className={styles.registeredMeta}>
+                    {CATEGORY_LABEL[place.category]}
+                </span>
+                <span className={styles.cardStatusRows}>
+                    <Badge
+                        size="sm"
+                        variant={getReviewStatusBadgeVariant(status)}
+                    >
+                        {REVIEW_STATUS_LABEL[status]}
+                    </Badge>
+                    <span className={styles.cardPrivacyText}>
+                        {place.isPublic ? (
+                            <Globe aria-hidden="true" size={12} />
+                        ) : (
+                            <Lock aria-hidden="true" size={12} />
+                        )}
+                        {place.isPublic
+                            ? COUPLE_PLACE_APP_COPY.public
+                            : COUPLE_PLACE_APP_COPY.private}
+                    </span>
+                    <Pill
+                        icon={<Star aria-hidden="true" size={12} />}
+                        tone="rating"
+                    >
+                        {rating ?? '-'}
+                    </Pill>
+                </span>
             </span>
         </button>
     )
@@ -76,6 +100,7 @@ export const RegisteredPlaceListCard = ({
 }: RegisteredPlaceCardProps) => {
     const status = getRegisteredPlaceStatus(detail)
     const rating = getRegisteredPlaceRating(detail)
+    const photoUrl = getRegisteredPlacePhotoUrl(detail)
 
     return (
         <button
@@ -84,7 +109,16 @@ export const RegisteredPlaceListCard = ({
             type="button"
         >
             <span className={styles.registeredListVisual}>
-                <MapPin aria-hidden="true" />
+                {photoUrl ? (
+                    <span
+                        aria-label={place.name}
+                        className={styles.feedPhoto}
+                        role="img"
+                        style={{ backgroundImage: `url(${photoUrl})` }}
+                    />
+                ) : (
+                    <MapPin aria-hidden="true" />
+                )}
             </span>
             <span className={styles.registeredListBody}>
                 <span className={styles.registeredListHeader}>
@@ -109,21 +143,29 @@ export const RegisteredPlaceListCard = ({
                         ? ` / ${place.roadAddress || place.address}`
                         : ''}
                 </span>
-                {rating ? (
-                    <Pill
-                        className={styles.registeredListRating}
-                        icon={<Star aria-hidden="true" size={12} />}
-                        tone="rating"
-                    >
-                        {rating}
-                    </Pill>
-                ) : null}
+                <Pill
+                    className={styles.registeredListRating}
+                    icon={<Star aria-hidden="true" size={12} />}
+                    tone="rating"
+                >
+                    {rating ?? '-'}
+                </Pill>
                 <Badge
                     size="sm"
                     variant={getReviewStatusBadgeVariant(status)}
                 >
                     {REVIEW_STATUS_LABEL[status]}
                 </Badge>
+                <span className={styles.cardPrivacyText}>
+                    {place.isPublic ? (
+                        <Globe aria-hidden="true" size={12} />
+                    ) : (
+                        <Lock aria-hidden="true" size={12} />
+                    )}
+                    {place.isPublic
+                        ? COUPLE_PLACE_APP_COPY.public
+                        : COUPLE_PLACE_APP_COPY.private}
+                </span>
             </span>
         </button>
     )

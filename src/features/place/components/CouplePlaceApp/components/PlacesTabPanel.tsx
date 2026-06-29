@@ -19,8 +19,8 @@ export const PlacesTabPanel = ({
             <div
                 className={
                     viewMode === 'feed'
-                        ? 'grid grid-cols-3 gap-2'
-                        : 'space-y-3'
+                        ? styles.mockFeedGrid
+                        : styles.mockList
                 }
             >
                 {MOCK_PLACES.map(place =>

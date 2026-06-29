@@ -5,7 +5,7 @@
     border: 1px solid transparent;
     border-radius: 999px;
     display: inline-flex;
-    font-weight: 800;
+    font-weight: 650;
     gap: 0.25rem;
     line-height: 1;
     max-width: 100%;
@@ -31,17 +31,20 @@
 
 .primary {
     background: $color-primary;
+    border-color: $color-primary;
+    box-shadow: 0 8px 18px rgba($color-primary, 0.18);
     color: $color-primary-foreground;
 }
 
 .primarySoft {
-    background: rgba($color-primary, 0.12);
-    border-color: rgba($color-primary, 0.16);
+    background: rgba($color-primary, 0.1);
+    border-color: rgba($color-primary, 0.22);
     color: $color-primary;
 }
 
 .secondary {
-    background: $color-secondary;
+    background: rgba($color-secondary, 0.24);
+    border-color: rgba($color-secondary, 0.38);
     color: $color-text;
 }
 

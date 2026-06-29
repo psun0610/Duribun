@@ -42,29 +42,36 @@ export const ReviewCard = ({
 
             <p className={styles.oneLineReview}>{review.oneLineReview}</p>
 
-            <div className={styles.tagList}>
-                {review.tags.map(tag => (
-                    <Badge key={tag} variant="outline">
-                        {tag}
-                    </Badge>
-                ))}
-            </div>
+            {review.tags.length > 0 ? (
+                <div className={styles.tagList}>
+                    {review.tags.map(tag => (
+                        <Badge key={tag} variant="outline">
+                            {tag}
+                        </Badge>
+                    ))}
+                </div>
+            ) : null}
 
-            <div className={styles.photoGrid}>
-                {review.photos.map(photo => (
-                    <figure className={styles.photoCard} key={photo.storagePath}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            alt={`${REVIEW_PHOTO_KIND_LABEL[photo.kind]} 사진`}
-                            className={styles.photo}
-                            src={photo.signedUrl}
-                        />
-                        <figcaption className={styles.photoCaption}>
-                            {REVIEW_PHOTO_KIND_LABEL[photo.kind]}
-                        </figcaption>
-                    </figure>
-                ))}
-            </div>
+            {review.photos.length > 0 ? (
+                <div className={styles.photoGrid}>
+                    {review.photos.map(photo => (
+                        <figure
+                            className={styles.photoCard}
+                            key={photo.storagePath}
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                alt={`${REVIEW_PHOTO_KIND_LABEL[photo.kind]} 사진`}
+                                className={styles.photo}
+                                src={photo.signedUrl}
+                            />
+                            <figcaption className={styles.photoCaption}>
+                                {REVIEW_PHOTO_KIND_LABEL[photo.kind]}
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+            ) : null}
         </article>
     )
 }

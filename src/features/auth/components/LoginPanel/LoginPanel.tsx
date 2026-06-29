@@ -16,11 +16,7 @@ import styles from './LoginPanel.module.scss'
 export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
     return (
         <main className={styles.login}>
-            <section className={styles.phone} aria-labelledby="login-title">
-                <div className={styles.statusBar} aria-hidden="true">
-                    <span>9:41</span>
-                    <span>●●●</span>
-                </div>
+            <section className={styles.content} aria-labelledby="login-title">
                 <div className={styles.brandBlock}>
                     <h1 className={styles.logo} id="login-title">
                         두리번

@@ -1,9 +1,9 @@
 'use client'
 
 import { useActionState, useEffect, useRef, useState } from 'react'
-import { X } from 'lucide-react'
+import { Heart, Lock, ShieldCheck, Star, X } from 'lucide-react'
 
-import { Badge, Button, FieldMessage, IconButton } from '@/components/ui'
+import { Button, FieldMessage, IconButton, Pill } from '@/components/ui'
 import { updateCouplePlaceSharing } from '@/features/place/actions'
 
 import { ReviewCard } from './components/ReviewCard'
@@ -70,21 +70,24 @@ export const ReviewDetailPanel = ({
         >
             <div className={styles.backdrop} onClick={handleClosePanel} />
             <div className={styles.panel}>
+                <div className={styles.hero}>
+                    <IconButton
+                        aria-label={REVIEW_DETAIL_COPY.close}
+                        className={styles.heroClose}
+                        onClick={handleClosePanel}
+                        type="button"
+                        variant="plain"
+                    >
+                        <X aria-hidden="true" size={16} />
+                    </IconButton>
+                </div>
                 <div className={styles.header}>
                     <div className={styles.titleWrap}>
-                        <Badge
-                            size="sm"
-                            variant={place.isPublic ? 'primarySoft' : 'muted'}
-                        >
-                            {place.isPublic
-                                ? REVIEW_DETAIL_COPY.publicBadge
-                                : REVIEW_DETAIL_COPY.privateBadge}
-                        </Badge>
                         <h2 className={styles.title} id="review-detail-title">
-                            {REVIEW_DETAIL_COPY.reviewTitle}
+                            {place.name}
                         </h2>
                         <p className={styles.subtitle}>
-                            {place.name} /{' '}
+                            {REVIEW_DETAIL_COPY.reviewTitle} ·{' '}
                             {
                                 REVIEW_STATUS_LABEL[
                                     detail?.reviewStatus ?? 'none'
@@ -92,42 +95,46 @@ export const ReviewDetailPanel = ({
                             }
                         </p>
                     </div>
-                    <IconButton
-                        aria-label={REVIEW_DETAIL_COPY.close}
-                        onClick={handleClosePanel}
-                        type="button"
-                    >
-                        <X aria-hidden="true" size={16} />
-                    </IconButton>
                 </div>
 
                 <div className={styles.content}>
                     {detail ? (
                         <>
-                            <div className={styles.summaryGrid}>
-                                <div className={styles.summaryCard}>
-                                    <span className={styles.summaryLabel}>
-                                        {REVIEW_DETAIL_COPY.averageRating}
-                                    </span>
-                                    <strong className={styles.summaryValue}>
-                                        {detail.averageRating === null
-                                            ? '-'
-                                            : formatRating(detail.averageRating)}
-                                    </strong>
-                                </div>
-                                <div className={styles.summaryCard}>
-                                    <span className={styles.summaryLabel}>
-                                        {REVIEW_DETAIL_COPY.reviewCount}
-                                    </span>
-                                    <strong className={styles.summaryValue}>
-                                        {detail.reviewCount} / 2
-                                    </strong>
-                                </div>
+                            <div className={styles.metaRow}>
+                                <Pill
+                                    icon={<Star aria-hidden="true" size={14} />}
+                                    tone="rating"
+                                >
+                                    {detail.averageRating === null
+                                        ? '-'
+                                        : formatRating(detail.averageRating)}
+                                </Pill>
+                                <span>{REVIEW_DETAIL_COPY.averageRating}</span>
                             </div>
 
-                            <p className={styles.statusCopy}>
-                                {REVIEW_STATUS_LABEL[detail.reviewStatus]}
-                            </p>
+                            <div className={styles.reviewStatusBox}>
+                                <h3>{REVIEW_DETAIL_COPY.ourReviewStatus}</h3>
+                                <div className={styles.statusCards}>
+                                    <div className={styles.statusCardMine}>
+                                        <span>
+                                            <Heart aria-hidden="true" size={18} />
+                                        </span>
+                                        <strong>
+                                            {REVIEW_DETAIL_COPY.myReviewShort}
+                                        </strong>
+                                        <p>{REVIEW_STATUS_LABEL[detail.reviewStatus]}</p>
+                                    </div>
+                                    <div className={styles.statusCardPartner}>
+                                        <span>
+                                            <Heart aria-hidden="true" size={18} />
+                                        </span>
+                                        <strong>
+                                            {REVIEW_DETAIL_COPY.partnerReviewShort}
+                                        </strong>
+                                        <p>{detail.reviewCount} / 2</p>
+                                    </div>
+                                </div>
+                            </div>
 
                             <form
                                 action={updateSharingAction}
@@ -143,6 +150,9 @@ export const ReviewDetailPanel = ({
                                     type="hidden"
                                     value={place.isPublic ? 'false' : 'true'}
                                 />
+                                <div className={styles.shareIcon}>
+                                    <Lock aria-hidden="true" size={18} />
+                                </div>
                                 <div className={styles.shareText}>
                                     <span className={styles.shareTitle}>
                                         {REVIEW_DETAIL_COPY.shareTitle}
@@ -168,6 +178,11 @@ export const ReviewDetailPanel = ({
                                     </FieldMessage>
                                 ) : null}
                             </form>
+
+                            <div className={styles.privacyNotice}>
+                                <ShieldCheck aria-hidden="true" size={18} />
+                                <p>{REVIEW_DETAIL_COPY.privacyNotice}</p>
+                            </div>
 
                             {detail.reviews.length > 0 ? (
                                 <div className={styles.reviewList}>

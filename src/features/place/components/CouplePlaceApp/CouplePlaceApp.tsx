@@ -45,8 +45,8 @@ export const CouplePlaceApp = ({
             getFallbackReviewDetail(reviewDetailTargetPlace))
 
     return (
-        <main className={`${styles.app} flex flex-col`}>
-            <section className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
+        <main className={styles.app}>
+            <section className={styles.content}>
                 <AppHeader
                     coupleName={coupleName}
                     onFeedView={handleFeedView}

@@ -37,11 +37,7 @@ export const CoupleOnboarding = ({ initialCouple }: CoupleOnboardingProps) => {
 
     return (
         <main className={styles.onboarding}>
-            <section className={styles.phone} aria-labelledby="couple-title">
-                <div className={styles.statusBar} aria-hidden="true">
-                    <span>9:41</span>
-                    <span>●●●</span>
-                </div>
+            <section className={styles.content} aria-labelledby="couple-title">
                 <header className={styles.header}>
                     <h1 className={styles.title} id="couple-title">
                         {headerTitle}

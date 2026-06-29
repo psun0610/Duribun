@@ -5,6 +5,8 @@ import { SegmentedControl } from '@/components/ui'
 import { COUPLE_PLACE_APP_COPY } from '../const/couplePlaceApp.const'
 import type { AppHeaderProps } from '../types/couplePlaceAppComponent.types'
 
+import styles from '../CouplePlaceApp.module.scss'
+
 export const AppHeader = ({
     coupleName,
     onFeedView,
@@ -21,17 +23,12 @@ export const AppHeader = ({
     }
 
     return (
-        <div className="mb-5 flex items-center justify-between gap-3">
-            <div>
-                <p className="text-[12px] font-medium tracking-widest text-muted-foreground uppercase">
-                    {COUPLE_PLACE_APP_COPY.appTitle}
-                </p>
-                <h1 className="mt-0.5 text-[1.375rem] font-semibold leading-tight text-foreground">
-                    {coupleName}
-                </h1>
-            </div>
+        <header className={styles.appHeader}>
+            <h1>{COUPLE_PLACE_APP_COPY.placesTitle}</h1>
+            <p>{coupleName}</p>
             <SegmentedControl
                 ariaLabel={COUPLE_PLACE_APP_COPY.viewModeLabel}
+                className={styles.viewSwitch}
                 onChange={handleViewChange}
                 options={[
                     {
@@ -47,6 +44,6 @@ export const AppHeader = ({
                 ]}
                 value={viewMode}
             />
-        </div>
+        </header>
     )
 }

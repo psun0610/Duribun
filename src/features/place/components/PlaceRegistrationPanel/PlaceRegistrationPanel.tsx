@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, type CSSProperties } from 'react'
-import { MapPin, Search, X } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 
 import { Button, FieldMessage, IconButton } from '@/components/ui'
 import {
@@ -109,15 +109,27 @@ export const PlaceRegistrationPanel = ({
                     </IconButton>
                 </div>
                 <div className={styles.titleArea}>
-                    <div className={styles.titleBadge} aria-hidden="true">
-                        <MapPin size={22} />
-                    </div>
                     <h2
                         className={styles.title}
                         id="place-registration-title"
                     >
                         {PLACE_REGISTRATION_COPY.panelTitle}
                     </h2>
+                    <div className={styles.registrationTabs} role="tablist">
+                        <button
+                            className={styles.registrationTabActive}
+                            type="button"
+                        >
+                            {PLACE_REGISTRATION_COPY.searchTab}
+                        </button>
+                        <button
+                            className={styles.registrationTab}
+                            onClick={handleOpenManualForm}
+                            type="button"
+                        >
+                            {PLACE_REGISTRATION_COPY.manualTab}
+                        </button>
+                    </div>
                 </div>
 
                 <div ref={sheetBodyRef} className={styles.sheetBody}>
@@ -140,6 +152,7 @@ export const PlaceRegistrationPanel = ({
                             <input name="mode" type="hidden" value="replace" />
                             <input name="page" type="hidden" value="1" />
                             <label className={styles.searchField}>
+                                <Search aria-hidden="true" size={18} />
                                 <input
                                     defaultValue={searchState.query}
                                     name="query"

@@ -53,14 +53,14 @@ export const getReviewStatusBadgeVariant = (
     }
 
     if (status === 'partner-waiting') {
-        return 'primary'
+        return 'secondary'
     }
 
     if (status === 'waiting-partner') {
-        return 'primarySoft'
+        return 'primary'
     }
 
-    return 'muted'
+    return 'primarySoft'
 }
 
 export const formatRating = (rating: number) => {
