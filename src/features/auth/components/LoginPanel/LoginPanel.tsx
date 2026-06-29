@@ -1,10 +1,9 @@
 import Image from 'next/image'
+import { ChevronRight } from 'lucide-react'
 
 import {
     Button,
     FieldMessage,
-    FormCard,
-    IconButton,
     TextField,
 } from '@/components/ui'
 import { signInWithEmail, signInWithProvider } from '@/features/auth/actions'
@@ -17,15 +16,57 @@ import styles from './LoginPanel.module.scss'
 export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
     return (
         <main className={styles.login}>
-            <FormCard
-                description={LOGIN_PANEL_COPY.description}
-                eyebrow={LOGIN_PANEL_COPY.eyebrow}
-                title={LOGIN_PANEL_COPY.title}
-                titleId="login-title"
-                titleVariant="gradient"
-            >
+            <section className={styles.phone} aria-labelledby="login-title">
+                <div className={styles.statusBar} aria-hidden="true">
+                    <span>9:41</span>
+                    <span>●●●</span>
+                </div>
+                <div className={styles.brandBlock}>
+                    <h1 className={styles.logo} id="login-title">
+                        두리번
+                    </h1>
+                    <p className={styles.title}>
+                        우리만의 장소를
+                        <br />
+                        <strong>함께</strong> 모아봐요
+                    </p>
+                </div>
+                <div
+                    aria-label={LOGIN_PANEL_COPY.heroImageLabel}
+                    className={styles.heroImage}
+                    role="img"
+                />
+                <div className={styles.providerList}>
+                    {LOGIN_PROVIDERS.map(provider => (
+                        <form action={signInWithProvider} key={provider.value}>
+                            <input
+                                name="provider"
+                                type="hidden"
+                                value={provider.value}
+                            />
+                            <Button
+                                className={`${styles.providerButton} ${
+                                    styles[provider.value]
+                                }`}
+                                leftIcon={
+                                    <Image
+                                        alt={provider.iconAlt}
+                                        height="22"
+                                        src={provider.iconSrc}
+                                        width="22"
+                                    />
+                                }
+                                type="submit"
+                                variant="secondary"
+                            >
+                                {provider.label}
+                            </Button>
+                        </form>
+                    ))}
+                </div>
                 <form action={signInWithEmail} className={styles.emailForm}>
                     <TextField
+                        className={styles.emailField}
                         label={LOGIN_PANEL_COPY.emailLabel}
                         name="email"
                         placeholder={LOGIN_PANEL_COPY.emailPlaceholder}
@@ -41,38 +82,11 @@ export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
                         </FieldMessage>
                     ) : null}
                 </form>
-                <div className={styles.socialDivider}>
-                    <span>{LOGIN_PANEL_COPY.socialLabel}</span>
-                </div>
-                <div className={styles.providerList}>
-                    {LOGIN_PROVIDERS.map(provider => (
-                        <form action={signInWithProvider} key={provider.value}>
-                            <input
-                                name="provider"
-                                type="hidden"
-                                value={provider.value}
-                            />
-                            <IconButton
-                                aria-label={provider.label}
-                                className={styles.providerButton}
-                                title={provider.label}
-                                type="submit"
-                                variant="plain"
-                            >
-                                <Image
-                                    alt={provider.iconAlt}
-                                    height="28"
-                                    src={provider.iconSrc}
-                                    width="28"
-                                />
-                            </IconButton>
-                        </form>
-                    ))}
-                </div>
-                {/* <p className={styles.accountHint}>
+                <p className={styles.accountHint}>
                     {LOGIN_PANEL_COPY.accountHint}
-                </p> */}
-            </FormCard>
+                    <ChevronRight aria-hidden="true" size={15} />
+                </p>
+            </section>
         </main>
     )
 }

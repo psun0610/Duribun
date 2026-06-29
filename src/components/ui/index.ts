@@ -15,6 +15,8 @@ export { LinkButton } from './LinkButton'
 export type { LinkButtonProps } from './LinkButton'
 export { Pill } from './Pill'
 export type { PillProps, PillTone } from './Pill'
+export { ProgressDots } from './ProgressDots'
+export type { ProgressDotsProps } from './ProgressDots'
 export { SelectField, TextareaField, TextField } from './Field'
 export type {
     FieldBaseProps,

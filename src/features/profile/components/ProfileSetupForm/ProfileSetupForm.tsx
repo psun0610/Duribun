@@ -2,7 +2,13 @@
 
 import { useActionState, useState, type FormEvent } from 'react'
 
-import { Button, FieldMessage, FormCard, TextField } from '@/components/ui'
+import {
+    Button,
+    FieldMessage,
+    FormCard,
+    ProgressDots,
+    TextField,
+} from '@/components/ui'
 import { saveProfileWithAvatar } from '@/features/profile/actions'
 import type { ProfileFormState } from '@/features/profile/types/profileAction.types'
 
@@ -61,6 +67,11 @@ export const ProfileSetupForm = ({ initialValues }: ProfileSetupFormProps) => {
                 title={PROFILE_SETUP_COPY.title}
                 titleId="profile-title"
             >
+                <ProgressDots
+                    activeIndex={isAvatarStep ? 1 : 0}
+                    className={styles.progressDots}
+                    count={4}
+                />
                 {isAvatarStep ? (
                     <form
                         action={formAction}

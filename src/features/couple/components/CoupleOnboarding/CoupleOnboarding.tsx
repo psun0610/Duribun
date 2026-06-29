@@ -1,5 +1,7 @@
 'use client'
 
+import { ProgressDots } from '@/components/ui'
+
 import { InviteCodePanel } from './components/InviteCodePanel'
 import { JoinCoupleForm } from './components/JoinCoupleForm'
 import { ModeSelector } from './components/ModeSelector'
@@ -30,44 +32,55 @@ export const CoupleOnboarding = ({ initialCouple }: CoupleOnboardingProps) => {
         joinErrorMessage,
         mode,
     } = useCoupleOnboarding({ initialCouple })
+    const progressIndex =
+        mode === 'create' ? 3 : 1
 
     return (
         <main className={styles.onboarding}>
-            <header className={styles.header}>
-                <h1 className={styles.title}>{headerTitle}</h1>
-                <p className={styles.description}>{headerDescription}</p>
-            </header>
+            <section className={styles.phone} aria-labelledby="couple-title">
+                <div className={styles.statusBar} aria-hidden="true">
+                    <span>9:41</span>
+                    <span>●●●</span>
+                </div>
+                <header className={styles.header}>
+                    <h1 className={styles.title} id="couple-title">
+                        {headerTitle}
+                    </h1>
+                    <ProgressDots activeIndex={progressIndex} count={4} />
+                    <p className={styles.description}>{headerDescription}</p>
+                </header>
 
-            {mode === 'select' ? (
-                <ModeSelector
-                    onCreateCouple={handleCreateCouple}
-                    onJoinMode={handleJoinMode}
-                />
-            ) : null}
+                {mode === 'select' ? (
+                    <ModeSelector
+                        onCreateCouple={handleCreateCouple}
+                        onJoinMode={handleJoinMode}
+                    />
+                ) : null}
 
-            {mode === 'create' ? (
-                <InviteCodePanel
-                    createdCouple={createdCouple}
-                    errorMessage={createErrorMessage}
-                    hasCopiedInviteCode={hasCopiedInviteCode}
-                    isCreatingCouple={isCreatingCouple}
-                    onCopyInviteCode={handleCopyInviteCode}
-                    onShareInviteCode={handleShareInviteCode}
-                />
-            ) : null}
+                {mode === 'create' ? (
+                    <InviteCodePanel
+                        createdCouple={createdCouple}
+                        errorMessage={createErrorMessage}
+                        hasCopiedInviteCode={hasCopiedInviteCode}
+                        isCreatingCouple={isCreatingCouple}
+                        onCopyInviteCode={handleCopyInviteCode}
+                        onShareInviteCode={handleShareInviteCode}
+                    />
+                ) : null}
 
-            {mode === 'join' ? (
-                <JoinCoupleForm
-                    errorMessage={joinErrorMessage}
-                    inputRefs={inputRefs}
-                    inviteCode={inviteCode}
-                    inviteCodeCharacters={inviteCodeCharacters}
-                    joinAction={joinAction}
-                    onInviteCodeChange={handleInviteCodeChange}
-                    onInviteCodeKeyDown={handleInviteCodeKeyDown}
-                    onInviteCodePaste={handleInviteCodePaste}
-                />
-            ) : null}
+                {mode === 'join' ? (
+                    <JoinCoupleForm
+                        errorMessage={joinErrorMessage}
+                        inputRefs={inputRefs}
+                        inviteCode={inviteCode}
+                        inviteCodeCharacters={inviteCodeCharacters}
+                        joinAction={joinAction}
+                        onInviteCodeChange={handleInviteCodeChange}
+                        onInviteCodeKeyDown={handleInviteCodeKeyDown}
+                        onInviteCodePaste={handleInviteCodePaste}
+                    />
+                ) : null}
+            </section>
         </main>
     )
 }

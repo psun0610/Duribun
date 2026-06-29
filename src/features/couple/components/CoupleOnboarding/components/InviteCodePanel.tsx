@@ -1,3 +1,5 @@
+import { Clock, Copy, RefreshCw } from 'lucide-react'
+
 import { Button, FieldMessage } from '@/components/ui'
 
 import { COUPLE_ONBOARDING_COPY } from '../const/coupleOnboarding.const'
@@ -20,16 +22,27 @@ export const InviteCodePanel = ({
                     <h2 className={styles.panelTitle}>
                         {COUPLE_ONBOARDING_COPY.inviteCodeIssuedTitle}
                     </h2>
-                    <strong className={styles.inviteCodeValue}>
-                        {createdCouple.inviteCode}
-                    </strong>
+                    <div className={styles.inviteCodeCard}>
+                        <span>{COUPLE_ONBOARDING_COPY.inviteCodeCardLabel}</span>
+                        <strong>{createdCouple.inviteCode}</strong>
+                        <small>
+                            <Clock aria-hidden="true" size={14} />
+                            {COUPLE_ONBOARDING_COPY.inviteCodeTimer}
+                        </small>
+                    </div>
                     <div className={styles.actionRow}>
-                        <Button onClick={onCopyInviteCode} type="button">
+                        <Button
+                            leftIcon={<Copy aria-hidden="true" size={16} />}
+                            onClick={onCopyInviteCode}
+                            type="button"
+                            variant="secondary"
+                        >
                             {hasCopiedInviteCode
                                 ? COUPLE_ONBOARDING_COPY.copyInviteCodeDoneLabel
                                 : COUPLE_ONBOARDING_COPY.copyInviteCodeLabel}
                         </Button>
                         <Button
+                            leftIcon={<RefreshCw aria-hidden="true" size={16} />}
                             onClick={onShareInviteCode}
                             type="button"
                             variant="secondary"

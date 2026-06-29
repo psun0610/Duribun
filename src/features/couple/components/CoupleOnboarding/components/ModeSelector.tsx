@@ -1,4 +1,4 @@
-import { HeartHandshake, Ticket } from 'lucide-react'
+import { ChevronRight, HeartHandshake, Ticket } from 'lucide-react'
 
 import { COUPLE_ONBOARDING_COPY } from '../const/coupleOnboarding.const'
 import type { ModeSelectorProps } from '../types/coupleOnboarding.types'
@@ -25,6 +25,11 @@ export const ModeSelector = ({
                 <span className={styles.optionDescription}>
                     {COUPLE_ONBOARDING_COPY.createOptionDescription}
                 </span>
+                <ChevronRight
+                    aria-hidden="true"
+                    className={styles.optionArrow}
+                    size={20}
+                />
             </button>
             <button
                 className={styles.optionButton}
@@ -40,6 +45,11 @@ export const ModeSelector = ({
                 <span className={styles.optionDescription}>
                     {COUPLE_ONBOARDING_COPY.joinOptionDescription}
                 </span>
+                <ChevronRight
+                    aria-hidden="true"
+                    className={styles.optionArrow}
+                    size={20}
+                />
             </button>
         </div>
     )

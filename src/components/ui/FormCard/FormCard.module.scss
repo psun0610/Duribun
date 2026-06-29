@@ -4,26 +4,27 @@
     background: $color-surface;
     border: 1px solid $color-line;
     border-radius: $radius-photo-card;
-    box-shadow: $shadow-lifted;
-    padding: clamp(1.25rem, 6vw, 2.25rem);
+    box-shadow: 0 22px 58px rgba(0, 0, 0, 0.1);
+    min-height: min(42rem, calc(100vh - 7rem));
+    padding: 1.15rem 1.1rem 1.3rem;
+    text-align: center;
 }
 
 .eyebrow {
-    color: $color-primary;
-    font-size: 0.78rem;
+    color: $color-text;
+    font-size: 0.9rem;
     font-weight: 900;
     letter-spacing: 0;
-    margin: 0 0 0.75rem;
-    text-transform: uppercase;
+    margin: 0;
 }
 
 .title {
-    margin: 0;
     color: $color-text;
-    font-size: clamp(2rem, 8vw, 3rem);
-    font-weight: 800;
-    line-height: 1.05;
+    font-size: 0.98rem;
+    font-weight: 900;
     letter-spacing: 0;
+    line-height: 1.35;
+    margin: 0.4rem 0 0;
     word-break: keep-all;
 }
 
@@ -37,10 +38,12 @@
 }
 
 .description {
-    margin: 0.85rem 0 0;
     color: $color-muted;
-    font-weight: 400;
-    line-height: 1.7;
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1.55;
+    margin: 0.65rem auto 0;
+    max-width: 18rem;
 }
 
 .form {
