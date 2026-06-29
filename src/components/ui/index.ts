@@ -1,5 +1,9 @@
+export { Badge } from './Badge'
+export type { BadgeProps, BadgeSize, BadgeVariant } from './Badge'
 export { Button } from './Button'
 export type { ButtonProps, ButtonSize, ButtonVariant } from './Button'
+export { EmptyState } from './EmptyState'
+export type { EmptyStateProps } from './EmptyState'
 export { FieldMessage } from './FieldMessage'
 export type {
     FieldMessageProps,
@@ -7,6 +11,8 @@ export type {
 } from './FieldMessage'
 export { IconButton } from './IconButton'
 export type { IconButtonProps, IconButtonVariant } from './IconButton'
+export { Pill } from './Pill'
+export type { PillProps, PillTone } from './Pill'
 export { SelectField, TextareaField, TextField } from './Field'
 export type {
     FieldBaseProps,
@@ -14,6 +20,11 @@ export type {
     TextareaFieldProps,
     TextFieldProps,
 } from './Field'
+export { SegmentedControl } from './SegmentedControl'
+export type {
+    SegmentedControlOption,
+    SegmentedControlProps,
+} from './SegmentedControl'
 export { FormCard } from './FormCard'
 export type { FormCardProps, FormCardTitleVariant } from './FormCard'
 export { Spinner } from './Spinner'

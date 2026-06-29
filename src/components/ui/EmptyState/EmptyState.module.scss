@@ -1,0 +1,61 @@
+@use '../../../styles/variables' as *;
+
+.emptyState {
+    align-items: center;
+    display: grid;
+    gap: 1.25rem;
+    justify-items: center;
+    padding: clamp(2.5rem, 12vw, 5rem) 1rem;
+    text-align: center;
+}
+
+.iconBox {
+    align-items: center;
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    border-radius: $radius-photo-card;
+    box-shadow: 0 18px 38px rgba($color-primary, 0.24);
+    color: $color-primary-foreground;
+    display: inline-flex;
+    height: 7rem;
+    justify-content: center;
+    width: 7rem;
+
+    svg {
+        height: 3rem;
+        width: 3rem;
+    }
+}
+
+.copy {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: center;
+
+    h2,
+    p {
+        margin: 0;
+    }
+
+    h2 {
+        color: $color-text;
+        font-size: 1.25rem;
+        font-weight: 900;
+        line-height: 1.25;
+        word-break: keep-all;
+    }
+
+    p {
+        color: $color-muted;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        max-width: 20rem;
+        word-break: keep-all;
+    }
+}
+
+.action {
+    display: flex;
+    justify-content: center;
+    max-width: min(100%, 20rem);
+    width: 100%;
+}

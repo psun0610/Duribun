@@ -1,4 +1,5 @@
 import type { ButtonProps } from './types/button.types'
+import { Spinner } from '../Spinner'
 
 import styles from './Button.module.scss'
 
@@ -8,6 +9,7 @@ export const Button = ({
     disabled,
     isLoading = false,
     leftIcon,
+    rightIcon,
     size = 'md',
     type = 'button',
     variant = 'primary',
@@ -29,8 +31,9 @@ export const Button = ({
             type={type}
             {...buttonProps}
         >
-            {leftIcon}
-            {children}
+            {isLoading ? <Spinner /> : leftIcon}
+            <span className={styles.label}>{children}</span>
+            {rightIcon}
         </button>
     )
 }

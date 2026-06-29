@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 
-export type IconButtonVariant = 'secondary' | 'plain'
+export type IconButtonVariant = 'primary' | 'secondary' | 'plain'
 
 export interface IconButtonProps
     extends ButtonHTMLAttributes<HTMLButtonElement> {

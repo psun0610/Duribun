@@ -12,6 +12,7 @@
     justify-content: center;
     letter-spacing: 0;
     min-width: 0;
+    position: relative;
     transition:
         transform 160ms ease,
         box-shadow 160ms ease,
@@ -34,6 +35,13 @@
     }
 }
 
+.label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .primary {
     background: linear-gradient(90deg, $color-primary, $color-secondary);
     box-shadow: 0 14px 30px rgba($color-primary, 0.2);
@@ -46,10 +54,13 @@
 
 .secondary {
     background: $color-muted-surface;
+    border: 1px solid $color-line;
     color: $color-text;
 
     &:hover:not(:disabled) {
-        background: darken(#f5f5f5, 5%);
+        background: $color-surface;
+        border-color: rgba($color-primary, 0.24);
+        box-shadow: $shadow-soft;
     }
 }
 
@@ -74,6 +85,12 @@
     min-height: 3.25rem;
     padding: 0.875rem 1.125rem;
     font-size: 0.9375rem;
+}
+
+.lg {
+    min-height: 3.5rem;
+    padding: 0.95rem 1.25rem;
+    font-size: 1rem;
 }
 
 .icon {

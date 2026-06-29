@@ -16,6 +16,10 @@
         transform 160ms ease;
     width: 2.25rem;
 
+    svg {
+        flex-shrink: 0;
+    }
+
     &:hover:not(:disabled) {
         transform: translateY(-1px);
     }
@@ -28,6 +32,16 @@
     &:disabled {
         cursor: not-allowed;
         opacity: 0.58;
+    }
+}
+
+.primary {
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    box-shadow: 0 12px 28px rgba($color-primary, 0.24);
+    color: $color-primary-foreground;
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 16px 34px rgba($color-primary, 0.28);
     }
 }
 

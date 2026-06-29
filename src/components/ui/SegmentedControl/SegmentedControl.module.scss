@@ -1,0 +1,59 @@
+@use '../../../styles/variables' as *;
+
+.control {
+    align-items: center;
+    background: $color-muted-surface;
+    border: 1px solid $color-line;
+    border-radius: 999px;
+    display: inline-flex;
+    gap: 0.25rem;
+    max-width: 100%;
+    padding: 0.25rem;
+}
+
+.item {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    color: $color-muted;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 800;
+    gap: 0.4rem;
+    justify-content: center;
+    min-height: 2rem;
+    min-width: 2rem;
+    padding: 0.45rem 0.75rem;
+    transition:
+        background 160ms ease,
+        box-shadow 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
+    white-space: nowrap;
+
+    svg {
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        color: $color-text;
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($color-primary, 0.28);
+        outline-offset: 2px;
+    }
+}
+
+.active {
+    background: linear-gradient(90deg, $color-primary, #ff7c89);
+    box-shadow: 0 8px 18px rgba($color-primary, 0.22);
+    color: $color-primary-foreground;
+
+    &:hover {
+        color: $color-primary-foreground;
+    }
+}

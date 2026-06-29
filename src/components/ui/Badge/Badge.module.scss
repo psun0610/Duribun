@@ -1,0 +1,58 @@
+@use '../../../styles/variables' as *;
+
+.badge {
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    display: inline-flex;
+    font-weight: 800;
+    gap: 0.25rem;
+    line-height: 1;
+    max-width: 100%;
+    min-width: 0;
+    white-space: nowrap;
+
+    svg {
+        flex-shrink: 0;
+    }
+}
+
+.sm {
+    font-size: 0.75rem;
+    min-height: 1.5rem;
+    padding: 0.3rem 0.5rem;
+}
+
+.md {
+    font-size: 0.8125rem;
+    min-height: 1.85rem;
+    padding: 0.4rem 0.65rem;
+}
+
+.primary {
+    background: $color-primary;
+    color: $color-primary-foreground;
+}
+
+.primarySoft {
+    background: rgba($color-primary, 0.12);
+    border-color: rgba($color-primary, 0.16);
+    color: $color-primary;
+}
+
+.secondary {
+    background: $color-secondary;
+    color: $color-text;
+}
+
+.muted {
+    background: $color-muted-surface;
+    border-color: $color-line;
+    color: $color-muted;
+}
+
+.outline {
+    background: $color-surface;
+    border-color: $color-line;
+    color: $color-text;
+}
