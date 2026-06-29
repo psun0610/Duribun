@@ -1,5 +1,6 @@
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
 import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
+import type { BadgeVariant } from '@/components/ui'
 
 import type {
     ReviewDetailTargetPlace,
@@ -42,6 +43,24 @@ export const getListStatusClassName = (status: ReviewStatus) => {
     }
 
     return `${baseClassName} bg-muted text-muted-foreground`
+}
+
+export const getReviewStatusBadgeVariant = (
+    status: ReviewStatus
+): BadgeVariant => {
+    if (status === 'complete') {
+        return 'secondary'
+    }
+
+    if (status === 'partner-waiting') {
+        return 'primary'
+    }
+
+    if (status === 'waiting-partner') {
+        return 'primarySoft'
+    }
+
+    return 'muted'
 }
 
 export const formatRating = (rating: number) => {

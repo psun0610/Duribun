@@ -1,12 +1,12 @@
 @use '../../../../styles/variables' as *;
 
 .onboarding {
-    width: min(100%, 34rem);
-    min-height: calc(100vh - 4.25rem);
     display: grid;
     align-content: center;
     margin: 0 auto;
+    min-height: calc(100vh - 4.25rem);
     padding: clamp(2rem, 10vh, 5rem) $space-page-inline;
+    width: min(100%, 34rem);
 }
 
 .header {
@@ -77,15 +77,15 @@
 
 .optionButton,
 .panel {
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: $radius-photo-card;
+    box-shadow: $shadow-soft;
     display: grid;
     gap: 1rem;
-    width: 100%;
-    border: 2px solid var(--border);
-    border-radius: $radius-surface;
-    background: $color-surface;
     padding: clamp(1.1rem, 5vw, 1.5rem);
     text-align: left;
-    box-shadow: $shadow-soft;
+    width: 100%;
 }
 
 .optionButton {
@@ -105,6 +105,18 @@
         outline: 3px solid rgba($color-primary, 0.34);
         outline-offset: 3px;
     }
+}
+
+.optionIcon {
+    align-items: center;
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    border-radius: 1.25rem;
+    box-shadow: 0 12px 28px rgba($color-primary, 0.18);
+    color: $color-primary-foreground;
+    display: inline-flex;
+    height: 3.5rem;
+    justify-content: center;
+    width: 3.5rem;
 }
 
 .optionTitle {
@@ -228,9 +240,10 @@
 .inviteCodeValue {
     display: block;
     border-radius: $radius-control;
-    background: $color-muted-surface;
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    box-shadow: 0 16px 34px rgba($color-primary, 0.2);
     padding: 1.15rem;
-    color: $color-text;
+    color: $color-primary-foreground;
     font-size: clamp(2rem, 12vw, 3rem);
     font-weight: 750;
     line-height: 1;
@@ -257,16 +270,16 @@
 
 .codeInput {
     aspect-ratio: 1;
-    min-width: 0;
-    border: 2px solid var(--border);
-    border-radius: 1rem;
     background: $color-muted-surface;
+    border: 1.5px solid transparent;
+    border-radius: 1rem;
     color: $color-text;
     font-size: clamp(1.2rem, 8vw, 2rem);
     font-weight: 750;
     letter-spacing: 0;
     text-align: center;
     text-transform: uppercase;
+    min-width: 0;
 
     &:focus {
         border-color: rgba($color-primary, 0.56);

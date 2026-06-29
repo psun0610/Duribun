@@ -1,4 +1,4 @@
-import { Button, FieldMessage, Spinner } from '@/components/ui'
+import { Button, FieldMessage, SelectField, TextField } from '@/components/ui'
 
 import {
     PLACE_CATEGORY_OPTIONS,
@@ -16,16 +16,16 @@ export const ManualPlaceForm = ({
     return (
         <form action={registerManualAction} className={styles.manualForm}>
             <h3>{PLACE_REGISTRATION_COPY.manualTitle}</h3>
-            <input
-                className={styles.input}
+            <TextField
                 disabled={isRegisteringManualPlace}
+                label={PLACE_REGISTRATION_COPY.manualNameLabel}
                 name="name"
                 placeholder={PLACE_REGISTRATION_COPY.manualNamePlaceholder}
                 required
             />
-            <select
-                className={styles.select}
+            <SelectField
                 disabled={isRegisteringManualPlace}
+                label={PLACE_REGISTRATION_COPY.categoryLabel}
                 name="category"
             >
                 {PLACE_CATEGORY_OPTIONS.map(option => (
@@ -33,22 +33,21 @@ export const ManualPlaceForm = ({
                         {option.label}
                     </option>
                 ))}
-            </select>
-            <input
-                className={styles.input}
+            </SelectField>
+            <TextField
                 disabled={isRegisteringManualPlace}
+                label={PLACE_REGISTRATION_COPY.addressLabel}
                 name="address"
                 placeholder={PLACE_REGISTRATION_COPY.addressPlaceholder}
             />
-            <Button disabled={isRegisteringManualPlace} type="submit">
-                {isRegisteringManualPlace ? (
-                    <span className={styles.buttonContent}>
-                        <Spinner />
-                        {PLACE_REGISTRATION_COPY.registering}
-                    </span>
-                ) : (
-                    PLACE_REGISTRATION_COPY.manualRegister
-                )}
+            <Button
+                disabled={isRegisteringManualPlace}
+                isLoading={isRegisteringManualPlace}
+                type="submit"
+            >
+                {isRegisteringManualPlace
+                    ? PLACE_REGISTRATION_COPY.registering
+                    : PLACE_REGISTRATION_COPY.manualRegister}
             </Button>
             {manualRegistrationState.errorMessage ? (
                 <FieldMessage variant="error">

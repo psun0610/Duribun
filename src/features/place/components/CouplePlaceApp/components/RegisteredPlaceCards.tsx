@@ -1,5 +1,7 @@
 import { Globe, Lock, MapPin, Star } from 'lucide-react'
 
+import { Badge, Pill } from '@/components/ui'
+
 import {
     CATEGORY_LABEL,
     COUPLE_PLACE_APP_COPY,
@@ -7,11 +9,10 @@ import {
 } from '../const/couplePlaceApp.const'
 import type { RegisteredPlaceCardProps } from '../types/couplePlaceAppComponent.types'
 import {
-    getListStatusClassName,
     getRegisteredPlaceRating,
     getRegisteredPlaceStatus,
+    getReviewStatusBadgeVariant,
     getReviewDetailTargetPlace,
-    getStatusClassName,
 } from '../utils/couplePlaceApp.utils'
 
 import styles from '../CouplePlaceApp.module.scss'
@@ -46,17 +47,23 @@ export const RegisteredPlaceFeedCard = ({
                     )}
                 </span>
                 {rating ? (
-                    <span className={styles.registeredRating}>
-                        <Star aria-hidden="true" size={12} />
+                    <Pill
+                        className={styles.registeredRating}
+                        icon={<Star aria-hidden="true" size={12} />}
+                        tone="rating"
+                    >
                         {rating}
-                    </span>
+                    </Pill>
                 ) : null}
             </span>
             <span className={styles.registeredFeedBody}>
                 <strong>{place.name}</strong>
-                <span className={getStatusClassName(status)}>
+                <Badge
+                    size="sm"
+                    variant={getReviewStatusBadgeVariant(status)}
+                >
                     {REVIEW_STATUS_LABEL[status]}
-                </span>
+                </Badge>
             </span>
         </button>
     )
@@ -103,14 +110,20 @@ export const RegisteredPlaceListCard = ({
                         : ''}
                 </span>
                 {rating ? (
-                    <span className={styles.registeredListRating}>
-                        <Star aria-hidden="true" size={12} />
+                    <Pill
+                        className={styles.registeredListRating}
+                        icon={<Star aria-hidden="true" size={12} />}
+                        tone="rating"
+                    >
                         {rating}
-                    </span>
+                    </Pill>
                 ) : null}
-                <span className={getListStatusClassName(status)}>
+                <Badge
+                    size="sm"
+                    variant={getReviewStatusBadgeVariant(status)}
+                >
                     {REVIEW_STATUS_LABEL[status]}
-                </span>
+                </Badge>
             </span>
         </button>
     )

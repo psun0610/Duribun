@@ -1,0 +1,76 @@
+@use '../../../styles/variables' as *;
+
+.linkButton {
+    align-items: center;
+    border-radius: $radius-control;
+    display: inline-flex;
+    font-weight: 800;
+    gap: 0.5rem;
+    justify-content: center;
+    letter-spacing: 0;
+    min-width: 0;
+    text-decoration: none;
+    transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($color-primary, 0.34);
+        outline-offset: 3px;
+    }
+}
+
+.label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.primary {
+    background: linear-gradient(90deg, $color-primary, $color-secondary);
+    box-shadow: 0 14px 30px rgba($color-primary, 0.2);
+    color: $color-primary-foreground;
+}
+
+.secondary {
+    background: $color-muted-surface;
+    border: 1px solid $color-line;
+    color: $color-text;
+
+    &:hover {
+        background: $color-surface;
+        border-color: rgba($color-primary, 0.24);
+        box-shadow: $shadow-soft;
+    }
+}
+
+.ghost {
+    background: transparent;
+    color: $color-primary;
+}
+
+.sm {
+    min-height: 2.5rem;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.875rem;
+}
+
+.md {
+    min-height: 3.25rem;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.9375rem;
+}
+
+.lg {
+    min-height: 3.5rem;
+    padding: 0.95rem 1.25rem;
+    font-size: 1rem;
+}

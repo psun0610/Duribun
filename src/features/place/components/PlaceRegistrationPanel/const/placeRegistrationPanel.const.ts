@@ -25,12 +25,15 @@ export const PLACE_CATEGORY_OPTIONS: Array<{
 export const MODAL_CLOSE_ANIMATION_MS = 220
 
 export const PLACE_REGISTRATION_COPY = {
+    addressLabel: '주소',
     addressPlaceholder: '주소',
+    categoryLabel: '카테고리',
     close: '닫기',
     confirmPlace: '이 장소로 할까요?',
     loadMore: '더보기',
     manualCta: '직접 입력',
     manualHint: '찾는 장소가 없나요?',
+    manualNameLabel: '장소명',
     manualNamePlaceholder: '장소명',
     manualRegister: '장소 추가하기',
     manualTitle: '직접 입력',

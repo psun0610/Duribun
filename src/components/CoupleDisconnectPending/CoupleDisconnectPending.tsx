@@ -1,5 +1,6 @@
 import { LockKeyhole } from 'lucide-react'
 
+import { Button, EmptyState, FieldMessage } from '@/components/ui'
 import { signOut } from '@/features/auth/actions'
 import { cancelCoupleDisconnect } from '@/features/couple/actions'
 
@@ -25,14 +26,12 @@ export const CoupleDisconnectPending = ({
                     <p className={styles.coupleName}>{coupleName}</p>
                 </div>
 
-                <div className={styles.lockIcon}>
-                    <LockKeyhole aria-hidden="true" />
-                </div>
-
-                <div className={styles.copy}>
-                    <h2>{COUPLE_DISCONNECT_PENDING_COPY.title}</h2>
-                    <p>{COUPLE_DISCONNECT_PENDING_COPY.description}</p>
-                </div>
+                <EmptyState
+                    className={styles.emptyState}
+                    description={COUPLE_DISCONNECT_PENDING_COPY.description}
+                    icon={<LockKeyhole />}
+                    title={COUPLE_DISCONNECT_PENDING_COPY.title}
+                />
 
                 <dl className={styles.details}>
                     <div>
@@ -52,19 +51,21 @@ export const CoupleDisconnectPending = ({
                 </dl>
 
                 {errorMessage ? (
-                    <p className={styles.errorMessage}>{errorMessage}</p>
+                    <FieldMessage className={styles.errorMessage} variant="error">
+                        {errorMessage}
+                    </FieldMessage>
                 ) : null}
 
                 <div className={styles.actions}>
                     <form action={cancelCoupleDisconnect}>
-                        <button className={styles.primaryButton} type="submit">
+                        <Button type="submit">
                             {COUPLE_DISCONNECT_PENDING_COPY.cancel}
-                        </button>
+                        </Button>
                     </form>
                     <form action={signOut}>
-                        <button className={styles.secondaryButton} type="submit">
+                        <Button type="submit" variant="secondary">
                             {COUPLE_DISCONNECT_PENDING_COPY.signOut}
-                        </button>
+                        </Button>
                     </form>
                 </div>
             </section>

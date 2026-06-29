@@ -1,15 +1,14 @@
 import { Globe, Lock, Star } from 'lucide-react'
 
+import { Badge, Pill } from '@/components/ui'
+
 import {
     CATEGORY_LABEL,
     COUPLE_PLACE_APP_COPY,
     REVIEW_STATUS_LABEL,
 } from '../const/couplePlaceApp.const'
 import type { MockPlaceCardProps } from '../types/couplePlaceAppComponent.types'
-import {
-    getListStatusClassName,
-    getStatusClassName,
-} from '../utils/couplePlaceApp.utils'
+import { getReviewStatusBadgeVariant } from '../utils/couplePlaceApp.utils'
 
 import styles from '../CouplePlaceApp.module.scss'
 
@@ -51,15 +50,13 @@ export const PlaceCardFeed = ({ place }: MockPlaceCardProps) => {
                         )}
                     </div>
                     {place.rating ? (
-                        <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 shadow">
-                            <Star
-                                aria-hidden="true"
-                                className="h-2.5 w-2.5 fill-secondary text-secondary"
-                            />
-                            <span className="text-[11px] font-medium text-foreground">
-                                {place.rating}
-                            </span>
-                        </div>
+                        <Pill
+                            className={styles.mockFeedRating}
+                            icon={<Star aria-hidden="true" size={12} />}
+                            tone="rating"
+                        >
+                            {place.rating}
+                        </Pill>
                     ) : null}
                 </div>
             </div>
@@ -67,9 +64,12 @@ export const PlaceCardFeed = ({ place }: MockPlaceCardProps) => {
                 <h3 className="truncate text-[13px] font-medium text-foreground">
                     {place.name}
                 </h3>
-                <span className={getStatusClassName(place.reviewStatus)}>
+                <Badge
+                    size="sm"
+                    variant={getReviewStatusBadgeVariant(place.reviewStatus)}
+                >
                     {REVIEW_STATUS_LABEL[place.reviewStatus]}
-                </span>
+                </Badge>
             </div>
         </article>
     )
@@ -111,20 +111,20 @@ export const PlaceCardList = ({ place }: MockPlaceCardProps) => {
                             </span>
                         </div>
                         {place.rating ? (
-                            <div className="flex items-center gap-1">
-                                <Star
-                                    aria-hidden="true"
-                                    className="h-3 w-3 fill-secondary text-secondary"
-                                />
-                                <span className="text-[13px] font-medium">
-                                    {place.rating}
-                                </span>
-                            </div>
+                            <Pill
+                                icon={<Star aria-hidden="true" size={12} />}
+                                tone="rating"
+                            >
+                                {place.rating}
+                            </Pill>
                         ) : null}
                     </div>
-                    <span className={getListStatusClassName(place.reviewStatus)}>
+                    <Badge
+                        size="sm"
+                        variant={getReviewStatusBadgeVariant(place.reviewStatus)}
+                    >
                         {REVIEW_STATUS_LABEL[place.reviewStatus]}
-                    </span>
+                    </Badge>
                 </div>
             </div>
         </article>

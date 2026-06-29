@@ -4,7 +4,7 @@
     animation: panelIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: $radius-surface;
+    border-radius: $radius-photo-card;
     box-shadow: $shadow-soft;
     display: grid;
     gap: 1rem;
@@ -124,8 +124,8 @@
 
 .tagChip {
     align-items: center;
-    background: $color-muted-surface;
-    border: 1px solid transparent;
+    background: $color-surface;
+    border: 1px solid $color-line;
     border-radius: 999px;
     display: inline-flex;
     gap: 0.5rem;
@@ -133,6 +133,12 @@
 
     input {
         accent-color: $color-primary;
+    }
+
+    &:has(input:checked) {
+        background: rgba($color-primary, 0.1);
+        border-color: rgba($color-primary, 0.28);
+        box-shadow: 0 8px 18px rgba($color-primary, 0.1);
     }
 
     span {

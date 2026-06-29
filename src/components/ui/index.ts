@@ -11,6 +11,8 @@ export type {
 } from './FieldMessage'
 export { IconButton } from './IconButton'
 export type { IconButtonProps, IconButtonVariant } from './IconButton'
+export { LinkButton } from './LinkButton'
+export type { LinkButtonProps } from './LinkButton'
 export { Pill } from './Pill'
 export type { PillProps, PillTone } from './Pill'
 export { SelectField, TextareaField, TextField } from './Field'

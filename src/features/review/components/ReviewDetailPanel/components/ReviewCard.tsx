@@ -1,5 +1,7 @@
 import { Star } from 'lucide-react'
 
+import { Badge, Pill } from '@/components/ui'
+
 import {
     REVIEW_DETAIL_COPY,
     REVIEW_PHOTO_KIND_LABEL,
@@ -29,19 +31,22 @@ export const ReviewCard = ({
                         {formatRating(review.rating)}
                     </p>
                 </div>
-                <span className={styles.ratingPill}>
-                    <Star aria-hidden="true" size={14} />
+                <Pill
+                    className={styles.ratingPill}
+                    icon={<Star aria-hidden="true" size={14} />}
+                    tone="rating"
+                >
                     {formatRating(review.rating)}
-                </span>
+                </Pill>
             </div>
 
             <p className={styles.oneLineReview}>{review.oneLineReview}</p>
 
             <div className={styles.tagList}>
                 {review.tags.map(tag => (
-                    <span className={styles.tagChip} key={tag}>
+                    <Badge key={tag} variant="outline">
                         {tag}
-                    </span>
+                    </Badge>
                 ))}
             </div>
 

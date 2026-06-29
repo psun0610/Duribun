@@ -1,4 +1,4 @@
-import { Button, FieldMessage, Spinner } from '@/components/ui'
+import { Button, FieldMessage } from '@/components/ui'
 
 import { PLACE_REGISTRATION_COPY } from '../const/placeRegistrationPanel.const'
 import type { ConfirmPlaceBarProps } from '../types/placeRegistrationPanel.types'
@@ -79,15 +79,14 @@ export const ConfirmPlaceBar = ({
                 >
                     {PLACE_REGISTRATION_COPY.selectAnother}
                 </Button>
-                <Button disabled={isRegisteringKakaoPlace} type="submit">
-                    {isRegisteringKakaoPlace ? (
-                        <span className={styles.buttonContent}>
-                            <Spinner />
-                            {PLACE_REGISTRATION_COPY.registering}
-                        </span>
-                    ) : (
-                        PLACE_REGISTRATION_COPY.submitSelectedPlace
-                    )}
+                <Button
+                    disabled={isRegisteringKakaoPlace}
+                    isLoading={isRegisteringKakaoPlace}
+                    type="submit"
+                >
+                    {isRegisteringKakaoPlace
+                        ? PLACE_REGISTRATION_COPY.registering
+                        : PLACE_REGISTRATION_COPY.submitSelectedPlace}
                 </Button>
             </div>
         </form>

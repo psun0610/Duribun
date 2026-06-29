@@ -1,3 +1,5 @@
+import { HeartHandshake, Ticket } from 'lucide-react'
+
 import { COUPLE_ONBOARDING_COPY } from '../const/coupleOnboarding.const'
 import type { ModeSelectorProps } from '../types/coupleOnboarding.types'
 
@@ -14,6 +16,9 @@ export const ModeSelector = ({
                 onClick={onCreateCouple}
                 type="button"
             >
+                <span className={styles.optionIcon}>
+                    <Ticket aria-hidden="true" size={26} />
+                </span>
                 <span className={styles.optionTitle}>
                     {COUPLE_ONBOARDING_COPY.createOptionTitle}
                 </span>
@@ -26,6 +31,9 @@ export const ModeSelector = ({
                 onClick={onJoinMode}
                 type="button"
             >
+                <span className={styles.optionIcon}>
+                    <HeartHandshake aria-hidden="true" size={26} />
+                </span>
                 <span className={styles.optionTitle}>
                     {COUPLE_ONBOARDING_COPY.joinOptionTitle}
                 </span>

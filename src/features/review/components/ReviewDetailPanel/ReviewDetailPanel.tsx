@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
 
-import { Button, FieldMessage, IconButton } from '@/components/ui'
+import { Badge, Button, FieldMessage, IconButton } from '@/components/ui'
 import { updateCouplePlaceSharing } from '@/features/place/actions'
 
 import { ReviewCard } from './components/ReviewCard'
@@ -72,11 +72,14 @@ export const ReviewDetailPanel = ({
             <div className={styles.panel}>
                 <div className={styles.header}>
                     <div className={styles.titleWrap}>
-                        <span className={styles.badge}>
+                        <Badge
+                            size="sm"
+                            variant={place.isPublic ? 'primarySoft' : 'muted'}
+                        >
                             {place.isPublic
                                 ? REVIEW_DETAIL_COPY.publicBadge
                                 : REVIEW_DETAIL_COPY.privateBadge}
-                        </span>
+                        </Badge>
                         <h2 className={styles.title} id="review-detail-title">
                             {REVIEW_DETAIL_COPY.reviewTitle}
                         </h2>

@@ -1,5 +1,7 @@
 import { LayoutGrid, List } from 'lucide-react'
 
+import { SegmentedControl } from '@/components/ui'
+
 import { COUPLE_PLACE_APP_COPY } from '../const/couplePlaceApp.const'
 import type { AppHeaderProps } from '../types/couplePlaceAppComponent.types'
 
@@ -9,6 +11,15 @@ export const AppHeader = ({
     onListView,
     viewMode,
 }: AppHeaderProps) => {
+    const handleViewChange = (nextView: string) => {
+        if (nextView === 'feed') {
+            onFeedView()
+            return
+        }
+
+        onListView()
+    }
+
     return (
         <div className="mb-5 flex items-center justify-between gap-3">
             <div>
@@ -19,32 +30,23 @@ export const AppHeader = ({
                     {coupleName}
                 </h1>
             </div>
-            <div className="flex items-center gap-1 rounded-full bg-muted p-1">
-                <button
-                    aria-label={COUPLE_PLACE_APP_COPY.feedView}
-                    className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
-                        viewMode === 'feed'
-                            ? 'bg-white text-primary shadow-sm'
-                            : 'text-muted-foreground'
-                    }`}
-                    onClick={onFeedView}
-                    type="button"
-                >
-                    <LayoutGrid className="h-3.5 w-3.5" />
-                </button>
-                <button
-                    aria-label={COUPLE_PLACE_APP_COPY.listView}
-                    className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
-                        viewMode === 'list'
-                            ? 'bg-white text-primary shadow-sm'
-                            : 'text-muted-foreground'
-                    }`}
-                    onClick={onListView}
-                    type="button"
-                >
-                    <List className="h-3.5 w-3.5" />
-                </button>
-            </div>
+            <SegmentedControl
+                ariaLabel={COUPLE_PLACE_APP_COPY.viewModeLabel}
+                onChange={handleViewChange}
+                options={[
+                    {
+                        icon: <LayoutGrid aria-hidden="true" size={14} />,
+                        label: COUPLE_PLACE_APP_COPY.feedViewShort,
+                        value: 'feed',
+                    },
+                    {
+                        icon: <List aria-hidden="true" size={14} />,
+                        label: COUPLE_PLACE_APP_COPY.listViewShort,
+                        value: 'list',
+                    },
+                ]}
+                value={viewMode}
+            />
         </div>
     )
 }

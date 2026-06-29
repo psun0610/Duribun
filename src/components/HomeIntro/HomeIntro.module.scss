@@ -59,42 +59,6 @@
         padding-top: 0.5rem;
     }
 
-    .primaryAction,
-    .secondaryAction {
-        min-height: 3rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 999px;
-        padding: 0.8rem 1.15rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition:
-            transform 160ms ease,
-            box-shadow 160ms ease,
-            background 160ms ease;
-
-        &:hover {
-            transform: translateY(-1px);
-        }
-
-        &:focus-visible {
-            outline: 3px solid rgba($color-primary, 0.34);
-            outline-offset: 3px;
-        }
-    }
-
-    .primaryAction {
-        background: $color-primary;
-        color: $color-primary-foreground;
-        box-shadow: 0 14px 32px rgba($color-primary, 0.28);
-    }
-
-    .secondaryAction {
-        background: $color-muted-surface;
-        color: $color-text;
-    }
-
     .memoryCard {
         overflow: hidden;
         border: 2px solid transparent;

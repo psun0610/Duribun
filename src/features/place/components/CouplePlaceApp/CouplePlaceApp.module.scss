@@ -88,23 +88,9 @@
     }
 
     .registeredRating {
-        align-items: center;
-        background: rgba(255, 255, 255, 0.94);
-        border-radius: 999px;
         bottom: 0.5rem;
-        color: $color-text;
-        display: inline-flex;
-        font-size: 0.75rem;
-        font-weight: 600;
-        gap: 0.2rem;
         left: 0.5rem;
-        padding: 0.25rem 0.45rem;
         position: absolute;
-
-        svg {
-            color: $color-secondary;
-            fill: $color-secondary;
-        }
     }
 
     .registeredFeedBody {
@@ -201,17 +187,13 @@
     }
 
     .registeredListRating {
-        align-items: center;
-        color: $color-text;
-        display: inline-flex;
-        font-size: 0.8125rem;
-        font-weight: 600;
-        gap: 0.25rem;
+        justify-self: start;
+    }
 
-        svg {
-            color: $color-secondary;
-            fill: $color-secondary;
-        }
+    .mockFeedRating {
+        bottom: 0.5rem;
+        left: 0.5rem;
+        position: absolute;
     }
 }
 

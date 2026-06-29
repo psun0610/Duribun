@@ -20,8 +20,7 @@
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
     }
 
-    .brand,
-    .privateLink {
+    .brand {
         min-height: 2.5rem;
         display: inline-flex;
         align-items: center;
@@ -40,20 +39,5 @@
         font-weight: 750;
         color: transparent;
         letter-spacing: 0;
-    }
-
-    .privateLink {
-        border-radius: 999px;
-        padding: 0 1rem;
-        background: $color-muted-surface;
-        color: $color-text;
-        font-size: 0.95rem;
-        font-weight: 650;
-        white-space: nowrap;
-
-        &:hover {
-            background: $color-primary;
-            color: $color-primary-foreground;
-        }
     }
 }

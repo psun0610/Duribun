@@ -72,10 +72,12 @@ export const COUPLE_PLACE_APP_COPY = {
         '다른 커플들이 공개한 데이트 장소를 발견하는 공간입니다.',
     exploreTitle: '새로운 장소 탐색',
     feedView: '피드 보기',
+    feedViewShort: '피드',
     friendDescription:
         '친구 커플을 연결하면 서로의 공개 가능한 추천 장소를 볼 수 있어요.',
     friendTitle: '친구 커플 추천',
     listView: '목록 보기',
+    listViewShort: '리스트',
     logout: '로그아웃',
     manualExplorePending: '탐색 승인 전',
     private: '비공개',
@@ -84,6 +86,7 @@ export const COUPLE_PLACE_APP_COPY = {
     requestDisconnect: '커플 연결 해제 요청',
     settingsDescription: '프로필과 커플 공간을 관리합니다.',
     settingsTitle: '설정',
+    viewModeLabel: '장소 보기 방식',
 } as const
 
 export const TAB_ITEMS: Array<{
