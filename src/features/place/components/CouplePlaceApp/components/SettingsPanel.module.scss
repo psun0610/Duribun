@@ -1,0 +1,11 @@
+@use '../../../../../styles/variables' as *;
+
+.stack {
+    display: grid;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.fullWidth {
+    width: 100%;
+}

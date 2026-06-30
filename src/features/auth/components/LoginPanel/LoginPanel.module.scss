@@ -24,16 +24,16 @@
         background: linear-gradient(90deg, $color-primary, $color-secondary);
         background-clip: text;
         color: transparent;
-        font-size: 2.15rem;
-        font-weight: 950;
+        font-size: 2.2rem;
+        font-weight: 700;
         line-height: 1;
         margin: 0;
     }
 
     .title {
         color: $color-text;
-        font-size: 1.15rem;
-        font-weight: 900;
+        font-size: 1.2rem;
+        font-weight: 700;
         line-height: 1.42;
         margin: 0;
 
@@ -44,7 +44,11 @@
 
     .heroImage {
         background:
-            linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.08)),
+            linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0.08)
+            ),
             url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=700&q=80');
         background-position: center;
         background-size: cover;
@@ -96,8 +100,8 @@
         align-items: center;
         color: $color-muted;
         display: flex;
-        font-size: 0.84rem;
-        font-weight: 800;
+        font-size: 0.8rem;
+        font-weight: 700;
         gap: 0.2rem;
         justify-content: center;
         margin: 0.25rem 0 0;

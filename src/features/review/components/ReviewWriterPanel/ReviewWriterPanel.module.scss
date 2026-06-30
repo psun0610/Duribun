@@ -41,14 +41,14 @@
     align-items: center;
     color: $color-text;
     display: flex;
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     font-weight: 650;
     gap: 0.45rem;
     justify-content: space-between;
 
     small {
         color: $color-muted;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 500;
     }
 }
@@ -69,7 +69,7 @@
     color: $color-muted;
     cursor: pointer;
     display: inline-flex;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
     gap: 0.3rem;
     justify-content: center;
@@ -121,7 +121,7 @@
 
 .helpText {
     color: $color-muted;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 500;
     line-height: 1.5;
     margin: 0;

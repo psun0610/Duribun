@@ -24,8 +24,8 @@
     .eyebrow {
         margin: 0;
         color: $color-primary;
-        font-size: 0.78rem;
-        font-weight: 900;
+        font-size: 0.8rem;
+        font-weight: 700;
         letter-spacing: 0;
         text-transform: uppercase;
     }
@@ -38,7 +38,7 @@
         background-clip: text;
         color: transparent;
         font-size: clamp(2.5rem, 12vw, 5rem);
-        font-weight: 950;
+        font-weight: 700;
         line-height: 1;
         letter-spacing: 0;
     }
@@ -110,15 +110,15 @@
 
         span {
             color: $color-muted;
-            font-size: 0.82rem;
-            font-weight: 800;
+            font-size: 0.8rem;
+            font-weight: 700;
             line-height: 1.4;
         }
 
         strong {
             color: $color-text;
-            font-size: 1.45rem;
-            font-weight: 950;
+            font-size: 1.5rem;
+            font-weight: 700;
             line-height: 1.15;
         }
     }

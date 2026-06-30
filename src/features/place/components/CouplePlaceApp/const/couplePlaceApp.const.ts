@@ -70,8 +70,7 @@ export const CATEGORY_LABEL: Record<PlaceCategory, string> = {
 export const COUPLE_PLACE_APP_COPY = {
     addPlace: '장소 추가',
     appTitle: '두리번',
-    exploreDescription:
-        '다른 커플들이 공개한 좋은 장소를 발견하는 공간입니다.',
+    exploreDescription: '다른 커플들이 공개한 좋은 장소를 발견하는 공간입니다.',
     exploreTitle: '새로운 장소 탐색',
     feedView: '피드 보기',
     feedViewShort: '피드',

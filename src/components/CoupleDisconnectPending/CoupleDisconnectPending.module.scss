@@ -28,13 +28,13 @@
     background-clip: text;
     color: transparent;
     font-size: 2rem;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1;
 }
 
 .coupleName {
     color: $color-muted;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     font-weight: 700;
     margin-top: 0.5rem;
 }
@@ -60,14 +60,14 @@
 
     dt {
         color: $color-muted;
-        font-size: 0.8125rem;
+        font-size: 0.8rem;
         font-weight: 700;
     }
 
     dd {
         color: $color-text;
-        font-size: 0.9375rem;
-        font-weight: 800;
+        font-size: 0.9rem;
+        font-weight: 700;
         margin: 0;
     }
 }

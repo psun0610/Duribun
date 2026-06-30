@@ -5,19 +5,20 @@ import { signOut } from '@/features/auth/actions'
 import { requestCoupleDisconnect } from '@/features/couple/actions'
 
 import { COUPLE_PLACE_APP_COPY } from '../const/couplePlaceApp.const'
+import styles from './SettingsPanel.module.scss'
 
 export const SettingsPanel = () => {
     return (
         <EmptyState
             action={
-                <div className="grid w-full gap-2">
+                <div className={styles.stack}>
                     <form action={signOut}>
-                        <Button className="w-full" type="submit" variant="secondary">
+                        <Button className={styles.fullWidth} type="submit" variant="secondary">
                             {COUPLE_PLACE_APP_COPY.logout}
                         </Button>
                     </form>
                     <form action={requestCoupleDisconnect}>
-                        <Button className="w-full" type="submit" variant="secondary">
+                        <Button className={styles.fullWidth} type="submit" variant="secondary">
                             {COUPLE_PLACE_APP_COPY.requestDisconnect}
                         </Button>
                     </form>

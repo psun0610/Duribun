@@ -146,11 +146,18 @@ export const usePlaceRegistrationPanel = ({
         expandSearch()
     }
 
+    const handleOpenSearchTab = () => {
+        setIsManualFormOpen(false)
+        expandSearch()
+    }
+
     const handleSearchFocus = () => {
+        setIsManualFormOpen(false)
         expandSearch()
     }
 
     const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setIsManualFormOpen(false)
         expandSearch()
 
         if (searchTimerRef.current) {
@@ -192,6 +199,7 @@ export const usePlaceRegistrationPanel = ({
         handleClearSelectedPlace,
         handleClosePanel,
         handleOpenManualForm,
+        handleOpenSearchTab,
         handleSearchExpand,
         handleSearchFocus,
         handleSearchInputChange,

@@ -44,6 +44,7 @@ export const PlaceRegistrationPanel = ({
         handleClearSelectedPlace,
         handleClosePanel,
         handleOpenManualForm,
+        handleOpenSearchTab,
         handleSearchExpand,
         handleSearchFocus,
         handleSearchInputChange,
@@ -117,14 +118,27 @@ export const PlaceRegistrationPanel = ({
                     </h2>
                     <div className={styles.registrationTabs} role="tablist">
                         <button
-                            className={styles.registrationTabActive}
+                            aria-selected={!isManualFormOpen}
+                            className={
+                                isManualFormOpen
+                                    ? styles.registrationTab
+                                    : styles.registrationTabActive
+                            }
+                            onClick={handleOpenSearchTab}
+                            role="tab"
                             type="button"
                         >
                             {PLACE_REGISTRATION_COPY.searchTab}
                         </button>
                         <button
-                            className={styles.registrationTab}
+                            aria-selected={isManualFormOpen}
+                            className={
+                                isManualFormOpen
+                                    ? styles.registrationTabActive
+                                    : styles.registrationTab
+                            }
                             onClick={handleOpenManualForm}
+                            role="tab"
                             type="button"
                         >
                             {PLACE_REGISTRATION_COPY.manualTab}
@@ -168,116 +182,131 @@ export const PlaceRegistrationPanel = ({
                     </div>
 
                     <div className={styles.content}>
-                    <div
-                        aria-hidden={!isContentShown}
-                        className={`${styles.contentInner} ${
-                            isContentShown ? styles.contentInnerVisible : ''
-                        }`}
-                    >
-                    {searchState.errorMessage ? (
-                        <FieldMessage variant="error">
-                            {searchState.errorMessage}
-                        </FieldMessage>
-                    ) : null}
-
-                    {shouldShowSearchPrompt ? (
-                        <div className={styles.searchPrompt}>
-                            <span className={styles.searchPromptIcon}>
-                                <Search aria-hidden="true" size={30} />
-                            </span>
-                            <div className={styles.promptManualArea}>
-                                <span>{PLACE_REGISTRATION_COPY.manualHint}</span>
-                                <Button
-                                    onClick={handleOpenManualForm}
-                                    type="button"
-                                    variant="ghost"
-                                >
-                                    {PLACE_REGISTRATION_COPY.manualCta}
-                                </Button>
-                            </div>
-                        </div>
-                    ) : null}
-
-                    {searchState.query &&
-                    searchState.results.length === 0 &&
-                    !isSearching ? (
-                        <p className={styles.emptyText}>
-                            {PLACE_REGISTRATION_COPY.noSearchResults}
-                        </p>
-                    ) : null}
-
-                    {searchState.results.length > 0 ? (
-                        <>
-                            <div className={styles.results}>
-                                {searchState.results.map(place => (
-                                    <KakaoPlaceResultRow
-                                        isSelected={
-                                            confirmedPlace?.id === place.id
-                                        }
-                                        key={place.id}
-                                        onSelect={handleSelectPlace}
-                                        place={place}
-                                    />
-                                ))}
-                            </div>
-                            {!searchState.isEnd ? (
-                                <form
-                                    action={searchAction}
-                                    className={styles.loadMoreForm}
-                                >
-                                    <input
-                                        name="mode"
-                                        type="hidden"
-                                        value="append"
-                                    />
-                                    <input
-                                        name="query"
-                                        type="hidden"
-                                        value={searchState.query}
-                                    />
-                                    <input
-                                        name="page"
-                                        type="hidden"
-                                        value={searchState.page + 1}
-                                    />
-                                    <Button
-                                        disabled={isSearching}
-                                        onMouseDown={handleSearchExpand}
-                                        size="sm"
-                                        type="submit"
-                                        variant="secondary"
-                                    >
-                                        {PLACE_REGISTRATION_COPY.loadMore}
-                                    </Button>
-                                </form>
+                        <div
+                            aria-hidden={!isContentShown}
+                            className={`${styles.contentInner} ${
+                                isContentShown
+                                    ? styles.contentInnerVisible
+                                    : ''
+                            }`}
+                        >
+                            {searchState.errorMessage ? (
+                                <FieldMessage variant="error">
+                                    {searchState.errorMessage}
+                                </FieldMessage>
                             ) : null}
-                        </>
-                    ) : null}
 
-                    {!shouldShowSearchPrompt ? (
-                        <div className={styles.manualArea}>
-                            <span>{PLACE_REGISTRATION_COPY.manualHint}</span>
-                            <Button
-                                onClick={handleOpenManualForm}
-                                type="button"
-                                variant="ghost"
-                            >
-                                {PLACE_REGISTRATION_COPY.manualCta}
-                            </Button>
+                            {shouldShowSearchPrompt ? (
+                                <div className={styles.searchPrompt}>
+                                    <span className={styles.searchPromptIcon}>
+                                        <Search aria-hidden="true" size={30} />
+                                    </span>
+                                    <div className={styles.promptManualArea}>
+                                        <span>
+                                            {
+                                                PLACE_REGISTRATION_COPY.manualHint
+                                            }
+                                        </span>
+                                        <Button
+                                            onClick={handleOpenManualForm}
+                                            type="button"
+                                            variant="ghost"
+                                        >
+                                            {PLACE_REGISTRATION_COPY.manualCta}
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : null}
+
+                            {searchState.query &&
+                            searchState.results.length === 0 &&
+                            !isSearching ? (
+                                <p className={styles.emptyText}>
+                                    {
+                                        PLACE_REGISTRATION_COPY.noSearchResults
+                                    }
+                                </p>
+                            ) : null}
+
+                            {searchState.results.length > 0 ? (
+                                <>
+                                    <div className={styles.results}>
+                                        {searchState.results.map(place => (
+                                            <KakaoPlaceResultRow
+                                                isSelected={
+                                                    confirmedPlace?.id ===
+                                                    place.id
+                                                }
+                                                key={place.id}
+                                                onSelect={handleSelectPlace}
+                                                place={place}
+                                            />
+                                        ))}
+                                    </div>
+                                    {!searchState.isEnd ? (
+                                        <form
+                                            action={searchAction}
+                                            className={styles.loadMoreForm}
+                                        >
+                                            <input
+                                                name="mode"
+                                                type="hidden"
+                                                value="append"
+                                            />
+                                            <input
+                                                name="query"
+                                                type="hidden"
+                                                value={searchState.query}
+                                            />
+                                            <input
+                                                name="page"
+                                                type="hidden"
+                                                value={searchState.page + 1}
+                                            />
+                                            <Button
+                                                disabled={isSearching}
+                                                onMouseDown={handleSearchExpand}
+                                                size="sm"
+                                                type="submit"
+                                                variant="secondary"
+                                            >
+                                                {
+                                                    PLACE_REGISTRATION_COPY.loadMore
+                                                }
+                                            </Button>
+                                        </form>
+                                    ) : null}
+                                </>
+                            ) : null}
+
+                            {!shouldShowSearchPrompt && !isManualFormOpen ? (
+                                <div className={styles.manualArea}>
+                                    <span>
+                                        {PLACE_REGISTRATION_COPY.manualHint}
+                                    </span>
+                                    <Button
+                                        onClick={handleOpenManualForm}
+                                        type="button"
+                                        variant="ghost"
+                                    >
+                                        {PLACE_REGISTRATION_COPY.manualCta}
+                                    </Button>
+                                </div>
+                            ) : null}
+
+                            {isManualFormOpen ? (
+                                <ManualPlaceForm
+                                    isRegisteringManualPlace={
+                                        isRegisteringManualPlace
+                                    }
+                                    manualRegistrationState={
+                                        manualRegistrationState
+                                    }
+                                    registerManualAction={registerManualAction}
+                                />
+                            ) : null}
                         </div>
-                    ) : null}
-
-                    {isManualFormOpen ? (
-                        <ManualPlaceForm
-                            isRegisteringManualPlace={
-                                isRegisteringManualPlace
-                            }
-                            manualRegistrationState={manualRegistrationState}
-                            registerManualAction={registerManualAction}
-                        />
-                    ) : null}
                     </div>
-                </div>
                 </div>
 
                 {confirmedPlace ? (

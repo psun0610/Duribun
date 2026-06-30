@@ -1,7 +1,5 @@
 import Link from 'next/link'
 
-import { LinkButton } from '@/components/ui'
-
 import type { AppShellProps } from './types/appShell.types'
 
 import styles from './AppShell.module.scss'
@@ -13,9 +11,6 @@ export const AppShell = ({ children }: AppShellProps) => {
                 <Link className={styles.brand} href="/">
                     두리번
                 </Link>
-                <LinkButton href="/app" size="sm" variant="secondary">
-                    우리 공간
-                </LinkButton>
             </header>
             {children}
         </div>
