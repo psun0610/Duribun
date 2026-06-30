@@ -1,4 +1,16 @@
-import { Compass, Home, Settings, Users, type LucideIcon } from 'lucide-react'
+import {
+    Building2,
+    Coffee,
+    Compass,
+    Grid3X3,
+    Heart,
+    Home,
+    Settings,
+    Trees,
+    Users,
+    Utensils,
+    type LucideIcon,
+} from 'lucide-react'
 
 import type {
     ActiveTab,
@@ -75,6 +87,7 @@ export const COUPLE_PLACE_APP_COPY = {
         '필터를 바꾸거나 공개 가능한 장소가 쌓이면 탐색 추천이 표시돼요.',
     exploreEmptyTitle: '아직 표시할 탐색 추천이 없어요',
     exploreRegionAll: '전체 지역',
+    exploreSearchPlaceholder: '장소, 지역, 키워드 검색',
     exploreSortLabel: '탐색 정렬',
     exploreTitle: '새로운 장소 탐색',
     feedView: '피드 보기',
@@ -98,6 +111,7 @@ export const COUPLE_PLACE_APP_COPY = {
     listViewShort: '리스트',
     logout: '로그아웃',
     manualExplorePending: '탐색 승인 중',
+    notification: '알림',
     placesTitle: '우리 장소',
     private: '비공개',
     public: '공개',
@@ -106,6 +120,12 @@ export const COUPLE_PLACE_APP_COPY = {
     requestDisconnect: '커플 연결 해제 요청',
     settingsDescription: '프로필과 커플 공간을 관리합니다.',
     settingsTitle: '설정',
+    tabTitle: {
+        explore: '탐색',
+        friends: '친구 추천',
+        places: '',
+        settings: '설정',
+    },
     viewModeLabel: '장소 보기 방식',
 } as const
 
@@ -126,29 +146,38 @@ export const EXPLORE_SORT_OPTIONS = [
 
 export const EXPLORE_CATEGORY_OPTIONS = [
     {
+        icon: Grid3X3,
         label: '전체',
         value: 'all',
     },
     {
+        icon: Coffee,
         label: CATEGORY_LABEL.cafe,
         value: 'cafe',
     },
     {
-        label: CATEGORY_LABEL.restaurant,
+        icon: Utensils,
+        label: '맛집',
         value: 'restaurant',
     },
     {
-        label: CATEGORY_LABEL.activity,
+        icon: Heart,
+        label: '데이트',
         value: 'activity',
+    },
+    {
+        icon: Trees,
+        label: '자연',
+        value: 'nature',
+    },
+    {
+        icon: Building2,
+        label: '문화',
+        value: 'culture',
     },
 ] as const
 
-export const EXPLORE_REGION_OPTIONS = [
-    '서울',
-    '부산',
-    '대구',
-    '제주',
-] as const
+export const EXPLORE_REGION_OPTIONS = ['서울', '부산', '대구', '제주'] as const
 
 export const TAB_ITEMS: Array<{
     icon: LucideIcon

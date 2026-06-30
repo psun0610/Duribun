@@ -17,7 +17,6 @@ import { getFallbackReviewDetail } from './utils/couplePlaceApp.utils'
 import styles from './CouplePlaceApp.module.scss'
 
 export const CouplePlaceApp = ({
-    coupleName,
     currentUserId,
     exploreRecommendations,
     friendCode,
@@ -50,7 +49,7 @@ export const CouplePlaceApp = ({
         <main className={styles.app}>
             <section className={styles.content}>
                 <AppHeader
-                    coupleName={coupleName}
+                    activeTab={activeTab}
                     onFeedView={handleFeedView}
                     onListView={handleListView}
                     viewMode={viewMode}

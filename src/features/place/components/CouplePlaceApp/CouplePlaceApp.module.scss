@@ -2,13 +2,13 @@
 
 .app {
     background: $color-background;
-    min-height: calc(100vh - 4.25rem);
+    min-height: 100vh;
     padding: clamp(1rem, 4vw, 1.25rem) $space-page-inline 0;
 
     .content {
         display: flex;
         flex-direction: column;
-        min-height: calc(100vh - 5.25rem);
+        min-height: calc(100vh - 1rem);
         margin: 0 auto;
         max-width: 28rem;
         padding: 0;
@@ -19,28 +19,40 @@
     .appHeader {
         display: grid;
         flex-shrink: 0;
-        gap: 0.8rem;
-        justify-items: center;
-        padding: 0.25rem 0.25rem 1rem;
-        text-align: center;
+        gap: 0.7rem;
+        padding: 0.15rem 0.1rem 0.8rem;
 
-        h1,
-        p {
+        h1 {
             margin: 0;
         }
 
         h1 {
             color: $color-text;
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1.05rem;
+            font-weight: 800;
             line-height: 1.25;
         }
+    }
 
-        p {
-            color: $color-muted;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
+    .topNav {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        min-height: 2.35rem;
+    }
+
+    .headerIconButton {
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-radius: 999px;
+        color: $color-text;
+        cursor: pointer;
+        display: inline-flex;
+        height: 2rem;
+        justify-content: center;
+        padding: 0;
+        width: 2rem;
     }
 
     .viewSwitch {

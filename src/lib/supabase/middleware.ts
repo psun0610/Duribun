@@ -1,13 +1,39 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import type { Database } from '@/types/database'
-import { getAuthGateRedirect } from '@/features/auth/routing'
+import { getAuthGateRedirect, isProtectedPath } from '@/features/auth/routing'
+import { isStaleRefreshTokenError } from '@/lib/supabase/authError'
 import { getEnv } from '@/lib/env'
+
+const isSupabaseAuthCookie = (cookieName: string) => {
+    return cookieName.startsWith('sb-') && cookieName.includes('auth-token')
+}
+
+const clearSupabaseAuthCookies = (
+    request: NextRequest,
+    response: NextResponse
+) => {
+    request.cookies
+        .getAll()
+        .filter(cookie => isSupabaseAuthCookie(cookie.name))
+        .forEach(cookie => {
+            request.cookies.delete(cookie.name)
+            response.cookies.set(cookie.name, '', {
+                maxAge: 0,
+                path: '/',
+            })
+        })
+}
 
 export const updateSession = async (request: NextRequest) => {
     let response = NextResponse.next({
         request,
     })
+    const pathname = request.nextUrl.pathname
+
+    if (!isProtectedPath(pathname)) {
+        return response
+    }
 
     const supabase = createServerClient<Database>(
         getEnv('NEXT_PUBLIC_SUPABASE_URL'),
@@ -32,17 +58,38 @@ export const updateSession = async (request: NextRequest) => {
         }
     )
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    let isAuthenticated = false
+
+    try {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser()
+
+        isAuthenticated = Boolean(user)
+    } catch (error) {
+        if (!isStaleRefreshTokenError(error)) {
+            throw error
+        }
+
+        response = NextResponse.next({
+            request,
+        })
+        clearSupabaseAuthCookies(request, response)
+    }
 
     const redirectPath = getAuthGateRedirect({
-        pathname: request.nextUrl.pathname,
-        isAuthenticated: Boolean(user),
+        pathname,
+        isAuthenticated,
     })
 
     if (redirectPath) {
-        return NextResponse.redirect(new URL(redirectPath, request.url))
+        const redirectResponse = NextResponse.redirect(
+            new URL(redirectPath, request.url)
+        )
+
+        clearSupabaseAuthCookies(request, redirectResponse)
+
+        return redirectResponse
     }
 
     return response

@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 
 import { ProfileSetupForm } from '@/features/profile/components/ProfileSetupForm'
 import { getProfileInitialValues } from '@/features/profile/utils/profileMetadata.utils'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, getServerUser } from '@/lib/supabase/server'
 
 interface ProfileSetupPageProps {
     searchParams: Promise<{
@@ -13,9 +13,7 @@ interface ProfileSetupPageProps {
 const ProfileSetupPage = async ({ searchParams }: ProfileSetupPageProps) => {
     const supabase = await createServerSupabaseClient()
     const resolvedSearchParams = await searchParams
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const user = await getServerUser(supabase)
 
     if (!user) {
         redirect('/login')

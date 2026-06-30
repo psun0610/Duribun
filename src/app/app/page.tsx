@@ -10,7 +10,7 @@ import {
     getExploreCouplePlaceSummaries,
     getFriendCouplePlaceSummaries,
 } from '@/features/share/actions'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, getServerUser } from '@/lib/supabase/server'
 
 interface ProtectedAppPageProps {
     searchParams?: Promise<{
@@ -21,9 +21,7 @@ interface ProtectedAppPageProps {
 const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
     const resolvedSearchParams = await searchParams
     const supabase = await createServerSupabaseClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const user = await getServerUser(supabase)
 
     if (!user) {
         redirect('/login')

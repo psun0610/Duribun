@@ -2,13 +2,17 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { Compass, MapPin, Search, Star } from 'lucide-react'
+import {
+    Bookmark,
+    Compass,
+    MapPin,
+    Search,
+    SlidersHorizontal,
+    Star,
+} from 'lucide-react'
 
-import { Badge, Pill } from '@/components/ui'
-import type {
-    PublicSummaryCategoryFilter,
-    PublicSummarySort,
-} from '@/features/share/types/shareSummary.types'
+import { Pill } from '@/components/ui'
+import type { PublicSummarySort } from '@/features/share/types/shareSummary.types'
 
 import type { ExploreRecommendationsPanelProps } from '../types/couplePlaceAppComponent.types'
 import {
@@ -18,6 +22,7 @@ import {
     EXPLORE_REGION_OPTIONS,
     EXPLORE_SORT_OPTIONS,
 } from '../const/couplePlaceApp.const'
+import { DragScrollArea } from './DragScrollArea'
 
 import styles from './ExploreRecommendationsPanel.module.scss'
 
@@ -25,26 +30,68 @@ const getRegionText = (address: string, roadAddress: string) => {
     return roadAddress || address
 }
 
+const isSupportedCategory = (category: string) => {
+    return category === 'cafe' || category === 'restaurant' || category === 'activity'
+}
+
 export const ExploreRecommendationsPanel = ({
     recommendations,
 }: ExploreRecommendationsPanelProps) => {
     const [sort, setSort] = useState<PublicSummarySort>('recommended')
-    const [category, setCategory] =
-        useState<PublicSummaryCategoryFilter>('all')
+    const [category, setCategory] = useState('all')
     const [region, setRegion] = useState('')
+    const [query, setQuery] = useState('')
+    const normalizedQuery = query.trim()
     const filteredRecommendations = recommendations
         .filter(recommendation => {
-            if (category !== 'all' && recommendation.category !== category) {
+            if (
+                category !== 'all' &&
+                isSupportedCategory(category) &&
+                recommendation.category !== category
+            ) {
+                return false
+            }
+
+            if (category === 'nature' && !recommendation.tags.includes('야외')) {
+                return false
+            }
+
+            if (
+                category === 'culture' &&
+                !recommendation.tags.some(tag => tag.includes('사진') || tag.includes('데이트'))
+            ) {
                 return false
             }
 
             if (!region) {
+                return !normalizedQuery || [
+                    recommendation.placeName,
+                    recommendation.coupleName,
+                    recommendation.address,
+                    recommendation.roadAddress,
+                    ...recommendation.tags,
+                ].some(text => text.includes(normalizedQuery))
+            }
+
+            const hasRegion = [recommendation.address, recommendation.roadAddress].some(
+                address => address.includes(region)
+            )
+
+            if (!hasRegion) {
+                return false
+            }
+
+            if (!normalizedQuery) {
                 return true
             }
 
-            return [recommendation.address, recommendation.roadAddress].some(
-                address => address.includes(region)
-            )
+            return [
+                recommendation.placeName,
+                recommendation.coupleName,
+                recommendation.address,
+                recommendation.roadAddress,
+                ...recommendation.tags,
+            ].some(text => text.includes(normalizedQuery))
         })
         .sort((leftRecommendation, rightRecommendation) => {
             if (sort === 'rating') {
@@ -73,16 +120,25 @@ export const ExploreRecommendationsPanel = ({
         })
 
     return (
-        <div className={styles.panel}>
+        <DragScrollArea axis="y" className={styles.panel}>
             <section className={styles.searchPanel} aria-label="탐색 필터">
-                <div className={styles.searchInput}>
+                <label className={styles.searchInput}>
                     <Search size={17} />
-                    <span>{COUPLE_PLACE_APP_COPY.exploreDescription}</span>
-                </div>
+                    <input
+                        aria-label={COUPLE_PLACE_APP_COPY.exploreSearchPlaceholder}
+                        onChange={event => setQuery(event.target.value)}
+                        placeholder={COUPLE_PLACE_APP_COPY.exploreSearchPlaceholder}
+                        type="search"
+                        value={query}
+                    />
+                    <SlidersHorizontal size={17} />
+                </label>
 
-                <div
-                    aria-label={COUPLE_PLACE_APP_COPY.exploreSortLabel}
+                <DragScrollArea
+                    axis="x"
                     className={styles.chipRow}
+                    label={COUPLE_PLACE_APP_COPY.exploreSortLabel}
+                    shouldStopPropagation
                 >
                     {EXPLORE_SORT_OPTIONS.map(option => (
                         <button
@@ -98,9 +154,14 @@ export const ExploreRecommendationsPanel = ({
                             {option.label}
                         </button>
                     ))}
-                </div>
+                </DragScrollArea>
 
-                <div className={styles.iconChipRow} aria-label="카테고리 필터">
+                <DragScrollArea
+                    axis="x"
+                    className={styles.iconChipRow}
+                    label="카테고리 필터"
+                    shouldStopPropagation
+                >
                     {EXPLORE_CATEGORY_OPTIONS.map(option => (
                         <button
                             className={
@@ -112,12 +173,20 @@ export const ExploreRecommendationsPanel = ({
                             onClick={() => setCategory(option.value)}
                             type="button"
                         >
+                            <span>
+                                <option.icon size={17} />
+                            </span>
                             {option.label}
                         </button>
                     ))}
-                </div>
+                </DragScrollArea>
 
-                <div className={styles.chipRow} aria-label="지역 필터">
+                <DragScrollArea
+                    axis="x"
+                    className={styles.chipRow}
+                    label="지역 필터"
+                    shouldStopPropagation
+                >
                     <button
                         className={!region ? styles.filterChipActive : styles.filterChip}
                         onClick={() => setRegion('')}
@@ -139,7 +208,7 @@ export const ExploreRecommendationsPanel = ({
                             {regionOption}
                         </button>
                     ))}
-                </div>
+                </DragScrollArea>
             </section>
 
             <section className={styles.recommendationList}>
@@ -174,6 +243,26 @@ export const ExploreRecommendationsPanel = ({
                                             <h3>{recommendation.placeName}</h3>
                                             <p>{recommendation.coupleName}의 공개 추천</p>
                                         </div>
+                                        <button
+                                            aria-label="추천 저장"
+                                            className={styles.bookmarkButton}
+                                            type="button"
+                                        >
+                                            <Bookmark size={17} />
+                                        </button>
+                                    </div>
+
+                                    <div className={styles.metaRow}>
+                                        {regionText ? (
+                                            <span>
+                                                <MapPin size={12} />
+                                                {regionText}
+                                            </span>
+                                        ) : null}
+                                        <span>{CATEGORY_LABEL[recommendation.category]}</span>
+                                    </div>
+
+                                    <div className={styles.ratingRow}>
                                         <Pill
                                             icon={
                                                 <Star
@@ -185,18 +274,7 @@ export const ExploreRecommendationsPanel = ({
                                         >
                                             {recommendation.averageRating.toFixed(1)}
                                         </Pill>
-                                    </div>
-
-                                    <div className={styles.metaRow}>
-                                        <Badge size="sm" variant="primary">
-                                            {CATEGORY_LABEL[recommendation.category]}
-                                        </Badge>
-                                        {regionText ? (
-                                            <span>
-                                                <MapPin size={12} />
-                                                {regionText}
-                                            </span>
-                                        ) : null}
+                                        <span>전체 공개</span>
                                     </div>
 
                                     {recommendation.tags.length > 0 ? (
@@ -220,6 +298,6 @@ export const ExploreRecommendationsPanel = ({
                     </div>
                 )}
             </section>
-        </div>
+        </DragScrollArea>
     )
 }

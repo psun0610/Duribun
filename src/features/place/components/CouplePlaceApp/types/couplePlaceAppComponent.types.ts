@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
+import type { ReactNode } from 'react'
 
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
 import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
@@ -13,7 +14,7 @@ import type {
 } from './couplePlaceApp.types'
 
 export interface AppHeaderProps {
-    coupleName: string
+    activeTab: ActiveTab
     onFeedView: () => void
     onListView: () => void
     viewMode: ViewMode
@@ -56,4 +57,12 @@ export interface FriendRecommendationsPanelProps {
 
 export interface ExploreRecommendationsPanelProps {
     recommendations: PublicCouplePlaceSummary[]
+}
+
+export interface DragScrollAreaProps {
+    axis: 'x' | 'y'
+    children: ReactNode
+    className: string
+    label?: string
+    shouldStopPropagation?: boolean
 }
