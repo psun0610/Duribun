@@ -5,6 +5,9 @@ import type { ProtectedSpaceProps } from './types/protectedSpace.types'
 export const ProtectedSpace = ({
     coupleName,
     currentUserId,
+    friendCode,
+    friendCouples,
+    friendRecommendations,
     places,
     reviewDetailsByPlaceId,
     userLabel,
@@ -13,6 +16,9 @@ export const ProtectedSpace = ({
         <CouplePlaceApp
             coupleName={coupleName}
             currentUserId={currentUserId}
+            friendCode={friendCode}
+            friendCouples={friendCouples}
+            friendRecommendations={friendRecommendations}
             places={places}
             reviewDetailsByPlaceId={reviewDetailsByPlaceId}
             userLabel={userLabel}

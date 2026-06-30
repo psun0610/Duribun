@@ -1,6 +1,6 @@
 'use client'
 
-import { Compass, Users } from 'lucide-react'
+import { Compass } from 'lucide-react'
 
 import { PlaceRegistrationPanel } from '@/features/place/components/PlaceRegistrationPanel'
 import { ReviewDetailPanel } from '@/features/review/components/ReviewDetailPanel'
@@ -9,6 +9,7 @@ import { ReviewWriterPanel } from '@/features/review/components/ReviewWriterPane
 import { AppHeader } from './components/AppHeader'
 import { BottomNavigation } from './components/BottomNavigation'
 import { EmptyTab } from './components/EmptyTab'
+import { FriendRecommendationsPanel } from './components/FriendRecommendationsPanel'
 import { PlacesTabPanel } from './components/PlacesTabPanel'
 import { SettingsPanel } from './components/SettingsPanel'
 import { COUPLE_PLACE_APP_COPY } from './const/couplePlaceApp.const'
@@ -21,6 +22,9 @@ import styles from './CouplePlaceApp.module.scss'
 export const CouplePlaceApp = ({
     coupleName,
     currentUserId,
+    friendCode,
+    friendCouples,
+    friendRecommendations,
     places,
     reviewDetailsByPlaceId,
 }: CouplePlaceAppProps) => {
@@ -86,10 +90,10 @@ export const CouplePlaceApp = ({
                 ) : null}
 
                 {activeTab === 'friends' ? (
-                    <EmptyTab
-                        description={COUPLE_PLACE_APP_COPY.friendDescription}
-                        icon={Users}
-                        title={COUPLE_PLACE_APP_COPY.friendTitle}
+                    <FriendRecommendationsPanel
+                        friendCode={friendCode}
+                        friendCouples={friendCouples}
+                        recommendations={friendRecommendations}
                     />
                 ) : null}
 

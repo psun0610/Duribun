@@ -9,6 +9,51 @@ export type Json =
 export type Database = {
     public: {
         Tables: {
+            couple_friendships: {
+                Row: {
+                    couple_a_id: string;
+                    couple_b_id: string;
+                    created_at: string;
+                    created_by: string;
+                    id: string;
+                };
+                Insert: {
+                    couple_a_id: string;
+                    couple_b_id: string;
+                    created_at?: string;
+                    created_by: string;
+                    id?: string;
+                };
+                Update: {
+                    couple_a_id?: string;
+                    couple_b_id?: string;
+                    created_at?: string;
+                    created_by?: string;
+                    id?: string;
+                };
+                Relationships: [];
+            };
+            friend_couple_filters: {
+                Row: {
+                    enabled: boolean;
+                    friend_couple_id: string;
+                    updated_at: string;
+                    user_id: string;
+                };
+                Insert: {
+                    enabled?: boolean;
+                    friend_couple_id: string;
+                    updated_at?: string;
+                    user_id: string;
+                };
+                Update: {
+                    enabled?: boolean;
+                    friend_couple_id?: string;
+                    updated_at?: string;
+                    user_id?: string;
+                };
+                Relationships: [];
+            };
             review_photos: {
                 Row: {
                     created_at: string;
@@ -288,6 +333,15 @@ export type Database = {
             };
         };
         Views: {
+            friend_couple_filter_summaries: {
+                Row: {
+                    created_at: string;
+                    enabled: boolean;
+                    friend_couple_id: string;
+                    friend_couple_name: string;
+                };
+                Relationships: [];
+            };
             explore_couple_place_summaries: {
                 Row: {
                     address: string | null;
@@ -338,6 +392,12 @@ export type Database = {
                 };
                 Returns: string;
             };
+            create_friendship_by_friend_code: {
+                Args: {
+                    p_friend_code: string;
+                };
+                Returns: string;
+            };
             current_couple_id: {
                 Args: Record<PropertyKey, never>;
                 Returns: string | null;
@@ -346,6 +406,10 @@ export type Database = {
                 Args: {
                     p_invite_code: string;
                 };
+                Returns: string;
+            };
+            regenerate_friend_code: {
+                Args: Record<PropertyKey, never>;
                 Returns: string;
             };
             request_couple_disconnect: {

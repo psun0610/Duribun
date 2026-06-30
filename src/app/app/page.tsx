@@ -3,8 +3,10 @@ import { redirect } from 'next/navigation'
 import { CoupleDisconnectPending } from '@/components/CoupleDisconnectPending'
 import { ProtectedSpace } from '@/components/ProtectedSpace'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
+import { getFriendCoupleFilters } from '@/features/friend/actions'
 import { getCouplePlaces } from '@/features/place/actions'
 import { getCouplePlaceReviewDetailsMap } from '@/features/review/actions'
+import { getFriendCouplePlaceSummaries } from '@/features/share/actions'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 interface ProtectedAppPageProps {
@@ -93,11 +95,16 @@ const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
         places.map(place => place.couplePlaceId),
         user.id
     )
+    const friendCouples = await getFriendCoupleFilters()
+    const friendRecommendations = await getFriendCouplePlaceSummaries()
 
     return (
         <ProtectedSpace
             coupleName={coupleSummary.name}
             currentUserId={user.id}
+            friendCode={coupleSummary.friendCode}
+            friendCouples={friendCouples}
+            friendRecommendations={friendRecommendations}
             places={places}
             reviewDetailsByPlaceId={reviewDetailsByPlaceId}
             userLabel={userLabel}

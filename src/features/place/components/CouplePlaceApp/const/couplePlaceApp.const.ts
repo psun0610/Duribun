@@ -74,8 +74,20 @@ export const COUPLE_PLACE_APP_COPY = {
     exploreTitle: '새로운 장소 탐색',
     feedView: '피드 보기',
     feedViewShort: '피드',
+    addFriendCode: '친구 추가',
+    addFriendCodeLabel: '친구 커플 코드',
+    addFriendCodePlaceholder: '예: DURI7A',
+    addFriendCodeSuccess: '친구 커플을 추가했어요.',
+    copyFriendCode: '코드 복사',
+    friendCodeCopied: '복사 완료',
+    friendCodeDescription:
+        '이 코드를 공유하면 친구 커플이 공개 가능한 장소만 볼 수 있어요.',
+    friendCodeTitle: '우리 친구 코드',
     friendDescription:
         '친구 커플과 연결하면 서로 공개 가능한 추천 장소를 볼 수 있어요.',
+    friendEmptyDescription:
+        '친구 커플을 추가하거나 필터를 켜면 공개 가능한 추천 장소가 표시돼요.',
+    friendEmptyTitle: '아직 표시할 추천이 없어요',
     friendTitle: '친구 커플 추천',
     listView: '리스트 보기',
     listViewShort: '리스트',
@@ -85,6 +97,7 @@ export const COUPLE_PLACE_APP_COPY = {
     private: '비공개',
     public: '공개',
     recordSuffix: '개의 장소 기록',
+    regenerateFriendCode: '새 코드 생성',
     requestDisconnect: '커플 연결 해제 요청',
     settingsDescription: '프로필과 커플 공간을 관리합니다.',
     settingsTitle: '설정',

@@ -53,7 +53,7 @@ describe('share eligibility', () => {
         expect(placeActionsSource).toContain(".update({ is_public: isPublic })")
         expect(placeActionsSource).toContain("couple.status !== 'active'")
         expect(reviewDetailPanelSource).toContain('updateCouplePlaceSharing')
-        expect(reviewDetailCopySource).toContain("shareTitle: '공유 설정'")
+        expect(reviewDetailCopySource).toContain("shareTitle: '공개 설정'")
     })
 
     it('keeps public visibility gated by completed reviews and public photos', () => {

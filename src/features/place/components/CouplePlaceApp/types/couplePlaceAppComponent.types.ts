@@ -2,6 +2,8 @@ import type { LucideIcon } from 'lucide-react'
 
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
 import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
+import type { PublicCouplePlaceSummary } from '@/features/share/types/shareSummary.types'
+import type { FriendCoupleFilterSummary } from '@/features/friend/types/friendRelationship.types'
 
 import type {
     ActiveTab,
@@ -44,4 +46,10 @@ export interface RegisteredPlaceCardProps {
     detail: CouplePlaceReviewDetail | undefined
     onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
     place: CouplePlaceListItem
+}
+
+export interface FriendRecommendationsPanelProps {
+    friendCode: string
+    friendCouples: FriendCoupleFilterSummary[]
+    recommendations: PublicCouplePlaceSummary[]
 }
