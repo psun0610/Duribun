@@ -4,11 +4,16 @@ import { revalidatePath } from 'next/cache'
 
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
-import type { ReviewSubmissionState } from './types/reviewSubmission.types'
+import { REVIEW_RATING_OPTIONS } from './const/reviewSubmission.const'
+import type {
+    ReviewRatingInput,
+    ReviewSubmissionState,
+} from './types/reviewSubmission.types'
 import type {
     CouplePlaceReviewDetail,
     ReviewDetailItem,
     ReviewDetailPhoto,
+    ReviewRatingDetail,
     ReviewStatus,
 } from './types/reviewDetail.types'
 import {
@@ -102,9 +107,61 @@ const parseRating = (value: FormDataEntryValue | null) => {
 
     const rating = Number(normalizedValue)
 
-    return Number.isFinite(rating) && rating >= 1 && rating <= 5
+    return (
+        Number.isFinite(rating) &&
+        rating >= 0.5 &&
+        rating <= 5 &&
+        Number.isInteger(rating * 2)
+    )
         ? rating
         : null
+}
+
+const parseReviewRatings = (
+    formData: FormData,
+    options: Array<{ key: string; label: string }>
+) => {
+    const keys = formData.getAll('ratingKey')
+    const labels = formData.getAll('ratingLabel')
+    const scores = formData.getAll('ratingScore')
+    const ratingsByKey = new Map<string, ReviewRatingInput>()
+
+    for (let index = 0; index < keys.length; index += 1) {
+        const key = normalizeReviewText(keys[index])
+        const label = normalizeReviewText(labels[index])
+        const score = parseRating(scores[index] ?? null)
+
+        if (!key || !label || score === null) {
+            continue
+        }
+
+        ratingsByKey.set(key, {
+            key,
+            label,
+            score,
+        })
+    }
+
+    const ratings: ReviewRatingInput[] = []
+
+    for (const option of options) {
+        const rating = ratingsByKey.get(option.key)
+
+        if (!rating || rating.label !== option.label) {
+            return null
+        }
+
+        ratings.push(rating)
+    }
+
+    return ratings
+}
+
+const getRepresentativeRating = (ratings: ReviewRatingInput[]) => {
+    const averageRating =
+        ratings.reduce((sum, rating) => sum + rating.score, 0) / ratings.length
+
+    return Math.round(averageRating * 10) / 10
 }
 
 export const submitReview = async (
@@ -114,7 +171,6 @@ export const submitReview = async (
     try {
         const { supabase, user } = await getAuthenticatedSupabase()
         const couplePlaceId = normalizeReviewText(formData.get('couplePlaceId'))
-        const rating = parseRating(formData.get('rating'))
         const oneLineReview = normalizeReviewText(formData.get('oneLineReview'))
         const selectedTags = formData
             .getAll('tagLabels')
@@ -130,13 +186,6 @@ export const submitReview = async (
             return {
                 ...previousState,
                 errorMessage: '리뷰할 장소를 선택해 주세요.',
-            }
-        }
-
-        if (rating === null) {
-            return {
-                ...previousState,
-                errorMessage: '평점은 1점에서 5점 사이로 선택해 주세요.',
             }
         }
 
@@ -214,6 +263,21 @@ export const submitReview = async (
                 errorMessage: '장소 정보를 찾지 못했어요.',
             }
         }
+
+        const reviewRatings = parseReviewRatings(
+            formData,
+            REVIEW_RATING_OPTIONS[place.category]
+        )
+
+        if (!reviewRatings) {
+            return {
+                ...previousState,
+                errorMessage:
+                    '카테고리에 맞는 모든 평점을 0.5점에서 5점 사이로 선택해 주세요.',
+            }
+        }
+
+        const rating = getRepresentativeRating(reviewRatings)
 
         const { data: existingReview } = await supabase
             .from('reviews')
@@ -311,6 +375,10 @@ export const submitReview = async (
                 .delete()
                 .eq('review_id', existingReview.id)
             await supabase
+                .from('review_ratings')
+                .delete()
+                .eq('review_id', existingReview.id)
+            await supabase
                 .from('review_photos')
                 .delete()
                 .eq('review_id', existingReview.id)
@@ -334,6 +402,30 @@ export const submitReview = async (
                 errorMessage: mapReviewErrorMessage(
                     reviewTagError.message,
                     reviewTagError.code
+                ),
+            }
+        }
+
+        const { error: reviewRatingError } = await supabase
+            .from('review_ratings')
+            .upsert(
+                reviewRatings.map(reviewRating => ({
+                    rating_key: reviewRating.key,
+                    rating_label: reviewRating.label,
+                    review_id: reviewRow.id,
+                    score: reviewRating.score,
+                })),
+                {
+                    onConflict: 'review_id,rating_key',
+                }
+            )
+
+        if (reviewRatingError) {
+            return {
+                ...previousState,
+                errorMessage: mapReviewErrorMessage(
+                    reviewRatingError.message,
+                    reviewRatingError.code
                 ),
             }
         }
@@ -406,7 +498,7 @@ export const getCouplePlaceReviewDetailsMap = async (
 
     const reviewIds = reviewRows.map(reviewRow => reviewRow.id)
 
-    const [tagResult, photoResult] = await Promise.all([
+    const [tagResult, photoResult, ratingResult] = await Promise.all([
         reviewIds.length > 0
             ? supabase
                   .from('review_tags')
@@ -417,6 +509,12 @@ export const getCouplePlaceReviewDetailsMap = async (
             ? supabase
                   .from('review_photos')
                   .select('review_id, kind, storage_path')
+                  .in('review_id', reviewIds)
+            : Promise.resolve({ data: [], error: null }),
+        reviewIds.length > 0
+            ? supabase
+                  .from('review_ratings')
+                  .select('review_id, rating_key, rating_label, score')
                   .in('review_id', reviewIds)
             : Promise.resolve({ data: [], error: null }),
     ])
@@ -432,6 +530,13 @@ export const getCouplePlaceReviewDetailsMap = async (
         console.error('Failed to load review photos', {
             code: photoResult.error.code,
             message: photoResult.error.message,
+        })
+    }
+
+    if (ratingResult.error) {
+        console.error('Failed to load review ratings', {
+            code: ratingResult.error.code,
+            message: ratingResult.error.message,
         })
     }
 
@@ -454,6 +559,19 @@ export const getCouplePlaceReviewDetailsMap = async (
     }
 
     const photosByReviewId = new Map<string, ReviewDetailPhoto[]>()
+
+    const ratingsByReviewId = new Map<string, ReviewRatingDetail[]>()
+
+    for (const ratingRow of ratingResult.data ?? []) {
+        const reviewId = ratingRow.review_id as string
+        const nextRatings = ratingsByReviewId.get(reviewId) ?? []
+        nextRatings.push({
+            key: ratingRow.rating_key as string,
+            label: ratingRow.rating_label as string,
+            score: Number(ratingRow.score),
+        })
+        ratingsByReviewId.set(reviewId, nextRatings)
+    }
 
     for (const photoRow of photoResult.data ?? []) {
         const { data: signedUrlResult, error: signedUrlError } =
@@ -489,6 +607,7 @@ export const getCouplePlaceReviewDetailsMap = async (
             oneLineReview: reviewRow.one_line_review,
             photos: photosByReviewId.get(reviewRow.id) ?? [],
             rating: Number(reviewRow.rating),
+            ratings: ratingsByReviewId.get(reviewRow.id) ?? [],
             tags: sortedTags.map(tagRow => tagRow.label),
         })
         reviewsByPlaceId.set(reviewRow.couple_place_id, nextReviews)

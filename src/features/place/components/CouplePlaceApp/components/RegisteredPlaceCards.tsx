@@ -13,6 +13,7 @@ import {
     getRegisteredPlaceStatus,
     getReviewStatusBadgeVariant,
     getReviewDetailTargetPlace,
+    getReviewTargetPlace,
 } from '../utils/couplePlaceApp.utils'
 
 import styles from '../CouplePlaceApp.module.scss'
@@ -32,16 +33,23 @@ const getRegisteredPlacePhotoUrl = (
 export const RegisteredPlaceFeedCard = ({
     detail,
     onOpenReviewDetail,
+    onOpenReviewWriter,
     place,
 }: RegisteredPlaceCardProps) => {
     const status = getRegisteredPlaceStatus(detail)
     const rating = getRegisteredPlaceRating(detail)
     const photoUrl = getRegisteredPlacePhotoUrl(detail)
+    const shouldOpenReviewWriter =
+        status === 'none' || status === 'partner-waiting'
 
     return (
         <button
             className={styles.registeredFeedCard}
-            onClick={() => onOpenReviewDetail(getReviewDetailTargetPlace(place))}
+            onClick={() =>
+                shouldOpenReviewWriter
+                    ? onOpenReviewWriter(getReviewTargetPlace(place))
+                    : onOpenReviewDetail(getReviewDetailTargetPlace(place))
+            }
             type="button"
         >
             <span className={styles.registeredFeedVisual}>
@@ -96,16 +104,23 @@ export const RegisteredPlaceFeedCard = ({
 export const RegisteredPlaceListCard = ({
     detail,
     onOpenReviewDetail,
+    onOpenReviewWriter,
     place,
 }: RegisteredPlaceCardProps) => {
     const status = getRegisteredPlaceStatus(detail)
     const rating = getRegisteredPlaceRating(detail)
     const photoUrl = getRegisteredPlacePhotoUrl(detail)
+    const shouldOpenReviewWriter =
+        status === 'none' || status === 'partner-waiting'
 
     return (
         <button
             className={styles.registeredListCard}
-            onClick={() => onOpenReviewDetail(getReviewDetailTargetPlace(place))}
+            onClick={() =>
+                shouldOpenReviewWriter
+                    ? onOpenReviewWriter(getReviewTargetPlace(place))
+                    : onOpenReviewDetail(getReviewDetailTargetPlace(place))
+            }
             type="button"
         >
             <span className={styles.registeredListVisual}>

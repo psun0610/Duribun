@@ -8,6 +8,12 @@ export interface ReviewPhotoInput {
     kind: ReviewPhotoKind
 }
 
+export interface ReviewRatingInput {
+    key: string
+    label: string
+    score: number
+}
+
 export interface ReviewSubmissionState {
     errorMessage: string
     successMessage: string
@@ -22,4 +28,9 @@ export interface ReviewTargetPlace {
 export interface ReviewTagOption {
     label: string
     value: string
+}
+
+export interface ReviewRatingOption {
+    key: string
+    label: string
 }

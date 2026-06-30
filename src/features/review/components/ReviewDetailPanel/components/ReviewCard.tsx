@@ -42,6 +42,20 @@ export const ReviewCard = ({
 
             <p className={styles.oneLineReview}>{review.oneLineReview}</p>
 
+            {review.ratings.length > 0 ? (
+                <div className={styles.ratingBreakdown}>
+                    {review.ratings.map(rating => (
+                        <div
+                            className={styles.ratingBreakdownItem}
+                            key={rating.key}
+                        >
+                            <span>{rating.label}</span>
+                            <strong>{formatRating(rating.score)}</strong>
+                        </div>
+                    ))}
+                </div>
+            ) : null}
+
             {review.tags.length > 0 ? (
                 <div className={styles.tagList}>
                     {review.tags.map(tag => (

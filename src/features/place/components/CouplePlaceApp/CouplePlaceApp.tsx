@@ -37,6 +37,7 @@ export const CouplePlaceApp = ({
         handleListView,
         handleOpenRegistrationPanel,
         handleOpenReviewDetail,
+        handleOpenReviewWriter,
         handleTabChange,
         isRegistrationPanelOpen,
         reviewDetailTargetPlace,
@@ -83,6 +84,7 @@ export const CouplePlaceApp = ({
                 {activeTab === 'places' ? (
                     <PlacesTabPanel
                         onOpenReviewDetail={handleOpenReviewDetail}
+                        onOpenReviewWriter={handleOpenReviewWriter}
                         places={places}
                         reviewDetailsByPlaceId={reviewDetailsByPlaceId}
                         viewMode={viewMode}

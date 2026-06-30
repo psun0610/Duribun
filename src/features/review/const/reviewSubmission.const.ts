@@ -1,19 +1,8 @@
 import type {
     ReviewCategory,
+    ReviewRatingOption,
     ReviewTagOption,
 } from '../types/reviewSubmission.types'
-
-export const REVIEW_SCORE_OPTIONS = [
-    '1',
-    '1.5',
-    '2',
-    '2.5',
-    '3',
-    '3.5',
-    '4',
-    '4.5',
-    '5',
-] as const
 
 export const REVIEW_KIND_OPTIONS = [
     {
@@ -25,6 +14,31 @@ export const REVIEW_KIND_OPTIONS = [
         value: 'couple_private',
     },
 ] as const
+
+export const REVIEW_RATING_OPTIONS: Record<
+    ReviewCategory,
+    ReviewRatingOption[]
+> = {
+    activity: [
+        { key: 'fun', label: '재미' },
+        { key: 'accessibility', label: '접근성' },
+        { key: 'value', label: '가성비' },
+        { key: 'satisfaction', label: '만족도' },
+    ],
+    cafe: [
+        { key: 'coffee', label: '커피맛' },
+        { key: 'dessert', label: '디저트' },
+        { key: 'mood', label: '분위기' },
+        { key: 'seat_comfort', label: '좌석편의' },
+        { key: 'satisfaction', label: '만족도' },
+    ],
+    restaurant: [
+        { key: 'taste', label: '맛' },
+        { key: 'cleanliness', label: '청결도' },
+        { key: 'value', label: '가성비' },
+        { key: 'satisfaction', label: '만족도' },
+    ],
+}
 
 export const REVIEW_TAG_OPTIONS: Record<ReviewCategory, ReviewTagOption[]> = {
     activity: [
@@ -58,15 +72,15 @@ export const REVIEW_WRITER_COPY = {
     close: '닫기',
     kindLabel: '사진 유형',
     oneLineLabel: '한 줄 리뷰',
-    panelTitle: '리뷰 작성',
+    panelTitle: '이 장소 어땠나요?',
     photoHelp:
-        '장소/음식 사진과 커플/개인 사진을 구분해 주세요. 공개는 장소/음식 사진만 가능해요.',
+        '각 사진마다 장소/음식 또는 커플/개인 유형을 선택해 주세요. 공개는 장소/음식 사진만 가능해요.',
     photoLabel: '사진 추가',
-    photoLimitHelp: '최대 5장까지 추가할 수 있어요.',
+    photoLimitHelp: '최대 10장까지 추가할 수 있어요.',
     photoRowLabel: '사진',
-    ratingLabel: '별점',
+    ratingHelp: '각 항목을 0.5점 단위로 선택해 주세요.',
+    ratingLabel: '평점',
     save: '리뷰 저장하기',
     tagLabel: '카테고리',
-    tagsHelp: '이 장소의 매력을 한 줄로 남겨보세요.',
-    titlePrefix: '리뷰 작성',
+    tagsHelp: '이 장소의 매력을 태그로 골라주세요.',
 } as const

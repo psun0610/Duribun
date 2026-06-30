@@ -276,6 +276,38 @@
     margin: 0;
 }
 
+.ratingBreakdown {
+    display: grid;
+    gap: 0.45rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ratingBreakdownItem {
+    align-items: center;
+    background: rgba($color-muted-surface, 0.72);
+    border: 1px solid $color-line;
+    border-radius: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+
+    span {
+        color: $color-muted;
+        font-size: 0.72rem;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    strong {
+        color: $color-primary;
+        font-size: 0.78rem;
+        font-weight: 850;
+    }
+}
+
 .tagList {
     display: flex;
     flex-wrap: wrap;

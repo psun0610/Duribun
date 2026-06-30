@@ -14,6 +14,10 @@ const couplePlaceAppSource = readFileSync(
     ),
     'utf8'
 )
+const reviewActionsSource = readFileSync(
+    path.resolve(process.cwd(), 'src/features/review/actions.ts'),
+    'utf8'
+)
 const reviewDetailPanelSource = readFileSync(
     path.resolve(
         process.cwd(),
@@ -53,36 +57,41 @@ describe('review detail', () => {
     it('opens a private detail panel with review state copy', () => {
         expect(couplePlaceAppSource).toContain('ReviewDetailPanel')
         expect(couplePlaceAppSource).toContain('onOpenReviewDetail')
+        expect(couplePlaceAppSource).toContain('onOpenReviewWriter')
         expect(registeredPlaceCardsSource).toContain(
             'getReviewDetailTargetPlace'
         )
+        expect(reviewDetailCopySource).toContain("'partner-waiting': '상대가 기다려요'")
+        expect(reviewDetailCopySource).toContain("none: '작성 전'")
         expect(reviewDetailCopySource).toContain(
-            "'partner-waiting': '상대가 리뷰를 기다리고 있어요'"
-        )
-        expect(reviewDetailCopySource).toContain(
-            "none: '리뷰를 작성해 주세요!'"
-        )
-        expect(reviewDetailCopySource).toContain(
-            "'waiting-partner': '아직 상대가 작성하지 않았어요'"
+            "'waiting-partner': '내가 작성한 차례'"
         )
     })
 
-    it('shows private one-line reviews, ratings, tags, and photos only inside the couple space', () => {
+    it('shows private one-line reviews, rating metrics, tags, and photos only inside the couple space', () => {
         expect(reviewCardSource).toContain('oneLineReview')
-        expect(reviewCardSource).toContain('rating')
+        expect(reviewCardSource).toContain('review.ratings')
+        expect(reviewCardSource).toContain('ratingBreakdown')
         expect(reviewCardSource).toContain('photoGrid')
         expect(reviewCardSource).toContain('REVIEW_PHOTO_KIND_LABEL')
+        expect(reviewActionsSource).toContain('review_ratings')
         expect(reviewDetailCopySource).toContain("myReview: '내 리뷰'")
         expect(reviewDetailCopySource).toContain("partnerReview: '상대 리뷰'")
     })
 
     it('keeps completed review state aligned with average rating and photo visibility rules', () => {
         expect(reviewDetailPanelSource).toContain('averageRating')
-        expect(reviewDetailCopySource).toContain(
-            "complete: '리뷰가 모두 작성되었어요'"
-        )
+        expect(reviewDetailCopySource).toContain("complete: '작성 완료'")
         expect(reviewDetailCopySource).toContain("privateBadge: '비공개'")
         expect(reviewDetailCopySource).toContain("publicBadge: '공개'")
+    })
+
+    it('routes unrevised registered places to the review writer', () => {
+        expect(couplePlaceAppSource).toContain('onOpenReviewWriter')
+        expect(registeredPlaceCardsSource).toContain('getReviewTargetPlace')
+        expect(registeredPlaceCardsSource).toContain(
+            "status === 'none' || status === 'partner-waiting'"
+        )
     })
 
     it('keeps the detail modal mounted while fade-out animation runs', () => {
