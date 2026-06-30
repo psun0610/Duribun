@@ -1,0 +1,17 @@
+@use '../../../styles/variables' as *;
+
+.spinner {
+    animation: spin 0.72s linear infinite;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+    border-top-color: $color-primary-foreground;
+    display: inline-flex;
+    height: 0.95rem;
+    width: 0.95rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

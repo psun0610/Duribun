@@ -1,0 +1,292 @@
+@use '../../../../../styles/variables' as *;
+
+.panel {
+    cursor: grab;
+    display: grid;
+    gap: 0.7rem;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 0.1rem 5.5rem;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.recommendationCard,
+.emptyRecommendations {
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: 1.15rem;
+}
+
+.searchPanel {
+    display: grid;
+    gap: 0.65rem;
+    padding: 0 0.05rem 0.1rem;
+}
+
+.searchInput {
+    align-items: center;
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: 1.15rem;
+    color: $color-muted;
+    display: grid;
+    font-size: 0.8rem;
+    font-weight: 600;
+    gap: 0.45rem;
+    grid-template-columns: auto 1fr auto;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.8rem;
+
+    input {
+        background: transparent;
+        border: 0;
+        color: $color-text;
+        font: inherit;
+        min-width: 0;
+        outline: 0;
+
+        &::placeholder {
+            color: $color-muted;
+        }
+    }
+}
+
+.chipRow,
+.iconChipRow {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.05rem;
+    scrollbar-width: none;
+    touch-action: pan-x;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.filterChip,
+.filterChipActive,
+.iconChip,
+.iconChipActive {
+    align-items: center;
+    border: 1px solid $color-line;
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 750;
+    gap: 0.22rem;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.filterChip,
+.filterChipActive {
+    border-radius: 999px;
+    padding: 0.42rem 0.72rem;
+}
+
+.iconChip,
+.iconChipActive {
+    background: transparent;
+    border: 0;
+    color: $color-muted;
+    display: grid;
+    gap: 0.24rem;
+    justify-items: center;
+    min-width: 2.75rem;
+    padding: 0;
+
+    span {
+        align-items: center;
+        background: $color-surface;
+        border: 1px solid $color-line;
+        border-radius: 999px;
+        color: $color-muted;
+        display: inline-flex;
+        height: 2.45rem;
+        justify-content: center;
+        width: 2.45rem;
+    }
+}
+
+.filterChip {
+    background: $color-muted-surface;
+    color: $color-muted;
+}
+
+.filterChipActive {
+    background: rgba($color-primary, 0.12);
+    color: $color-primary;
+}
+
+.iconChipActive {
+    color: $color-primary;
+
+    span {
+        background: $color-primary;
+        border-color: $color-primary;
+        color: $color-primary-foreground;
+    }
+}
+
+.recommendationList {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.recommendationCard {
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: 4.6rem 1fr;
+    padding: 0.55rem;
+}
+
+.photoFrame {
+    align-items: center;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, rgba($color-primary, 0.16), rgba($color-secondary, 0.24));
+    border-radius: 0.85rem;
+    color: $color-primary;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+
+    img {
+        object-fit: cover;
+    }
+}
+
+.recommendationBody {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+.recommendationHeader {
+    align-items: flex-start;
+    display: flex;
+    gap: 0.45rem;
+    justify-content: space-between;
+    min-width: 0;
+
+    h3,
+    p {
+        margin: 0;
+    }
+
+    h3 {
+        color: $color-text;
+        font-size: 0.88rem;
+        font-weight: 750;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    p {
+        color: $color-muted;
+        font-size: 0.72rem;
+        font-weight: 550;
+        margin-top: 0.16rem;
+    }
+}
+
+.metaRow {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+
+    > span:not([class]) {
+        align-items: center;
+        color: $color-muted;
+        display: inline-flex;
+        font-size: 0.7rem;
+        font-weight: 650;
+        gap: 0.16rem;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.bookmarkButton {
+    align-items: center;
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: 999px;
+    color: $color-muted;
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    height: 1.8rem;
+    justify-content: center;
+    width: 1.8rem;
+}
+
+.ratingRow {
+    align-items: center;
+    display: flex;
+    gap: 0.45rem;
+
+    > span:not([class]) {
+        color: $color-muted;
+        font-size: 0.7rem;
+        font-weight: 650;
+    }
+}
+
+.tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+
+    span {
+        background: $color-muted-surface;
+        border-radius: 999px;
+        color: $color-muted;
+        font-size: 0.72rem;
+        font-weight: 650;
+        padding: 0.3rem 0.5rem;
+    }
+}
+
+.emptyRecommendations {
+    align-items: center;
+    color: $color-muted;
+    display: grid;
+    justify-items: center;
+    padding: 1.5rem 1rem;
+    text-align: center;
+
+    svg {
+        color: $color-primary;
+        margin-bottom: 0.6rem;
+    }
+
+    strong {
+        color: $color-text;
+        font-size: 0.98rem;
+        font-weight: 750;
+    }
+
+    p {
+        font-size: 0.82rem;
+        font-weight: 500;
+        line-height: 1.45;
+        margin: 0.35rem 0 0;
+    }
+}

@@ -1,0 +1,19 @@
+@use '../../../styles/variables' as *;
+
+.dots {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.dots span {
+    background: #d8d8d8;
+    border-radius: 999px;
+    height: 0.42rem;
+    width: 0.42rem;
+}
+
+.dots .active {
+    background: $color-primary;
+}

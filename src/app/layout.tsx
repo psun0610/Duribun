@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 
 import { AppShell } from '@/components/AppShell'
 
-import './tailwind.css'
 import '@/styles/globals.scss'
 
 export const metadata: Metadata = {

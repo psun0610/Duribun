@@ -1,5 +1,4 @@
-import Link from 'next/link'
-
+import { LinkButton, Pill } from '@/components/ui'
 import {
     HOME_ACTIONS,
     HOME_MEMORY_META,
@@ -25,13 +24,18 @@ export const HomeIntro = () => {
                     </p>
                     <div className={styles.actions}>
                         {HOME_ACTIONS.map(action => (
-                            <Link
-                                className={styles[action.variant]}
+                            <LinkButton
                                 href={action.href}
                                 key={action.label}
+                                size="lg"
+                                variant={
+                                    action.variant === 'primaryAction'
+                                        ? 'primary'
+                                        : 'secondary'
+                                }
                             >
                                 {action.label}
-                            </Link>
+                            </LinkButton>
                         ))}
                     </div>
                 </div>
@@ -52,7 +56,7 @@ export const HomeIntro = () => {
                         ))}
                     </div>
                     <div className={styles.memoryMeta}>
-                        <span>{HOME_MEMORY_META.category}</span>
+                        <Pill tone="primary">{HOME_MEMORY_META.category}</Pill>
                         <strong>{HOME_MEMORY_META.placeName}</strong>
                         <span>{HOME_MEMORY_META.status}</span>
                     </div>

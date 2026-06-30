@@ -4,6 +4,27 @@ Duribun now uses the visual language from the Modern Cute App Design reference:
 bright, playful, mobile-first, photo-led, and icon-heavy. The product should
 feel like a modern cute couple archive rather than a quiet premium journal.
 
+## Required Image References
+
+Before creating or changing frontend UI, layout, styling, interaction patterns,
+or visual copy, inspect the relevant files under `docs/design-image-files/`.
+These images are required design references, not optional inspiration.
+
+- `duribun_design_system.png`: source of truth for brand feeling, color,
+  typography, radius, shadow, navigation, badges, empty states, and card
+  patterns.
+- `duribun_uiux_mockup_01.png`: reference for login, onboarding, profile
+  creation, couple connection, invite code, and connection-complete flows.
+- `duribun_uiux_mockup_02.png`: reference for our-place home, feed/list
+  switching, place registration, place detail, review state, and review writing.
+- `duribun_uiux_mockup_03.png`: reference for friend recommendations, friend
+  code management, explore, settings, sharing criteria, privacy, and couple
+  disconnect flows.
+
+When a UI decision is more specific in these images than in written rules, use
+the image as the primary reference while preserving product behavior and privacy
+rules from the docs.
+
 ## Product Feeling
 
 - Default personality: cute couple place archive 70%, recommendation app 30%.

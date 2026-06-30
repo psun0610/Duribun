@@ -1,0 +1,371 @@
+@use '../../../../styles/variables' as *;
+
+.onboarding {
+    margin: 0 auto;
+    min-height: calc(100vh - 4.25rem);
+    padding: clamp(1.25rem, 4vw, 2rem) $space-page-inline
+        max(1.5rem, env(safe-area-inset-bottom));
+    width: min(100%, 28rem);
+}
+
+.content {
+    display: grid;
+    gap: 1.15rem;
+}
+
+.header {
+    display: grid;
+    gap: 0.7rem;
+    justify-items: center;
+    text-align: center;
+}
+
+.heartIcons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    svg {
+        animation: heartIcons 1.5s ease-in-out infinite;
+    }
+}
+
+@keyframes heartIcons {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.eyebrow {
+    margin: 0;
+    color: $color-primary;
+    font-size: 0.8rem;
+    font-weight: 650;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.title {
+    margin: 0;
+    color: $color-text;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0;
+}
+
+.description {
+    margin: 0;
+    color: $color-muted;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.55;
+    word-break: keep-all;
+}
+
+.optionGrid {
+    display: grid;
+    gap: 0.9rem;
+
+    form {
+        min-width: 0;
+    }
+}
+
+.optionButton,
+.panel {
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: 1.35rem;
+    box-shadow: $shadow-soft;
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem;
+    text-align: left;
+    width: 100%;
+}
+
+.optionButton {
+    align-items: center;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    cursor: pointer;
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        transform 160ms ease;
+
+    &:hover {
+        border-color: rgba($color-primary, 0.36);
+        box-shadow: 0 16px 36px rgba($color-primary, 0.16);
+        transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba($color-primary, 0.34);
+        outline-offset: 3px;
+    }
+}
+
+.optionIcon {
+    align-items: center;
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    border-radius: 1.25rem;
+    box-shadow: 0 12px 28px rgba($color-primary, 0.18);
+    color: $color-primary-foreground;
+    display: inline-flex;
+    height: 3.5rem;
+    justify-content: center;
+    width: 3.5rem;
+    grid-row: span 2;
+}
+
+.optionTitle {
+    color: $color-text;
+    font-size: 1.2rem;
+    font-weight: 750;
+    grid-column: 2;
+    letter-spacing: 0;
+}
+
+.optionDescription {
+    color: $color-muted;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.55;
+    word-break: keep-all;
+    grid-column: 2;
+}
+
+.optionArrow {
+    color: $color-text;
+    grid-column: 3;
+    grid-row: 1 / span 2;
+}
+
+.panelTitle {
+    margin: 0;
+    color: $color-text;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+.panelDescription {
+    margin: 0;
+    color: $color-muted;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.field {
+    display: grid;
+    gap: 0.45rem;
+    color: $color-text;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    input {
+        width: 100%;
+        border: 2px solid var(--border);
+        border-radius: $radius-control;
+        padding: 0.9rem 1rem;
+        background: $color-surface;
+        color: $color-text;
+        font: inherit;
+        font-weight: 400;
+        letter-spacing: 0;
+        text-transform: none;
+
+        &::placeholder {
+            color: $color-muted;
+        }
+
+        &:focus {
+            border-color: rgba($color-primary, 0.56);
+            outline: 3px solid rgba($color-primary, 0.22);
+        }
+    }
+}
+
+.button {
+    min-height: 3.2rem;
+    border: 0;
+    border-radius: $radius-control;
+    background: linear-gradient(90deg, $color-primary, $color-secondary);
+    color: $color-primary-foreground;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 650;
+    letter-spacing: 0;
+    box-shadow: 0 14px 30px rgba($color-primary, 0.18);
+
+    &:disabled {
+        background: $color-muted-surface;
+        color: $color-muted;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+}
+
+.secondaryButton {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius-control;
+    background: $color-muted-surface;
+    color: $color-text;
+    font-size: 1rem;
+    font-weight: 650;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.copyButton {
+    justify-self: start;
+    border: 0;
+    border-radius: 999px;
+    background: $color-surface;
+    padding: 0.55rem 0.85rem;
+    color: $color-primary;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 650;
+    box-shadow: $shadow-soft;
+}
+
+.codeGrid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.inviteCodeCard {
+    align-items: center;
+    border-radius: $radius-control;
+    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    box-shadow: 0 16px 34px rgba($color-primary, 0.2);
+    display: grid;
+    gap: 0.65rem;
+    justify-items: center;
+    min-height: 8.25rem;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.inviteCodeCard span,
+.inviteCodeCard small {
+    color: $color-primary-foreground;
+}
+
+.inviteCodeCard span {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.inviteCodeCard strong {
+    color: $color-primary-foreground;
+    font-size: clamp(2.1rem, 10vw, 3rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+}
+
+.inviteCodeCard small {
+    align-items: center;
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    gap: 0.35rem;
+}
+
+.actionRow {
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: 1fr;
+}
+
+.pendingPanel {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.codeInputGrid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.codeInput {
+    aspect-ratio: 1;
+    background: $color-muted-surface;
+    border: 1.5px solid transparent;
+    border-radius: 1rem;
+    color: $color-text;
+    font-size: clamp(1.2rem, 8vw, 2rem);
+    font-weight: 750;
+    letter-spacing: 0;
+    text-align: center;
+    text-transform: uppercase;
+    min-width: 0;
+
+    &:focus {
+        border-color: rgba($color-primary, 0.56);
+        background: $color-surface;
+        outline: 3px solid rgba($color-primary, 0.22);
+    }
+}
+
+.codeBlock {
+    display: grid;
+    gap: 0.35rem;
+    border: 2px solid var(--border);
+    border-radius: $radius-control;
+    background: $color-muted-surface;
+    padding: 0.9rem 1rem;
+}
+
+.codeLabel {
+    color: $color-muted;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.codeValue {
+    color: $color-text;
+    font-size: 1.4rem;
+    font-weight: 750;
+    letter-spacing: 0.04em;
+}
+
+.codeDescription {
+    margin: 0;
+    color: $color-muted;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.55;
+}
+
+.errorMessage {
+    margin: 0;
+    border-radius: $radius-control;
+    background: rgba($color-primary, 0.1);
+    padding: 0.85rem 1rem;
+    color: $color-text;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.5;
+}

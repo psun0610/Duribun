@@ -1,0 +1,418 @@
+@use '../../../../styles/variables' as *;
+
+.app {
+    background: $color-background;
+    min-height: 100vh;
+    padding: clamp(1rem, 4vw, 1.25rem) $space-page-inline 0;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 1rem);
+        margin: 0 auto;
+        max-width: 28rem;
+        padding: 0;
+        position: relative;
+        width: 100%;
+    }
+
+    .appHeader {
+        display: grid;
+        flex-shrink: 0;
+        gap: 0.7rem;
+        padding: 0.15rem 0.1rem 0.8rem;
+
+        h1 {
+            margin: 0;
+        }
+
+        h1 {
+            color: $color-text;
+            font-size: 1.05rem;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+    }
+
+    .topNav {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        min-height: 2.35rem;
+    }
+
+    .headerIconButton {
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-radius: 999px;
+        color: $color-text;
+        cursor: pointer;
+        display: inline-flex;
+        height: 2rem;
+        justify-content: center;
+        padding: 0;
+        width: 2rem;
+    }
+
+    .viewSwitch {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .feedPhoto {
+        background-position: center;
+        background-size: cover;
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+
+    .mockFeedGrid,
+    .registeredFeedGrid {
+        display: grid;
+        gap: 0.65rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        min-height: 0;
+        overflow-y: auto;
+        padding: 0 0.1rem 5.5rem;
+    }
+
+    .mockList,
+    .registeredList {
+        display: grid;
+        gap: 0.7rem;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 0 0.1rem 5.5rem;
+    }
+
+    .mockFeedCard,
+    .registeredFeedCard,
+    .registeredListCard,
+    .mockListCard {
+        background: transparent;
+        border: 0;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        padding: 0;
+        text-align: left;
+    }
+
+    .mockFeedCard,
+    .registeredFeedCard {
+        display: grid;
+        gap: 0.45rem;
+        min-width: 0;
+    }
+
+    .mockFeedVisual,
+    .registeredFeedVisual {
+        align-items: center;
+        aspect-ratio: 1;
+        background:
+            radial-gradient(circle at 24% 20%, rgba($color-secondary, 0.5), transparent 28%),
+            linear-gradient(135deg, rgba($color-primary, 0.18), rgba($color-secondary, 0.22));
+        border: 1px solid $color-line;
+        border-radius: 1.1rem;
+        color: $color-primary;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        transition:
+            box-shadow 0.15s,
+            transform 0.15s;
+
+        > svg {
+            height: 2rem;
+            width: 2rem;
+        }
+    }
+
+    .mockFeedVisual {
+        border: 0;
+        background: $color-muted-surface;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .registeredFeedVisual:has(.feedPhoto),
+    .registeredListVisual:has(.feedPhoto) {
+        background: $color-muted-surface;
+        color: $color-primary;
+    }
+
+    .mockFeedCard:hover .mockFeedVisual,
+    .registeredFeedCard:hover .registeredFeedVisual {
+        box-shadow: $shadow-soft;
+        transform: translateY(-1px);
+    }
+
+    .cardMenu,
+    .cardPrivacy,
+    .registeredPrivacyIcon {
+        align-items: center;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 999px;
+        color: $color-muted;
+        display: inline-flex;
+        height: 1.5rem;
+        justify-content: center;
+        position: absolute;
+        width: 1.5rem;
+    }
+
+    .cardMenu {
+        color: $color-text;
+        font-size: 0.7rem;
+        font-weight: 600;
+        right: 0.4rem;
+        top: 0.4rem;
+    }
+
+    .cardPrivacy {
+        bottom: 0.45rem;
+        left: 0.45rem;
+    }
+
+    .registeredPrivacyIcon {
+        right: 0.45rem;
+        top: 0.45rem;
+    }
+
+    .mockFeedRating,
+    .registeredRating {
+        bottom: 0.45rem;
+        left: 0.45rem;
+        position: absolute;
+    }
+
+    .mockFeedRating {
+        left: auto;
+        right: 0.45rem;
+    }
+
+    .mockFeedBody,
+    .registeredFeedBody {
+        display: grid;
+        gap: 0.38rem;
+        min-width: 0;
+
+        h3,
+        strong {
+            color: $color-text;
+            font-size: 0.9rem;
+            font-weight: 650;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .cardStatusRows {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        min-width: 0;
+    }
+
+    .cardPrivacyText {
+        align-items: center;
+        background: $color-surface;
+        border: 1px solid $color-line;
+        border-radius: 999px;
+        color: $color-muted;
+        display: inline-flex;
+        font-size: 0.7rem;
+        font-weight: 600;
+        gap: 0.25rem;
+        line-height: 1;
+        min-height: 1.5rem;
+        padding: 0.3rem 0.48rem;
+        white-space: nowrap;
+
+        svg {
+            flex-shrink: 0;
+        }
+    }
+
+    .mockListCard,
+    .registeredListCard {
+        align-items: center;
+        background: $color-surface;
+        border: 1px solid $color-line;
+        border-radius: 1.15rem;
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: auto 1fr;
+        padding: 0.7rem;
+        transition:
+            border-color 0.15s,
+            box-shadow 0.15s;
+
+        &:hover {
+            border-color: rgba($color-primary, 0.22);
+            box-shadow: $shadow-soft;
+        }
+    }
+
+    .mockListVisual,
+    .registeredListVisual {
+        align-items: center;
+        background: linear-gradient(135deg, rgba($color-primary, 0.18), rgba($color-secondary, 0.24));
+        border-radius: 0.9rem;
+        color: $color-primary;
+        display: inline-flex;
+        height: 4.4rem;
+        justify-content: center;
+        overflow: hidden;
+        width: 4.4rem;
+
+        svg {
+            height: 1.35rem;
+            width: 1.35rem;
+        }
+    }
+
+    .mockListBody,
+    .registeredListBody {
+        display: grid;
+        gap: 0.34rem;
+        min-width: 0;
+    }
+
+    .mockListHeader,
+    .registeredListHeader {
+        align-items: flex-start;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: space-between;
+        min-width: 0;
+
+        h3,
+        strong {
+            color: $color-text;
+            font-size: 0.9rem;
+            font-weight: 650;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        p {
+            color: $color-muted;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 0.15rem 0 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .cardPrivacyInline,
+    .registeredPrivacyIconInline {
+        align-items: center;
+        background: $color-muted-surface;
+        border-radius: 999px;
+        color: $color-muted;
+        display: inline-flex;
+        flex-shrink: 0;
+        height: 1.5rem;
+        justify-content: center;
+        width: 1.5rem;
+    }
+
+    .mockListMeta {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .registeredMeta {
+        color: $color-muted;
+        font-size: 0.8rem;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .registeredListRating {
+        justify-self: start;
+    }
+
+    .bottomNav {
+        background: rgba(255, 255, 255, 0.96);
+        border-top: 1px solid $color-line;
+        bottom: 0;
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+        left: 0;
+        position: fixed;
+        transform: none;
+        width: 100%;
+        z-index: 20;
+    }
+
+    .bottomNavInner {
+        align-items: center;
+        display: flex;
+        margin: 0 auto;
+        max-width: 28rem;
+        justify-content: space-around;
+        padding: 0.35rem 0.4rem max(0.45rem, env(safe-area-inset-bottom));
+        width: 100%;
+    }
+
+    .navItem {
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-radius: 1rem;
+        color: $color-muted;
+        cursor: pointer;
+        display: grid;
+        font: inherit;
+        font-size: 0.7rem;
+        font-weight: 600;
+        gap: 0.18rem;
+        justify-items: center;
+        min-width: 3rem;
+        padding: 0.35rem 0.3rem;
+
+        svg {
+            height: 1.25rem;
+            width: 1.25rem;
+        }
+    }
+
+    .navItemActive {
+        color: $color-primary;
+    }
+
+    .centerAction {
+        align-items: center;
+        background: linear-gradient(135deg, $color-primary, $color-secondary);
+        border: 4px solid $color-surface;
+        border-radius: 999px;
+        box-shadow: 0 12px 32px rgba($color-primary, 0.32);
+        color: $color-primary-foreground;
+        cursor: pointer;
+        display: inline-flex;
+        height: 3.65rem;
+        justify-content: center;
+        margin-top: -2rem;
+        width: 3.65rem;
+
+        svg {
+            height: 1.65rem;
+            width: 1.65rem;
+        }
+    }
+}

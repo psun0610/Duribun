@@ -1,0 +1,30 @@
+@use '../../../styles/variables' as *;
+
+.message {
+    border: 1px solid transparent;
+    border-radius: $radius-control;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0.75rem 0.875rem;
+}
+
+.error {
+    background: rgba($color-primary, 0.1);
+    border-color: rgba($color-primary, 0.18);
+    color: $color-primary;
+}
+
+.success {
+    background: rgba($color-secondary, 0.24);
+    border-color: rgba($color-secondary, 0.28);
+    color: $color-text;
+}
+
+.support {
+    background: $color-muted-surface;
+    border-color: $color-line;
+    color: $color-text;
+    font-weight: 500;
+}

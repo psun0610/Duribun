@@ -1,7 +1,9 @@
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
+import type { SupabaseClient, User } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
 import { getEnv } from '@/lib/env'
+import { isStaleRefreshTokenError } from '@/lib/supabase/authError'
 
 export const createServerSupabaseClient = async () => {
     const cookieStore = await cookies()
@@ -30,4 +32,22 @@ export const createServerSupabaseClient = async () => {
 
 export const createRouteHandlerSupabaseClient = async () => {
     return createServerSupabaseClient()
+}
+
+export const getServerUser = async (
+    supabase: SupabaseClient<Database>
+): Promise<User | null> => {
+    try {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser()
+
+        return user
+    } catch (error) {
+        if (isStaleRefreshTokenError(error)) {
+            return null
+        }
+
+        throw error
+    }
 }

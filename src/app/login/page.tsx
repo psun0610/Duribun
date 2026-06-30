@@ -1,7 +1,4 @@
-import { redirect } from 'next/navigation'
-
-import { LoginPanel } from '@/components/LoginPanel'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { LoginPanel } from '@/features/auth/components/LoginPanel'
 
 interface LoginPageProps {
     searchParams: Promise<{
@@ -10,15 +7,7 @@ interface LoginPageProps {
 }
 
 const LoginPage = async ({ searchParams }: LoginPageProps) => {
-    const supabase = await createServerSupabaseClient()
     const resolvedSearchParams = await searchParams
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
-
-    if (user) {
-        redirect('/app')
-    }
 
     return <LoginPanel hasEmailSent={resolvedSearchParams.emailSent === '1'} />
 }

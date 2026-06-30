@@ -17,7 +17,7 @@ const reviewActionsSource = readFileSync(
 const reviewPanelSource = readFileSync(
     path.resolve(
         process.cwd(),
-        'src/components/ReviewWriterPanel/ReviewWriterPanel.tsx'
+        'src/features/review/components/ReviewWriterPanel/ReviewWriterPanel.tsx'
     ),
     'utf8'
 )

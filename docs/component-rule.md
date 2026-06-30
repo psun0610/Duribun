@@ -4,6 +4,12 @@
 
 Component-related code must be separated by responsibility.
 
+- Shared UI primitives live under `src/components/ui/`.
+- App shell and cross-domain layout components may remain under
+  `src/components/`.
+- Domain-owned UI lives under `src/features/{domain}/components/`.
+- Do not place new domain UI directly under `src/components/`.
+
 ```txt
 ComponentName/
 ├─ ComponentName.tsx

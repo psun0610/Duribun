@@ -3,9 +3,14 @@ import { redirect } from 'next/navigation'
 import { CoupleDisconnectPending } from '@/components/CoupleDisconnectPending'
 import { ProtectedSpace } from '@/components/ProtectedSpace'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
+import { getFriendCoupleFilters } from '@/features/friend/actions'
 import { getCouplePlaces } from '@/features/place/actions'
 import { getCouplePlaceReviewDetailsMap } from '@/features/review/actions'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import {
+    getExploreCouplePlaceSummaries,
+    getFriendCouplePlaceSummaries,
+} from '@/features/share/actions'
+import { createServerSupabaseClient, getServerUser } from '@/lib/supabase/server'
 
 interface ProtectedAppPageProps {
     searchParams?: Promise<{
@@ -16,9 +21,7 @@ interface ProtectedAppPageProps {
 const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
     const resolvedSearchParams = await searchParams
     const supabase = await createServerSupabaseClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const user = await getServerUser(supabase)
 
     if (!user) {
         redirect('/login')
@@ -93,12 +96,22 @@ const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
         places.map(place => place.couplePlaceId),
         user.id
     )
+    const friendCouples = await getFriendCoupleFilters()
+    const friendRecommendations = await getFriendCouplePlaceSummaries()
+    const exploreRecommendations = await getExploreCouplePlaceSummaries({
+        sort: 'recommended',
+    })
 
     return (
         <ProtectedSpace
             coupleName={coupleSummary.name}
             currentUserId={user.id}
+            exploreRecommendations={exploreRecommendations}
+            friendCode={coupleSummary.friendCode}
+            friendCouples={friendCouples}
+            friendRecommendations={friendRecommendations}
             places={places}
+            publicPlaceCount={places.filter(place => place.isPublic).length}
             reviewDetailsByPlaceId={reviewDetailsByPlaceId}
             userLabel={userLabel}
         />

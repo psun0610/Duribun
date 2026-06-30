@@ -1,0 +1,53 @@
+@use '../../../styles/variables' as *;
+
+.pill {
+    align-items: center;
+    border: 1px solid $color-line;
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 650;
+    gap: 0.35rem;
+    line-height: 1;
+    min-height: 2rem;
+    min-width: 0;
+    padding: 0.45rem 0.7rem;
+    white-space: nowrap;
+
+    svg {
+        flex-shrink: 0;
+    }
+}
+
+.label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.neutral {
+    background: $color-surface;
+    color: $color-text;
+}
+
+.primary {
+    background: rgba($color-primary, 0.1);
+    border-color: rgba($color-primary, 0.16);
+    color: $color-primary;
+}
+
+.rating {
+    background: rgba($color-primary, 0.08);
+    border-color: rgba($color-primary, 0.16);
+    color: $color-primary;
+
+    svg {
+        color: $color-primary;
+        fill: $color-primary;
+    }
+}
+
+.privacy {
+    background: $color-surface;
+    color: $color-muted;
+}

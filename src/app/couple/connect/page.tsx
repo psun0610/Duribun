@@ -1,14 +1,12 @@
 import { redirect } from 'next/navigation'
 
-import { CoupleOnboarding } from '@/components/CoupleOnboarding'
+import { CoupleOnboarding } from '@/features/couple/components/CoupleOnboarding'
 import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.types'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient, getServerUser } from '@/lib/supabase/server'
 
 const CoupleConnectPage = async () => {
     const supabase = await createServerSupabaseClient()
-    const {
-        data: { user },
-    } = await supabase.auth.getUser()
+    const user = await getServerUser(supabase)
 
     if (!user) {
         redirect('/login')
