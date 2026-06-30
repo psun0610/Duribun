@@ -11,6 +11,7 @@ export interface ProtectedSpaceProps {
     friendCouples: FriendCoupleFilterSummary[]
     friendRecommendations: PublicCouplePlaceSummary[]
     places: CouplePlaceListItem[]
+    publicPlaceCount: number
     reviewDetailsByPlaceId: Record<string, CouplePlaceReviewDetail>
     userLabel: string
 }

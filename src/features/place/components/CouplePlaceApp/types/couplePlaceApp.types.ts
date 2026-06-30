@@ -35,6 +35,7 @@ export interface CouplePlaceAppProps {
     friendRecommendations: PublicCouplePlaceSummary[]
     exploreRecommendations: PublicCouplePlaceSummary[]
     places: CouplePlaceListItem[]
+    publicPlaceCount: number
     reviewDetailsByPlaceId: Record<string, CouplePlaceReviewDetail>
     userLabel: string
 }

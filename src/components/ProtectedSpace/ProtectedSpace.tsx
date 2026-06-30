@@ -10,6 +10,7 @@ export const ProtectedSpace = ({
     friendCouples,
     friendRecommendations,
     places,
+    publicPlaceCount,
     reviewDetailsByPlaceId,
     userLabel,
 }: ProtectedSpaceProps) => {
@@ -22,6 +23,7 @@ export const ProtectedSpace = ({
             friendCouples={friendCouples}
             friendRecommendations={friendRecommendations}
             places={places}
+            publicPlaceCount={publicPlaceCount}
             reviewDetailsByPlaceId={reviewDetailsByPlaceId}
             userLabel={userLabel}
         />

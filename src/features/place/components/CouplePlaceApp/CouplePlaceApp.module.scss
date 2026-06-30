@@ -351,21 +351,23 @@
     .bottomNav {
         background: rgba(255, 255, 255, 0.96);
         border-top: 1px solid $color-line;
-        bottom: 1rem;
+        bottom: 0;
         box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
-        left: 50%;
-        max-width: 24rem;
+        left: 0;
         position: fixed;
-        transform: translateX(-50%);
-        width: min(100%, 28rem);
+        transform: none;
+        width: 100%;
         z-index: 20;
     }
 
     .bottomNavInner {
         align-items: center;
         display: flex;
+        margin: 0 auto;
+        max-width: 28rem;
         justify-content: space-around;
         padding: 0.35rem 0.4rem max(0.45rem, env(safe-area-inset-bottom));
+        width: 100%;
     }
 
     .navItem {

@@ -59,6 +59,13 @@ export interface ExploreRecommendationsPanelProps {
     recommendations: PublicCouplePlaceSummary[]
 }
 
+export interface SettingsPanelProps {
+    coupleName: string
+    friendCoupleCount: number
+    publicPlaceCount: number
+    userLabel: string
+}
+
 export interface DragScrollAreaProps {
     axis: 'x' | 'y'
     children: ReactNode

@@ -17,13 +17,16 @@ import { getFallbackReviewDetail } from './utils/couplePlaceApp.utils'
 import styles from './CouplePlaceApp.module.scss'
 
 export const CouplePlaceApp = ({
+    coupleName,
     currentUserId,
     exploreRecommendations,
     friendCode,
     friendCouples,
     friendRecommendations,
     places,
+    publicPlaceCount,
     reviewDetailsByPlaceId,
+    userLabel,
 }: CouplePlaceAppProps) => {
     const {
         activeTab,
@@ -100,7 +103,14 @@ export const CouplePlaceApp = ({
                     />
                 ) : null}
 
-                {activeTab === 'settings' ? <SettingsPanel /> : null}
+                {activeTab === 'settings' ? (
+                    <SettingsPanel
+                        coupleName={coupleName}
+                        friendCoupleCount={friendCouples.length}
+                        publicPlaceCount={publicPlaceCount}
+                        userLabel={userLabel}
+                    />
+                ) : null}
             </section>
 
             <BottomNavigation

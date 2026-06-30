@@ -111,6 +111,7 @@ const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
             friendCouples={friendCouples}
             friendRecommendations={friendRecommendations}
             places={places}
+            publicPlaceCount={places.filter(place => place.isPublic).length}
             reviewDetailsByPlaceId={reviewDetailsByPlaceId}
             userLabel={userLabel}
         />
