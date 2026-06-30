@@ -33,6 +33,7 @@ export interface CouplePlaceAppProps {
     friendCode: string
     friendCouples: FriendCoupleFilterSummary[]
     friendRecommendations: PublicCouplePlaceSummary[]
+    exploreRecommendations: PublicCouplePlaceSummary[]
     places: CouplePlaceListItem[]
     reviewDetailsByPlaceId: Record<string, CouplePlaceReviewDetail>
     userLabel: string

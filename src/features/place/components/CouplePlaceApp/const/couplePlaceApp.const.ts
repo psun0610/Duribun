@@ -71,6 +71,11 @@ export const COUPLE_PLACE_APP_COPY = {
     addPlace: '장소 추가',
     appTitle: '두리번',
     exploreDescription: '다른 커플들이 공개한 좋은 장소를 발견하는 공간입니다.',
+    exploreEmptyDescription:
+        '필터를 바꾸거나 공개 가능한 장소가 쌓이면 탐색 추천이 표시돼요.',
+    exploreEmptyTitle: '아직 표시할 탐색 추천이 없어요',
+    exploreRegionAll: '전체 지역',
+    exploreSortLabel: '탐색 정렬',
     exploreTitle: '새로운 장소 탐색',
     feedView: '피드 보기',
     feedViewShort: '피드',
@@ -103,6 +108,47 @@ export const COUPLE_PLACE_APP_COPY = {
     settingsTitle: '설정',
     viewModeLabel: '장소 보기 방식',
 } as const
+
+export const EXPLORE_SORT_OPTIONS = [
+    {
+        label: '추천순',
+        value: 'recommended',
+    },
+    {
+        label: '평점순',
+        value: 'rating',
+    },
+    {
+        label: '최신순',
+        value: 'latest',
+    },
+] as const
+
+export const EXPLORE_CATEGORY_OPTIONS = [
+    {
+        label: '전체',
+        value: 'all',
+    },
+    {
+        label: CATEGORY_LABEL.cafe,
+        value: 'cafe',
+    },
+    {
+        label: CATEGORY_LABEL.restaurant,
+        value: 'restaurant',
+    },
+    {
+        label: CATEGORY_LABEL.activity,
+        value: 'activity',
+    },
+] as const
+
+export const EXPLORE_REGION_OPTIONS = [
+    '서울',
+    '부산',
+    '대구',
+    '제주',
+] as const
 
 export const TAB_ITEMS: Array<{
     icon: LucideIcon

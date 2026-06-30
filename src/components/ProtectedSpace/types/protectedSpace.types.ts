@@ -6,6 +6,7 @@ import type { FriendCoupleFilterSummary } from '@/features/friend/types/friendRe
 export interface ProtectedSpaceProps {
     coupleName: string
     currentUserId: string
+    exploreRecommendations: PublicCouplePlaceSummary[]
     friendCode: string
     friendCouples: FriendCoupleFilterSummary[]
     friendRecommendations: PublicCouplePlaceSummary[]

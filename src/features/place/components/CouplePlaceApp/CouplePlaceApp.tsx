@@ -1,18 +1,15 @@
 'use client'
 
-import { Compass } from 'lucide-react'
-
 import { PlaceRegistrationPanel } from '@/features/place/components/PlaceRegistrationPanel'
 import { ReviewDetailPanel } from '@/features/review/components/ReviewDetailPanel'
 import { ReviewWriterPanel } from '@/features/review/components/ReviewWriterPanel'
 
 import { AppHeader } from './components/AppHeader'
 import { BottomNavigation } from './components/BottomNavigation'
-import { EmptyTab } from './components/EmptyTab'
+import { ExploreRecommendationsPanel } from './components/ExploreRecommendationsPanel'
 import { FriendRecommendationsPanel } from './components/FriendRecommendationsPanel'
 import { PlacesTabPanel } from './components/PlacesTabPanel'
 import { SettingsPanel } from './components/SettingsPanel'
-import { COUPLE_PLACE_APP_COPY } from './const/couplePlaceApp.const'
 import { useCouplePlaceApp } from './hooks/useCouplePlaceApp'
 import type { CouplePlaceAppProps } from './types/couplePlaceApp.types'
 import { getFallbackReviewDetail } from './utils/couplePlaceApp.utils'
@@ -22,6 +19,7 @@ import styles from './CouplePlaceApp.module.scss'
 export const CouplePlaceApp = ({
     coupleName,
     currentUserId,
+    exploreRecommendations,
     friendCode,
     friendCouples,
     friendRecommendations,
@@ -98,10 +96,8 @@ export const CouplePlaceApp = ({
                 ) : null}
 
                 {activeTab === 'explore' ? (
-                    <EmptyTab
-                        description={COUPLE_PLACE_APP_COPY.exploreDescription}
-                        icon={Compass}
-                        title={COUPLE_PLACE_APP_COPY.exploreTitle}
+                    <ExploreRecommendationsPanel
+                        recommendations={exploreRecommendations}
                     />
                 ) : null}
 

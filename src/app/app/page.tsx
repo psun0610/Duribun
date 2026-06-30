@@ -6,7 +6,10 @@ import type { CoupleSummary } from '@/features/couple/types/coupleOnboarding.typ
 import { getFriendCoupleFilters } from '@/features/friend/actions'
 import { getCouplePlaces } from '@/features/place/actions'
 import { getCouplePlaceReviewDetailsMap } from '@/features/review/actions'
-import { getFriendCouplePlaceSummaries } from '@/features/share/actions'
+import {
+    getExploreCouplePlaceSummaries,
+    getFriendCouplePlaceSummaries,
+} from '@/features/share/actions'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 interface ProtectedAppPageProps {
@@ -97,11 +100,15 @@ const ProtectedAppPage = async ({ searchParams }: ProtectedAppPageProps) => {
     )
     const friendCouples = await getFriendCoupleFilters()
     const friendRecommendations = await getFriendCouplePlaceSummaries()
+    const exploreRecommendations = await getExploreCouplePlaceSummaries({
+        sort: 'recommended',
+    })
 
     return (
         <ProtectedSpace
             coupleName={coupleSummary.name}
             currentUserId={user.id}
+            exploreRecommendations={exploreRecommendations}
             friendCode={coupleSummary.friendCode}
             friendCouples={friendCouples}
             friendRecommendations={friendRecommendations}

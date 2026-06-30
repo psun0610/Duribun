@@ -53,3 +53,7 @@ export interface FriendRecommendationsPanelProps {
     friendCouples: FriendCoupleFilterSummary[]
     recommendations: PublicCouplePlaceSummary[]
 }
+
+export interface ExploreRecommendationsPanelProps {
+    recommendations: PublicCouplePlaceSummary[]
+}
