@@ -84,6 +84,30 @@ export type Database = {
                 };
                 Relationships: [];
             };
+            review_ratings: {
+                Row: {
+                    created_at: string;
+                    rating_key: string;
+                    rating_label: string;
+                    review_id: string;
+                    score: number;
+                };
+                Insert: {
+                    created_at?: string;
+                    rating_key: string;
+                    rating_label: string;
+                    review_id: string;
+                    score: number;
+                };
+                Update: {
+                    created_at?: string;
+                    rating_key?: string;
+                    rating_label?: string;
+                    review_id?: string;
+                    score?: number;
+                };
+                Relationships: [];
+            };
             review_tags: {
                 Row: {
                     review_id: string;

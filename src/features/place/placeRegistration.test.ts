@@ -83,6 +83,7 @@ describe('place registration', () => {
         expect(appPageSource).toContain('getCouplePlaces(couple.id)')
         expect(registeredPlaceCardsSource).toContain('RegisteredPlaceFeedCard')
         expect(registeredPlaceCardsSource).toContain('RegisteredPlaceListCard')
+        expect(registeredPlaceCardsSource).toContain('getReviewTargetPlace')
         expect(couplePlaceAppSource).toContain('PlacesTabPanel')
     })
 

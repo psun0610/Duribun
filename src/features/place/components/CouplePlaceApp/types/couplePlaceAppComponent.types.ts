@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
 import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
+import type { ReviewTargetPlace } from '@/features/review/types/reviewSubmission.types'
 import type { PublicCouplePlaceSummary } from '@/features/share/types/shareSummary.types'
 import type { FriendCoupleFilterSummary } from '@/features/friend/types/friendRelationship.types'
 
@@ -38,6 +39,7 @@ export interface MockPlaceCardProps {
 
 export interface PlacesTabPanelProps {
     onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
+    onOpenReviewWriter: (place: ReviewTargetPlace) => void
     places: CouplePlaceListItem[]
     reviewDetailsByPlaceId: Record<string, CouplePlaceReviewDetail>
     viewMode: ViewMode
@@ -46,6 +48,7 @@ export interface PlacesTabPanelProps {
 export interface RegisteredPlaceCardProps {
     detail: CouplePlaceReviewDetail | undefined
     onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
+    onOpenReviewWriter: (place: ReviewTargetPlace) => void
     place: CouplePlaceListItem
 }
 

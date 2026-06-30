@@ -4,15 +4,15 @@
 
 Couples need a private way to remember and evaluate date places together. Existing public review services are optimized for individual, public reviews, so they do not support the couple-specific workflow of both partners leaving private impressions, waiting for the other partner's review, and then selectively sharing only safe parts of the experience.
 
-Duribun should let a couple build a shared place list, review each place privately, and selectively share polished recommendations with friend couples or the broader discovery surface without leaking one-line reviews, private couple photos, or individual ratings.
+Duribun should let a couple build a shared place list, review each place privately, and selectively share polished recommendations with friend couples or the broader discovery surface without leaking one-line reviews, private couple photos, or individual rating metrics.
 
 ## Solution
 
 Build a Next.js, TypeScript, and Supabase application for private couple place reviews.
 
-Users sign in with social auth, create a personal profile, and either create a couple invite code or join an existing couple by entering a code. Once connected, the couple can register global places through Kakao Local search or manual entry, categorize them as restaurant, cafe, or activity, and each partner can leave their own rating, tags, one-line review, and required photos.
+Users sign in with social auth, create a personal profile, and either create a couple invite code or join an existing couple by entering a code. Once connected, the couple can register global places through Kakao Local search or manual entry, categorize them as restaurant, cafe, or activity, and each partner can leave their own category-specific rating metrics, tags, one-line review, and required photos.
 
-The app shows review progress copy based on whether neither, one, or both partners have reviewed the place. A couple place becomes shareable only after both partners have reviewed it and at least one place/food photo exists. Public surfaces expose only place name, category, average rating, tags, and place/food photos. One-line reviews, private couple photos, and individual ratings remain visible only inside the active couple space.
+The app shows review progress copy based on whether neither, one, or both partners have reviewed the place. A couple place becomes shareable only after both partners have reviewed it and at least one place/food photo exists. Public surfaces expose only place name, category, average representative rating, tags, and place/food photos. One-line reviews, private couple photos, and individual rating metrics remain visible only inside the active couple space.
 
 Couples can add friend couples by copying and entering friend codes. Friend recommendations show public-ready places from friend couples, with per-user toggles for which friend couples to include. Explore shows public-ready places from all users, with manual places excluded until approved or matched to Kakao.
 
@@ -42,9 +42,9 @@ Couple disconnect is intentionally strict: either partner can request disconnect
 20. As a connected partner, I want to see `이 장소는 어땠나요?` when neither partner reviewed a place, so that the next action is clear.
 21. As a connected partner, I want to see `상대를 기다리는 중...` when only I reviewed a place, so that I know the review is incomplete.
 22. As a connected partner, I want to see `상대가 기다리고 있어요` when only my partner reviewed a place, so that I know I should review it.
-23. As a connected partner, I want to submit my own rating for a place, so that my opinion is preserved independently.
-24. As a connected partner, I want my partner to submit their own rating, so that our public rating can represent both of us.
-25. As a connected partner, I want the app to average our two ratings for public surfaces, so that friends and explorers see a couple-level signal.
+23. As a connected partner, I want to submit my own category-specific rating metrics for a place, so that my opinion is preserved independently.
+24. As a connected partner, I want my partner to submit their own rating metrics, so that our public rating can represent both of us.
+25. As a connected partner, I want the app to average each review's representative rating for public surfaces, so that friends and explorers see a couple-level signal without exposing private metric details.
 26. As a connected partner, I want to write a one-line review, so that our couple can remember the personal context privately.
 27. As a connected partner, I want one-line reviews to remain private, so that intimate or subjective comments are not exposed.
 28. As a connected partner, I want to select category-specific tags, so that reviews are easy to scan and aggregate.
@@ -73,7 +73,7 @@ Couple disconnect is intentionally strict: either partner can request disconnect
 51. As a connected partner, I want explore to support category and region filtering, so that I can find relevant date places faster.
 52. As a connected partner, I want manual places excluded from explore until approved or matched, so that public discovery stays clean.
 53. As a connected partner, I want manual places allowed in friend recommendations, so that trusted friends can still see niche or newly opened places.
-54. As an explorer, I want public recommendations to hide individual ratings, so that I see a couple-level average without private detail.
+54. As an explorer, I want public recommendations to hide individual rating metrics, so that I see a couple-level average without private detail.
 55. As an explorer, I want public recommendations to hide one-line reviews, so that personal couple context remains private.
 56. As an explorer, I want public recommendations to hide couple/private photos, so that private images never leave the couple space.
 57. As a system, I want sharing eligibility enforced by database rules, so that frontend mistakes do not leak private data.
@@ -86,10 +86,11 @@ Couple disconnect is intentionally strict: either partner can request disconnect
 - Build the app with Next.js, TypeScript, Supabase Auth, Supabase Postgres, Supabase Storage, and Kakao Local API.
 - Use Supabase Auth social providers for Kakao, Naver, and Google. Keep email auth available for development and controlled testing.
 - Model places globally and couple-specific place state separately.
-- Store reviews per individual partner. Public surfaces use the average of the two ratings, not individual ratings.
+- Store reviews per individual partner. Each review has extensible category-specific rating metrics and a representative rating calculated from those metrics. Public surfaces use the average of partner representative ratings, not individual metric details.
 - Treat a couple place as public-ready only when the couple is active, the place is marked public, both partners have reviewed it, and at least one place/food photo exists.
 - Treat a couple place as explore-ready only when it is public-ready and either Kakao-backed or approved after manual creation.
-- Keep one-line reviews, private couple photos, and individual ratings inside the active couple space.
+- Keep one-line reviews, private couple photos, and individual rating metrics inside the active couple space.
+- Model rating metrics as keyed rows so restaurant, cafe, and activity metric definitions can change without adding new rating columns.
 - Require every review to include at least one photo.
 - Require every photo to be classified as place/food or couple/private.
 - Use category-specific selectable tags, with optional custom tag support at the application layer.
@@ -112,7 +113,7 @@ Couple disconnect is intentionally strict: either partner can request disconnect
 - Database tests should verify RLS and RPC behavior for private data, public-ready data, friend-visible data, explore-visible data, and disconnect pending data.
 - Couple lifecycle tests should cover create couple, join by invite code, duplicate membership rejection, full couple rejection, disconnect request, disconnect cancellation, and expired disconnect deletion.
 - Friend relationship tests should cover friend-code registration, self-friend rejection, duplicate friendship idempotency, friend-code regeneration, and per-user friend filter toggles.
-- Review workflow tests should cover the four review status states, individual rating persistence, average public rating, required photos, and public eligibility.
+- Review workflow tests should cover the four review status states, individual rating metric persistence, representative rating calculation, average public rating, required photos, and public eligibility.
 - Photo visibility tests should cover place/food versus couple/private access for own couple, friend couple, explore user, and unrelated user.
 - Place registration tests should cover Kakao-backed places, manual places, duplicate provider place ids, and manual explore approval.
 - Recommendation tests should cover friend recommendation filtering, explore eligibility, category filtering, region filtering, recommendation sort, rating sort, and newest sort.

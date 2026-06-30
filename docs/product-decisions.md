@@ -8,8 +8,10 @@ Duribun is a private couple place review app with selective sharing to friend co
 
 - Places are global records.
 - Couple-specific place state is stored separately from the global place.
-- Reviews are individual: each partner writes their own rating, tags, one-line review, and photos.
-- Public rating is the average of the two individual ratings.
+- Reviews are individual: each partner writes their own category-specific rating metrics, tags, one-line review, and photos.
+- Each review stores a representative rating calculated from its current rating metrics.
+- Public rating is the average of the partners' representative review ratings.
+- Rating metric definitions are category-specific and expected to change over time, so they must be modeled as extensible keyed metrics rather than hard-coded DB columns.
 
 ## Review Status Copy
 
@@ -36,7 +38,7 @@ Private fields:
 
 - One-line reviews
 - Couple/private photos
-- Individual ratings
+- Individual rating metrics
 
 Public eligibility requires:
 
@@ -66,6 +68,16 @@ Initial tag examples:
 - Cafe: `커피 맛집`, `디저트 맛집`, `조용해요`, `사진 잘 나와요`, `작업 가능`, `뷰 좋아요`
 - Activity: `재밌어요`, `초보 가능`, `실내`, `야외`, `비 오는 날 추천`, `예약 필요`
 - Common: `재방문 의사 있음`, `대화하기 좋아요`, `데이트 코스 추천`
+
+## Rating Metrics
+
+Reviews use multiple category-specific rating metrics. The current initial metric set is:
+
+- Restaurant: taste, cleanliness, value, satisfaction
+- Cafe: coffee, dessert, mood, seat comfort, satisfaction
+- Activity: fun, accessibility, value, satisfaction
+
+Each metric is scored from 0.5 to 5.0 in 0.5 increments. A review's representative rating is the average of its metric scores rounded to one decimal place. Public and friend-facing surfaces expose only the couple-level average representative rating, not the individual metric breakdown.
 
 ## Couple Lifecycle
 

@@ -1,35 +1,99 @@
 @use '../../../../styles/variables' as *;
 
+.overlay {
+    align-items: center;
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    padding: 1rem;
+    position: fixed;
+    z-index: 45;
+}
+
+.backdrop {
+    animation: modalBackdropIn 0.24s ease-out both;
+    background: rgba(0, 0, 0, 0.42);
+    inset: 0;
+    position: absolute;
+}
+
 .panel {
-    animation: panelIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation: modalPanelIn 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     background: $color-surface;
     border: 1px solid $color-line;
     border-radius: $radius-photo-card;
-    box-shadow: $shadow-soft;
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-    padding: 1rem;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column;
+    max-height: min(92dvh, calc(100dvh - 2rem));
+    max-width: 30rem;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+
+.closing {
+    .backdrop {
+        animation: modalBackdropOut 0.22s ease-in both;
+    }
+
+    .panel {
+        animation: modalPanelOut 0.22s cubic-bezier(0.4, 0, 1, 1) both;
+    }
 }
 
 .header {
     align-items: center;
     display: grid;
-    gap: 0.5rem;
+    gap: 0.65rem;
     grid-template-columns: auto 1fr auto;
+    padding: 0.95rem 0.95rem 0.85rem;
+}
+
+.closeButton {
+    background: rgba($color-muted-surface, 0.92);
+}
+
+.headerText {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+    text-align: center;
+}
+
+.headerSpacer {
+    width: 2rem;
 }
 
 .title {
     color: $color-text;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 800;
+    line-height: 1.2;
     margin: 0;
-    text-align: center;
+}
+
+.subtitle {
+    color: $color-muted;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.content {
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 0.95rem 1rem;
 }
 
 .form {
     display: grid;
     gap: 1rem;
+    padding-bottom: 0.3rem;
 }
 
 .fieldGroup {
@@ -53,13 +117,98 @@
     }
 }
 
-.ratingGrid {
-    display: grid;
-    gap: 0.45rem;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+.ratingControl {
+    align-items: center;
+    display: flex;
+    gap: 0.18rem;
+    justify-content: flex-start;
+    padding: 0.1rem 0 0.2rem;
+    touch-action: none;
+    user-select: none;
+
+    &:focus-visible {
+        outline: 2px solid rgba($color-primary, 0.4);
+        outline-offset: 4px;
+        border-radius: 1rem;
+    }
 }
 
-.ratingChip,
+.ratingList {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.ratingRow {
+    background: rgba($color-muted-surface, 0.72);
+    border: 1px solid $color-line;
+    border-radius: 1.15rem;
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.7rem 0.75rem 0.65rem;
+}
+
+.ratingRowHeader {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+        color: $color-text;
+        font-size: 0.82rem;
+        font-weight: 750;
+    }
+
+    strong {
+        color: $color-primary;
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+}
+
+.ratingStar {
+    align-items: center;
+    color: $color-muted-surface;
+    display: inline-flex;
+    flex: 0 0 1.85rem;
+    height: 1.85rem;
+    justify-content: center;
+    min-width: 1.85rem;
+    position: relative;
+}
+
+.ratingStarBase,
+.ratingStarFillIcon {
+    height: 100%;
+    inset: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.ratingStarBase {
+    color: rgba($color-muted, 0.32);
+    fill: currentColor;
+    stroke: currentColor;
+}
+
+.ratingStarFill {
+    color: $color-secondary;
+    inset: 0;
+    overflow: hidden;
+    position: absolute;
+}
+
+.ratingStarFillIcon {
+    color: $color-secondary;
+    fill: currentColor;
+    stroke: currentColor;
+}
+
+.tagGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
 .tagChip,
 .kindChip {
     align-items: center;
@@ -94,29 +243,11 @@
         box-shadow: 0 8px 20px rgba($color-primary, 0.2);
         color: $color-primary-foreground;
     }
-
-    svg {
-        fill: currentColor;
-        flex-shrink: 0;
-    }
-}
-
-.tagGrid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
 }
 
 .tagChip {
     min-height: 2rem;
     padding-inline: 0.8rem;
-}
-
-.photoHeader {
-    align-items: center;
-    display: flex;
-    gap: 0.75rem;
-    justify-content: space-between;
 }
 
 .helpText {
@@ -127,41 +258,128 @@
     margin: 0;
 }
 
-.photoList {
-    display: grid;
+.photoHeader {
+    align-items: center;
+    display: flex;
     gap: 0.75rem;
+    justify-content: space-between;
 }
 
-.photoRow {
+.photoGrid {
+    display: grid;
+    gap: 0.6rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.photoTile {
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.photoPreviewFrame,
+.photoAddTile {
+    aspect-ratio: 1;
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.photoPreviewFrame {
     background: $color-muted-surface;
     border: 1px solid $color-line;
-    border-radius: 1.1rem;
-    display: grid;
-    gap: 0.7rem;
-    padding: 0.75rem;
 }
 
-.fileBox {
-    display: grid;
-    gap: 0.65rem;
-    grid-template-columns: auto 1fr;
-    min-width: 0;
-
-    > svg {
-        align-self: center;
-        color: $color-primary;
-        grid-row: span 2;
-    }
+.photoPreview {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
 }
 
-.kindGrid {
-    background: $color-surface;
+.photoRemoveButton {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    border: 0;
+    border-radius: 999px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    color: $color-text;
+    cursor: pointer;
+    display: inline-flex;
+    height: 1.45rem;
+    justify-content: center;
+    padding: 0;
+    position: absolute;
+    right: 0.35rem;
+    top: 0.35rem;
+    width: 1.45rem;
+}
+
+.photoKindSegment {
+    background: $color-muted-surface;
     border: 1px solid $color-line;
     border-radius: 999px;
     display: grid;
-    gap: 0.25rem;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    padding: 0.25rem;
+    padding: 0.18rem;
+}
+
+.photoKindOption,
+.photoKindOptionActive {
+    align-items: center;
+    border-radius: 999px;
+    color: $color-muted;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.63rem;
+    font-weight: 750;
+    justify-content: center;
+    min-height: 1.45rem;
+    overflow: hidden;
+    padding: 0 0.25rem;
+    text-align: center;
+    white-space: nowrap;
+
+    input {
+        height: 1px;
+        opacity: 0;
+        position: absolute;
+        width: 1px;
+    }
+}
+
+.photoKindOptionActive {
+    background: $color-primary;
+    color: $color-primary-foreground;
+}
+
+.photoAddTile {
+    align-items: center;
+    background: $color-surface;
+    border: 1.5px dashed rgba($color-muted, 0.45);
+    color: $color-muted;
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: column;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 750;
+    gap: 0.25rem;
+    justify-content: center;
+    padding: 0.75rem;
+
+    svg {
+        color: $color-text;
+    }
+}
+
+.photoInput {
+    display: none;
+}
+
+.kindGrid,
+.kindChip {
+    display: none;
 }
 
 .kindChip {
@@ -170,20 +388,55 @@
 }
 
 @media (max-width: $breakpoint-sm) {
-    .panel {
-        border-radius: 1.5rem;
-        padding: 0.95rem;
+    .overlay {
+        padding: 0.5rem;
     }
 
-    .ratingGrid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    .panel {
+        max-height: calc(100dvh - 1rem);
+    }
+
+    .header {
+        padding-inline: 0.8rem;
+    }
+
+    .content {
+        padding-inline: 0.8rem;
+    }
+
+    .ratingControl {
+        gap: 0.25rem;
+    }
+
+    .photoGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-@keyframes panelIn {
+@keyframes modalBackdropIn {
     from {
         opacity: 0;
-        transform: translateY(0.75rem) scale(0.99);
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalBackdropOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes modalPanelIn {
+    from {
+        opacity: 0;
+        transform: translateY(1rem) scale(0.98);
     }
 
     to {
@@ -192,7 +445,20 @@
     }
 }
 
+@keyframes modalPanelOut {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(1rem) scale(0.98);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .backdrop,
     .panel {
         animation: none;
     }

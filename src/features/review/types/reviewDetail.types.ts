@@ -13,12 +13,19 @@ export interface ReviewDetailPhoto {
     storagePath: string
 }
 
+export interface ReviewRatingDetail {
+    key: string
+    label: string
+    score: number
+}
+
 export interface ReviewDetailItem {
     authorId: string
     id: string
     oneLineReview: string
     photos: ReviewDetailPhoto[]
     rating: number
+    ratings: ReviewRatingDetail[]
     tags: string[]
 }
 

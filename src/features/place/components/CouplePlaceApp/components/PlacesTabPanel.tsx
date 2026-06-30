@@ -10,6 +10,7 @@ import styles from '../CouplePlaceApp.module.scss'
 
 export const PlacesTabPanel = ({
     onOpenReviewDetail,
+    onOpenReviewWriter,
     places,
     reviewDetailsByPlaceId,
     viewMode,
@@ -48,6 +49,7 @@ export const PlacesTabPanel = ({
                         detail={reviewDetailsByPlaceId[place.couplePlaceId]}
                         key={place.couplePlaceId}
                         onOpenReviewDetail={onOpenReviewDetail}
+                        onOpenReviewWriter={onOpenReviewWriter}
                         place={place}
                     />
                 ) : (
@@ -55,6 +57,7 @@ export const PlacesTabPanel = ({
                         detail={reviewDetailsByPlaceId[place.couplePlaceId]}
                         key={place.couplePlaceId}
                         onOpenReviewDetail={onOpenReviewDetail}
+                        onOpenReviewWriter={onOpenReviewWriter}
                         place={place}
                     />
                 )

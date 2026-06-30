@@ -1,5 +1,6 @@
 import type { CouplePlaceListItem } from '@/features/place/types/placeRegistration.types'
 import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
+import type { ReviewTargetPlace } from '@/features/review/types/reviewSubmission.types'
 import type { BadgeVariant } from '@/components/ui'
 
 import type {
@@ -91,6 +92,14 @@ export const getReviewDetailTargetPlace = (
     category: place.category,
     couplePlaceId: place.couplePlaceId,
     isPublic: place.isPublic,
+    name: place.name,
+})
+
+export const getReviewTargetPlace = (
+    place: CouplePlaceListItem
+): ReviewTargetPlace => ({
+    category: place.category,
+    couplePlaceId: place.couplePlaceId,
     name: place.name,
 })
 

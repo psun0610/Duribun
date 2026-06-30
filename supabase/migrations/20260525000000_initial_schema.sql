@@ -94,7 +94,23 @@ create table public.reviews (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (couple_place_id, author_id),
-  constraint rating_range check (rating >= 1 and rating <= 5)
+  constraint rating_range check (rating >= 0.5 and rating <= 5)
+);
+
+create table public.review_ratings (
+  review_id uuid not null references public.reviews (id) on delete cascade,
+  rating_key text not null,
+  rating_label text not null,
+  score numeric(2, 1) not null,
+  created_at timestamptz not null default now(),
+  primary key (review_id, rating_key),
+  constraint review_rating_key_not_empty check (length(trim(rating_key)) > 0),
+  constraint review_rating_label_not_empty check (length(trim(rating_label)) > 0),
+  constraint review_rating_score_range check (
+    score >= 0.5
+    and score <= 5
+    and score * 2 = round(score * 2)
+  )
 );
 
 create table public.tags (
@@ -604,6 +620,7 @@ alter table public.couple_members enable row level security;
 alter table public.places enable row level security;
 alter table public.couple_places enable row level security;
 alter table public.reviews enable row level security;
+alter table public.review_ratings enable row level security;
 alter table public.tags enable row level security;
 alter table public.review_tags enable row level security;
 alter table public.review_photos enable row level security;
@@ -712,6 +729,40 @@ with check (author_id = auth.uid());
 create policy "reviews delete own"
 on public.reviews for delete
 using (author_id = auth.uid());
+
+create policy "review_ratings select visible review"
+on public.review_ratings for select
+using (
+  exists (
+    select 1 from public.reviews r
+    where r.id = review_ratings.review_id
+      and r.author_id = auth.uid()
+  )
+  or exists (
+    select 1
+    from public.reviews r
+    join public.couple_places cp on cp.id = r.couple_place_id
+    where r.id = review_ratings.review_id
+      and public.is_couple_member(cp.couple_id)
+  )
+);
+
+create policy "review_ratings manage own review"
+on public.review_ratings for all
+using (
+  exists (
+    select 1 from public.reviews r
+    where r.id = review_ratings.review_id
+      and r.author_id = auth.uid()
+  )
+)
+with check (
+  exists (
+    select 1 from public.reviews r
+    where r.id = review_ratings.review_id
+      and r.author_id = auth.uid()
+  )
+);
 
 create policy "tags select authenticated"
 on public.tags for select
