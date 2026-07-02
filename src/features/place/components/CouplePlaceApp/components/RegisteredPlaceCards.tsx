@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Ellipsis, Globe, Lock, MapPin, Star } from 'lucide-react'
 
 import { Badge, Pill } from '@/components/ui'
@@ -41,17 +42,14 @@ export const RegisteredPlaceFeedCard = ({
     const photoUrl = getRegisteredPlacePhotoUrl(detail)
     const shouldOpenReviewWriter =
         status === 'none' || status === 'partner-waiting'
+    const reviewDetailTargetPlace = getReviewDetailTargetPlace(place)
+    const reviewTargetPlace = getReviewTargetPlace(place)
+    const href = shouldOpenReviewWriter
+        ? onOpenReviewWriter(reviewTargetPlace)
+        : onOpenReviewDetail(reviewDetailTargetPlace)
 
     return (
-        <button
-            className={styles.registeredFeedCard}
-            onClick={() =>
-                shouldOpenReviewWriter
-                    ? onOpenReviewWriter(getReviewTargetPlace(place))
-                    : onOpenReviewDetail(getReviewDetailTargetPlace(place))
-            }
-            type="button"
-        >
+        <Link className={styles.registeredFeedCard} href={href}>
             <span className={styles.registeredFeedVisual}>
                 {photoUrl ? (
                     <span
@@ -97,7 +95,7 @@ export const RegisteredPlaceFeedCard = ({
                     </Pill>
                 </span>
             </span>
-        </button>
+        </Link>
     )
 }
 
@@ -112,17 +110,14 @@ export const RegisteredPlaceListCard = ({
     const photoUrl = getRegisteredPlacePhotoUrl(detail)
     const shouldOpenReviewWriter =
         status === 'none' || status === 'partner-waiting'
+    const reviewDetailTargetPlace = getReviewDetailTargetPlace(place)
+    const reviewTargetPlace = getReviewTargetPlace(place)
+    const href = shouldOpenReviewWriter
+        ? onOpenReviewWriter(reviewTargetPlace)
+        : onOpenReviewDetail(reviewDetailTargetPlace)
 
     return (
-        <button
-            className={styles.registeredListCard}
-            onClick={() =>
-                shouldOpenReviewWriter
-                    ? onOpenReviewWriter(getReviewTargetPlace(place))
-                    : onOpenReviewDetail(getReviewDetailTargetPlace(place))
-            }
-            type="button"
-        >
+        <Link className={styles.registeredListCard} href={href}>
             <span className={styles.registeredListVisual}>
                 {photoUrl ? (
                     <span
@@ -182,6 +177,6 @@ export const RegisteredPlaceListCard = ({
                         : COUPLE_PLACE_APP_COPY.private}
                 </span>
             </span>
-        </button>
+        </Link>
     )
 }

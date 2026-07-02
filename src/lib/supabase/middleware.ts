@@ -30,8 +30,9 @@ export const updateSession = async (request: NextRequest) => {
         request,
     })
     const pathname = request.nextUrl.pathname
+    const shouldCheckAuth = isProtectedPath(pathname) || pathname === '/login'
 
-    if (!isProtectedPath(pathname)) {
+    if (!shouldCheckAuth) {
         return response
     }
 
@@ -80,6 +81,7 @@ export const updateSession = async (request: NextRequest) => {
     const redirectPath = getAuthGateRedirect({
         pathname,
         isAuthenticated,
+        next: request.nextUrl.searchParams.get('next'),
     })
 
     if (redirectPath) {

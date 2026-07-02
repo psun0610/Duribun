@@ -1,53 +1,36 @@
 'use client'
 
-import { PlaceRegistrationPanel } from '@/features/place/components/PlaceRegistrationPanel'
-import { ReviewDetailPanel } from '@/features/review/components/ReviewDetailPanel'
-import { ReviewWriterPanel } from '@/features/review/components/ReviewWriterPanel'
+import { useRouter } from 'next/navigation'
+import type { ReactNode } from 'react'
 
 import { AppHeader } from './components/AppHeader'
 import { BottomNavigation } from './components/BottomNavigation'
-import { ExploreRecommendationsPanel } from './components/ExploreRecommendationsPanel'
-import { FriendRecommendationsPanel } from './components/FriendRecommendationsPanel'
-import { PlacesTabPanel } from './components/PlacesTabPanel'
-import { SettingsPanel } from './components/SettingsPanel'
-import { useCouplePlaceApp } from './hooks/useCouplePlaceApp'
 import type { CouplePlaceAppProps } from './types/couplePlaceApp.types'
-import { getFallbackReviewDetail } from './utils/couplePlaceApp.utils'
+import { getAppAddPlaceHref, getAppPlacesHref, getAppTabHref } from './utils/couplePlaceRoute.utils'
 
 import styles from './CouplePlaceApp.module.scss'
 
+type CouplePlaceAppShellProps = Pick<
+    CouplePlaceAppProps,
+    'activeTab' | 'viewMode'
+> & {
+    children: ReactNode
+}
+
 export const CouplePlaceApp = ({
-    coupleName,
-    currentUserId,
-    exploreRecommendations,
-    friendCode,
-    friendCouples,
-    friendRecommendations,
-    places,
-    publicPlaceCount,
-    reviewDetailsByPlaceId,
-    userLabel,
-}: CouplePlaceAppProps) => {
-    const {
-        activeTab,
-        handleCloseRegistrationPanel,
-        handleCloseReviewDetail,
-        handleCloseReviewWriter,
-        handleFeedView,
-        handleListView,
-        handleOpenRegistrationPanel,
-        handleOpenReviewDetail,
-        handleOpenReviewWriter,
-        handleTabChange,
-        isRegistrationPanelOpen,
-        reviewDetailTargetPlace,
-        reviewTargetPlace,
-        viewMode,
-    } = useCouplePlaceApp()
-    const reviewDetail =
-        reviewDetailTargetPlace &&
-        (reviewDetailsByPlaceId[reviewDetailTargetPlace.couplePlaceId] ??
-            getFallbackReviewDetail(reviewDetailTargetPlace))
+    activeTab,
+    children,
+    viewMode,
+}: CouplePlaceAppShellProps) => {
+    const router = useRouter()
+
+    const handleFeedView = () => {
+        router.replace(getAppPlacesHref('feed'))
+    }
+
+    const handleListView = () => {
+        router.replace(getAppPlacesHref('list'))
+    }
 
     return (
         <main className={styles.app}>
@@ -58,67 +41,18 @@ export const CouplePlaceApp = ({
                     onListView={handleListView}
                     viewMode={viewMode}
                 />
-
-                {activeTab === 'places' && isRegistrationPanelOpen ? (
-                    <PlaceRegistrationPanel
-                        onClose={handleCloseRegistrationPanel}
-                    />
-                ) : null}
-
-                {activeTab === 'places' && reviewTargetPlace ? (
-                    <ReviewWriterPanel
-                        onClose={handleCloseReviewWriter}
-                        place={reviewTargetPlace}
-                    />
-                ) : null}
-
-                {activeTab === 'places' && reviewDetailTargetPlace ? (
-                    <ReviewDetailPanel
-                        currentUserId={currentUserId}
-                        detail={reviewDetail}
-                        onClose={handleCloseReviewDetail}
-                        place={reviewDetailTargetPlace}
-                    />
-                ) : null}
-
-                {activeTab === 'places' ? (
-                    <PlacesTabPanel
-                        onOpenReviewDetail={handleOpenReviewDetail}
-                        onOpenReviewWriter={handleOpenReviewWriter}
-                        places={places}
-                        reviewDetailsByPlaceId={reviewDetailsByPlaceId}
-                        viewMode={viewMode}
-                    />
-                ) : null}
-
-                {activeTab === 'friends' ? (
-                    <FriendRecommendationsPanel
-                        friendCode={friendCode}
-                        friendCouples={friendCouples}
-                        recommendations={friendRecommendations}
-                    />
-                ) : null}
-
-                {activeTab === 'explore' ? (
-                    <ExploreRecommendationsPanel
-                        recommendations={exploreRecommendations}
-                    />
-                ) : null}
-
-                {activeTab === 'settings' ? (
-                    <SettingsPanel
-                        coupleName={coupleName}
-                        friendCoupleCount={friendCouples.length}
-                        publicPlaceCount={publicPlaceCount}
-                        userLabel={userLabel}
-                    />
-                ) : null}
+                {children}
             </section>
 
             <BottomNavigation
                 activeTab={activeTab}
-                onAddPlace={handleOpenRegistrationPanel}
-                onTabChange={handleTabChange}
+                addPlaceHref={getAppAddPlaceHref(viewMode)}
+                tabHrefs={{
+                    explore: getAppTabHref('explore'),
+                    friends: getAppTabHref('friends'),
+                    places: getAppPlacesHref(viewMode),
+                    settings: getAppTabHref('settings'),
+                }}
             />
         </main>
     )
