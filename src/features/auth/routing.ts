@@ -3,6 +3,7 @@ export const protectedRoutes = ['/app', '/profile/setup']
 type AuthGateInput = {
     pathname: string
     isAuthenticated: boolean
+    next?: string | null
 }
 
 export const isProtectedPath = (pathname: string) => {
@@ -11,16 +12,44 @@ export const isProtectedPath = (pathname: string) => {
     )
 }
 
+export const normalizeInternalRedirectPath = (
+    value: string | null | undefined,
+    fallback: string
+) => {
+    if (!value || !value.startsWith('/') || value.startsWith('//')) {
+        return fallback
+    }
+
+    if (
+        value === '/login' ||
+        value.startsWith('/login?') ||
+        value.startsWith('/login/')
+    ) {
+        return fallback
+    }
+
+    if (
+        value === '/auth/callback' ||
+        value.startsWith('/auth/callback?') ||
+        value.startsWith('/auth/callback/')
+    ) {
+        return fallback
+    }
+
+    return value
+}
+
 export const getAuthGateRedirect = ({
     pathname,
     isAuthenticated,
+    next,
 }: AuthGateInput) => {
     if (!isAuthenticated && isProtectedPath(pathname)) {
         return `/login?next=${encodeURIComponent(pathname)}`
     }
 
     if (isAuthenticated && pathname === '/login') {
-        return '/profile/setup'
+        return normalizeInternalRedirectPath(next, '/profile/setup')
     }
 
     return null

@@ -2,6 +2,7 @@ import type { CouplePlaceListItem } from '@/features/place/types/placeRegistrati
 import type { CouplePlaceReviewDetail } from '@/features/review/types/reviewDetail.types'
 import type { PublicCouplePlaceSummary } from '@/features/share/types/shareSummary.types'
 import type { FriendCoupleFilterSummary } from '@/features/friend/types/friendRelationship.types'
+import type { ReactNode } from 'react'
 
 export type ViewMode = 'feed' | 'list'
 
@@ -29,7 +30,6 @@ export interface CouplePlace {
 
 export interface CouplePlaceAppProps {
     coupleName: string
-    currentUserId: string
     friendCode: string
     friendCouples: FriendCoupleFilterSummary[]
     friendRecommendations: PublicCouplePlaceSummary[]
@@ -38,6 +38,9 @@ export interface CouplePlaceAppProps {
     publicPlaceCount: number
     reviewDetailsByPlaceId: Record<string, CouplePlaceReviewDetail>
     userLabel: string
+    activeTab: ActiveTab
+    children: ReactNode
+    viewMode: ViewMode
 }
 
 export interface ReviewTargetPlace {

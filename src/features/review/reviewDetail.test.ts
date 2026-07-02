@@ -3,8 +3,8 @@ import path from 'path'
 
 import { describe, expect, it } from 'vitest'
 
-const appPageSource = readFileSync(
-    path.resolve(process.cwd(), 'src/app/app/page.tsx'),
+const appDataSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/app/getProtectedAppData.ts'),
     'utf8'
 )
 const couplePlaceAppSource = readFileSync(
@@ -32,6 +32,20 @@ const registeredPlaceCardsSource = readFileSync(
     ),
     'utf8'
 )
+const reviewDetailPageSource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/app/app/places/[couplePlaceId]/review/page.tsx'
+    ),
+    'utf8'
+)
+const reviewWriterPageSource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/app/app/places/[couplePlaceId]/review/new/page.tsx'
+    ),
+    'utf8'
+)
 const reviewCardSource = readFileSync(
     path.resolve(
         process.cwd(),
@@ -49,15 +63,14 @@ const reviewDetailCopySource = readFileSync(
 
 describe('review detail', () => {
     it('loads review detail data for protected couple places', () => {
-        expect(appPageSource).toContain('getCouplePlaceReviewDetailsMap')
-        expect(appPageSource).toContain('reviewDetailsByPlaceId')
-        expect(appPageSource).toContain('currentUserId={user.id}')
+        expect(appDataSource).toContain('getCouplePlaceReviewDetailsMap')
+        expect(appDataSource).toContain('reviewDetailsByPlaceId')
+        expect(reviewDetailPageSource).toContain('currentUserId={appState.data.currentUserId}')
     })
 
     it('opens a private detail panel with review state copy', () => {
-        expect(couplePlaceAppSource).toContain('ReviewDetailPanel')
-        expect(couplePlaceAppSource).toContain('onOpenReviewDetail')
-        expect(couplePlaceAppSource).toContain('onOpenReviewWriter')
+        expect(couplePlaceAppSource).toContain('BottomNavigation')
+        expect(couplePlaceAppSource).toContain('AppHeader')
         expect(registeredPlaceCardsSource).toContain(
             'getReviewDetailTargetPlace'
         )
@@ -87,7 +100,7 @@ describe('review detail', () => {
     })
 
     it('routes unrevised registered places to the review writer', () => {
-        expect(couplePlaceAppSource).toContain('onOpenReviewWriter')
+        expect(reviewWriterPageSource).toContain('ReviewWriterRoutePanel')
         expect(registeredPlaceCardsSource).toContain('getReviewTargetPlace')
         expect(registeredPlaceCardsSource).toContain(
             "status === 'none' || status === 'partner-waiting'"

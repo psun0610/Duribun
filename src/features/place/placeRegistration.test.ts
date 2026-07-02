@@ -21,8 +21,8 @@ const placeActionsSource = readFileSync(
     path.resolve(process.cwd(), 'src/features/place/actions.ts'),
     'utf8'
 )
-const appPageSource = readFileSync(
-    path.resolve(process.cwd(), 'src/app/app/page.tsx'),
+const appDataSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/app/getProtectedAppData.ts'),
     'utf8'
 )
 const couplePlaceAppSource = readFileSync(
@@ -36,6 +36,13 @@ const registeredPlaceCardsSource = readFileSync(
     path.resolve(
         process.cwd(),
         'src/features/place/components/CouplePlaceApp/components/RegisteredPlaceCards.tsx'
+    ),
+    'utf8'
+)
+const placesRouteBackgroundSource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/app/app/places/PlacesRouteBackground.tsx'
     ),
     'utf8'
 )
@@ -80,11 +87,12 @@ describe('place registration', () => {
         expect(placeRegistrationSql).toContain(
             'on conflict (couple_id, place_id) do update'
         )
-        expect(appPageSource).toContain('getCouplePlaces(couple.id)')
+        expect(appDataSource).toContain('getCouplePlaces(couple.id)')
         expect(registeredPlaceCardsSource).toContain('RegisteredPlaceFeedCard')
         expect(registeredPlaceCardsSource).toContain('RegisteredPlaceListCard')
         expect(registeredPlaceCardsSource).toContain('getReviewTargetPlace')
-        expect(couplePlaceAppSource).toContain('PlacesTabPanel')
+        expect(placesRouteBackgroundSource).toContain('PlacesTabPanel')
+        expect(couplePlaceAppSource).toContain('BottomNavigation')
     })
 
     it('supports manual places without immediate explore approval', () => {

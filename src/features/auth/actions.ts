@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import type { Provider } from '@supabase/supabase-js'
 import { getSiteUrl } from '@/lib/env'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { normalizeInternalRedirectPath } from '@/features/auth/routing'
 
 const providerMap = {
     kakao: 'kakao',
@@ -26,6 +27,14 @@ const parseEmail = (value: FormDataEntryValue | null) => {
     return value.trim().toLowerCase()
 }
 
+const parseNextPath = (value: FormDataEntryValue | null) => {
+    if (typeof value !== 'string') {
+        return '/app'
+    }
+
+    return normalizeInternalRedirectPath(value, '/app')
+}
+
 const parseProvider = (value: FormDataEntryValue | null): SupportedProvider => {
     if (value === 'kakao' || value === 'naver' || value === 'google') {
         return value
@@ -36,6 +45,7 @@ const parseProvider = (value: FormDataEntryValue | null): SupportedProvider => {
 
 export const signInWithProvider = async (formData: FormData) => {
     const selectedProvider = parseProvider(formData.get('provider'))
+    const nextPath = parseNextPath(formData.get('next'))
     const provider = providerMap[selectedProvider] as Provider
     const headerStore = await headers()
     const origin = headerStore.get('origin') ?? getSiteUrl()
@@ -44,7 +54,7 @@ export const signInWithProvider = async (formData: FormData) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-            redirectTo: `${origin}/auth/callback`,
+            redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
             scopes: providerScopes[selectedProvider],
         },
     })
@@ -62,6 +72,7 @@ export const signInWithProvider = async (formData: FormData) => {
 
 export const signInWithEmail = async (formData: FormData) => {
     const email = parseEmail(formData.get('email'))
+    const nextPath = parseNextPath(formData.get('next'))
 
     if (!email) {
         throw new Error('이메일을 입력해 주세요.')
@@ -73,7 +84,7 @@ export const signInWithEmail = async (formData: FormData) => {
     const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-            emailRedirectTo: `${origin}/auth/callback`,
+            emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
             shouldCreateUser: true,
         },
     })
@@ -82,7 +93,7 @@ export const signInWithEmail = async (formData: FormData) => {
         throw error
     }
 
-    redirect('/login?emailSent=1')
+    redirect(`/login?emailSent=1&next=${encodeURIComponent(nextPath)}`)
 }
 
 export const signOut = async () => {

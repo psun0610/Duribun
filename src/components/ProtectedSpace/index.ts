@@ -1,1 +1,0 @@
-export { ProtectedSpace } from './ProtectedSpace'

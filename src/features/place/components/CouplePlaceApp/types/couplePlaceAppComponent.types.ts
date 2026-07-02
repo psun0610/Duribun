@@ -23,8 +23,8 @@ export interface AppHeaderProps {
 
 export interface BottomNavigationProps {
     activeTab: ActiveTab
-    onAddPlace: () => void
-    onTabChange: (nextTab: ActiveTab) => void
+    addPlaceHref: string
+    tabHrefs: Record<ActiveTab, string>
 }
 
 export interface EmptyTabProps {
@@ -38,8 +38,8 @@ export interface MockPlaceCardProps {
 }
 
 export interface PlacesTabPanelProps {
-    onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
-    onOpenReviewWriter: (place: ReviewTargetPlace) => void
+    onOpenReviewDetail: (place: ReviewDetailTargetPlace) => string
+    onOpenReviewWriter: (place: ReviewTargetPlace) => string
     places: CouplePlaceListItem[]
     reviewDetailsByPlaceId: Record<string, CouplePlaceReviewDetail>
     viewMode: ViewMode
@@ -47,8 +47,8 @@ export interface PlacesTabPanelProps {
 
 export interface RegisteredPlaceCardProps {
     detail: CouplePlaceReviewDetail | undefined
-    onOpenReviewDetail: (place: ReviewDetailTargetPlace) => void
-    onOpenReviewWriter: (place: ReviewTargetPlace) => void
+    onOpenReviewDetail: (place: ReviewDetailTargetPlace) => string
+    onOpenReviewWriter: (place: ReviewTargetPlace) => string
     place: CouplePlaceListItem
 }
 

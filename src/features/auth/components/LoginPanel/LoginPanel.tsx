@@ -13,7 +13,10 @@ import { LOGIN_PANEL_COPY, LOGIN_PROVIDERS } from './const/loginPanel.const'
 
 import styles from './LoginPanel.module.scss'
 
-export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
+export const LoginPanel = ({
+    hasEmailSent = false,
+    next = '/app',
+}: LoginPanelProps) => {
     return (
         <main className={styles.login}>
             <section className={styles.content} aria-labelledby="login-title">
@@ -40,6 +43,7 @@ export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
                                 type="hidden"
                                 value={provider.value}
                             />
+                            <input name="next" type="hidden" value={next} />
                             <Button
                                 className={`${styles.providerButton} ${
                                     styles[provider.value]
@@ -61,6 +65,7 @@ export const LoginPanel = ({ hasEmailSent = false }: LoginPanelProps) => {
                     ))}
                 </div>
                 <form action={signInWithEmail} className={styles.emailForm}>
+                    <input name="next" type="hidden" value={next} />
                     <TextField
                         className={styles.emailField}
                         label={LOGIN_PANEL_COPY.emailLabel}

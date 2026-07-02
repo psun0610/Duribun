@@ -21,6 +21,10 @@ const appPageSource = readFileSync(
     path.resolve(process.cwd(), 'src/app/app/page.tsx'),
     'utf8'
 )
+const appDataSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/app/getProtectedAppData.ts'),
+    'utf8'
+)
 
 describe('couple disconnect lifecycle', () => {
     it('lets an active couple member request a seven-day disconnect window', () => {
@@ -74,10 +78,11 @@ describe('couple disconnect lifecycle', () => {
     })
 
     it('keeps pending couples out of ordinary couple-space rendering', () => {
-        expect(appPageSource).toContain(
+        expect(appPageSource).toContain("redirect('/app/places')")
+        expect(appDataSource).toContain(
             "if (couple.status === 'disconnect_pending')"
         )
-        expect(appPageSource).toContain('<CoupleDisconnectPending')
-        expect(appPageSource).toContain('<ProtectedSpace')
+        expect(appDataSource).toContain("kind: 'disconnect-pending'")
+        expect(appDataSource).toContain('getCouplePlaces(couple.id)')
     })
 })

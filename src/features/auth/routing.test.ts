@@ -35,4 +35,24 @@ describe('auth gate routing', () => {
             })
         ).toBe('/profile/setup')
     })
+
+    it('redirects authenticated users away from login to the requested next path', () => {
+        expect(
+            getAuthGateRedirect({
+                pathname: '/login',
+                isAuthenticated: true,
+                next: '/app/places',
+            })
+        ).toBe('/app/places')
+    })
+
+    it('falls back when the requested next path is unsafe', () => {
+        expect(
+            getAuthGateRedirect({
+                pathname: '/login',
+                isAuthenticated: true,
+                next: 'https://example.com',
+            })
+        ).toBe('/profile/setup')
+    })
 })
