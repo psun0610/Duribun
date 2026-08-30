@@ -10,9 +10,29 @@ export const GET = async (request: NextRequest) => {
         '/app'
     )
 
-    if (code) {
-        const supabase = await createRouteHandlerSupabaseClient()
-        await supabase.auth.exchangeCodeForSession(code)
+    if (!code) {
+        return NextResponse.redirect(
+            new URL(
+                `/login?authError=1&next=${encodeURIComponent(next)}`,
+                requestUrl.origin
+            )
+        )
+    }
+
+    const supabase = await createRouteHandlerSupabaseClient()
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+    if (error) {
+        console.error('Failed to exchange auth code for session', {
+            message: error.message,
+        })
+
+        return NextResponse.redirect(
+            new URL(
+                `/login?authError=1&next=${encodeURIComponent(next)}`,
+                requestUrl.origin
+            )
+        )
     }
 
     return NextResponse.redirect(new URL(next, requestUrl.origin))

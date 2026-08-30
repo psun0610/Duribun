@@ -173,7 +173,7 @@ export const createCouple = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
 
     return {
@@ -212,7 +212,7 @@ export const joinCouple = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
     redirect('/app')
 }
@@ -234,7 +234,7 @@ export const requestCoupleDisconnect = async () => {
         )
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
     redirect('/app')
 }
@@ -256,7 +256,7 @@ export const cancelCoupleDisconnect = async () => {
         )
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
     redirect('/app')
 }

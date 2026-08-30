@@ -14,6 +14,7 @@ import { LOGIN_PANEL_COPY, LOGIN_PROVIDERS } from './const/loginPanel.const'
 import styles from './LoginPanel.module.scss'
 
 export const LoginPanel = ({
+    hasAuthError = false,
     hasEmailSent = false,
     next = '/app',
 }: LoginPanelProps) => {
@@ -80,6 +81,11 @@ export const LoginPanel = ({
                     {hasEmailSent ? (
                         <FieldMessage>
                             {LOGIN_PANEL_COPY.emailSentMessage}
+                        </FieldMessage>
+                    ) : null}
+                    {hasAuthError ? (
+                        <FieldMessage variant="error">
+                            {LOGIN_PANEL_COPY.authErrorMessage}
                         </FieldMessage>
                     ) : null}
                 </form>

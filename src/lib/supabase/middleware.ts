@@ -60,18 +60,29 @@ export const updateSession = async (request: NextRequest) => {
     )
 
     let isAuthenticated = false
+    let hasStaleAuthTokens = false
 
     try {
         const {
             data: { user },
+            error,
         } = await supabase.auth.getUser()
 
         isAuthenticated = Boolean(user)
+
+        // getUser는 대부분 던지지 않고 error를 반환합니다. 반환된 쪽도 검사합니다.
+        if (!user && error && isStaleRefreshTokenError(error)) {
+            hasStaleAuthTokens = true
+        }
     } catch (error) {
         if (!isStaleRefreshTokenError(error)) {
             throw error
         }
 
+        hasStaleAuthTokens = true
+    }
+
+    if (hasStaleAuthTokens) {
         response = NextResponse.next({
             request,
         })
@@ -89,7 +100,11 @@ export const updateSession = async (request: NextRequest) => {
             new URL(redirectPath, request.url)
         )
 
-        clearSupabaseAuthCookies(request, redirectResponse)
+        // 만료된 토큰일 때만 지웁니다. 무조건 지우면 로그인된 사용자가
+        // /login에 들어왔다가 나가는 순간 세션이 날아갑니다.
+        if (hasStaleAuthTokens) {
+            clearSupabaseAuthCookies(request, redirectResponse)
+        }
 
         return redirectResponse
     }

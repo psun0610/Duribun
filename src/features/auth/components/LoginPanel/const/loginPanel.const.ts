@@ -27,6 +27,7 @@ export const LOGIN_PANEL_COPY = {
     emailPlaceholder: 'you@example.com',
     emailSubmitLabel: '메일로 링크 받기',
     emailSentMessage: '메일로 링크를 보냈어요. 메일함에서 눌러주세요.',
+    authErrorMessage: '로그인이 끝까지 되지 않았어요. 한 번만 다시 해주세요.',
     heroImageLabel: '함께 장소를 기록하는 커플 이미지',
     socialLabel: '간편하게 시작하기',
     accountHint: '처음이어도 같은 버튼으로 시작해요. 가입 단계는 따로 없어요.',

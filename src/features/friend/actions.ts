@@ -82,7 +82,7 @@ export const addFriendCoupleByCode = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
 
     return {
         errorMessage: '',
@@ -113,7 +113,7 @@ export const regenerateFriendCode = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
 
     return {
         errorMessage: '',
@@ -156,7 +156,7 @@ export const updateFriendCoupleFilter = async (formData: FormData) => {
         })
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
 }
 
 export const getFriendCoupleFilters = async (): Promise<

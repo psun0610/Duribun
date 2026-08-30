@@ -106,7 +106,8 @@ const mergeSearchResults = (
 }
 
 const mapKakaoSearchErrorMessage = (status: number, responseBody: string) => {
-    if (responseBody.includes('지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.')) {
+    // Kakao Developers에서 로컬 서비스가 꺼져 있을 때 내려오는 응답입니다.
+    if (responseBody.includes('OPEN_MAP_AND_LOCAL')) {
         return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
@@ -118,7 +119,7 @@ const mapKakaoSearchErrorMessage = (status: number, responseBody: string) => {
         return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
-    return 'Kakao 장소 검색에 실패했어요. 잠시 후 다시 시도해 주세요.'
+    return '검색이 잠깐 안 되고 있어요. 다시 해볼까요?'
 }
 
 const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
@@ -127,11 +128,11 @@ const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
     }
 
     if (message.includes('Active couple required')) {
-        return '활성 커플만 장소를 등록할 수 있어요.'
+        return '연결된 상태에서만 장소를 담을 수 있어요.'
     }
 
     if (message.includes('Kakao provider place id required')) {
-        return 'Kakao 장소 정보가 올바르지 않아요. 다시 검색해 주세요.'
+        return '이 장소 정보를 읽지 못했어요. 다시 찾아볼까요?'
     }
 
     if (message.includes('Manual place name required')) {
@@ -245,7 +246,7 @@ export const searchKakaoPlaces = async (
 
         return {
             ...previousState,
-            errorMessage: 'Kakao 장소 검색 중 오류가 발생했어요.',
+            errorMessage: '검색이 잠깐 안 되고 있어요. 다시 해볼까요?',
             query,
             results: [],
         }
@@ -290,7 +291,7 @@ export const registerKakaoPlace = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
 
     return {
         errorMessage: '',
@@ -326,7 +327,7 @@ export const registerManualPlace = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
 
     return {
         errorMessage: '',
@@ -416,7 +417,7 @@ export const updateCouplePlaceSharing = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
 
     return {
         errorMessage: '',

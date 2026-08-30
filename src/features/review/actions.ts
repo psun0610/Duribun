@@ -450,7 +450,7 @@ export const submitReview = async (
             }
         }
 
-        revalidatePath('/app')
+        revalidatePath('/app', 'layout')
 
         return {
             errorMessage: '',
