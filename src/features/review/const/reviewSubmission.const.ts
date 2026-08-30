@@ -4,6 +4,14 @@ import type {
     ReviewTagOption,
 } from '../types/reviewSubmission.types'
 
+/**
+ * 새로 추가한 사진의 기본 유형입니다.
+ * 기본값은 항상 비공개(couple_private)여야 합니다. 사용자가 유형을 바꾸지 않은
+ * 사진이 커플 공간 밖으로 나가는 일이 없도록, 공개 후보가 되려면 반드시
+ * 명시적으로 place_food를 선택하게 합니다.
+ */
+export const DEFAULT_REVIEW_PHOTO_KIND = 'couple_private'
+
 export const REVIEW_KIND_OPTIONS = [
     {
         label: '장소/음식',

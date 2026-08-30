@@ -12,6 +12,7 @@ import { Save, X } from 'lucide-react'
 import { Button, FieldMessage, IconButton, TextareaField } from '@/components/ui'
 import { submitReview } from '@/features/review/actions'
 import {
+    DEFAULT_REVIEW_PHOTO_KIND,
     REVIEW_RATING_OPTIONS,
     REVIEW_WRITER_COPY,
 } from '@/features/review/const/reviewSubmission.const'
@@ -113,7 +114,7 @@ export const ReviewWriterPanel = ({
                     return {
                         file,
                         id: createPhotoPreviewId(file, index),
-                        kind: 'place_food',
+                        kind: DEFAULT_REVIEW_PHOTO_KIND,
                         previewUrl,
                     }
                 })
