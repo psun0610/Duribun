@@ -1,4 +1,4 @@
-import { ChevronRight, HeartHandshake, Ticket } from 'lucide-react'
+import { ChevronRight, HeartHandshake, Info, Ticket } from 'lucide-react'
 
 import { COUPLE_ONBOARDING_COPY } from '../const/coupleOnboarding.const'
 import type { ModeSelectorProps } from '../types/coupleOnboarding.types'
@@ -51,6 +51,15 @@ export const ModeSelector = ({
                     size={20}
                 />
             </button>
+
+            <div className={styles.notice}>
+                <span className={styles.noticeIcon}>
+                    <Info aria-hidden="true" size={13} />
+                </span>
+                <p className={styles.noticeText}>
+                    {COUPLE_ONBOARDING_COPY.noticeText}
+                </p>
+            </div>
         </div>
     )
 }

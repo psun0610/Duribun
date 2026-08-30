@@ -23,22 +23,21 @@
         padding: 0.15rem 0.1rem 0.8rem;
 
         h1 {
-            margin: 0;
-        }
-
-        h1 {
             color: $color-text;
-            font-size: 1.05rem;
-            font-weight: 800;
+            font-size: 1.0625rem;
+            font-weight: $weight-bold;
+            letter-spacing: -0.02em;
             line-height: 1.25;
+            margin: 0;
         }
     }
 
     .topNav {
         align-items: center;
         display: flex;
-        justify-content: space-between;
-        min-height: 2.35rem;
+        justify-content: center;
+        min-height: 2.875rem;
+        position: relative;
     }
 
     .headerIconButton {
@@ -46,6 +45,8 @@
         background: transparent;
         border: 0;
         border-radius: $radius-pill;
+        position: absolute;
+        right: 0;
         color: $color-text;
         cursor: pointer;
         display: inline-flex;
@@ -168,7 +169,7 @@
     .cardMenu {
         color: $color-text;
         font-size: 0.7rem;
-        font-weight: 600;
+        font-weight: $weight-bold;
         right: 0.4rem;
         top: 0.4rem;
     }
@@ -230,7 +231,7 @@
         color: $color-muted;
         display: inline-flex;
         font-size: 0.7rem;
-        font-weight: 600;
+        font-weight: $weight-bold;
         gap: 0.25rem;
         line-height: 1;
         min-height: 1.5rem;

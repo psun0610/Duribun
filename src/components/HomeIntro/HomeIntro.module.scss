@@ -1,125 +1,198 @@
 @use '../../styles/variables' as *;
 
 .home {
-    width: min(100%, 1060px);
+    background:
+        $wash-top,
+        $color-background;
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
-    padding: $space-page-block $space-page-inline;
+    max-width: 26rem;
+    min-height: 100dvh;
+    padding: 2.75rem 1.25rem 2.125rem;
+}
 
-    .hero {
-        display: grid;
-        gap: 2rem;
-        align-items: center;
+.brandRow {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
 
-        @media (min-width: $breakpoint-md) {
-            grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 1fr);
-            gap: clamp(2rem, 6vw, 5rem);
-        }
+.brandMark {
+    align-items: center;
+    background: $gradient-brand;
+    border-radius: $radius-pill $radius-pill $radius-pill 4px;
+    color: $color-primary-foreground;
+    display: inline-flex;
+    height: 1.75rem;
+    justify-content: center;
+    width: 1.75rem;
+
+    svg {
+        fill: currentcolor;
     }
+}
 
-    .copy {
-        display: grid;
-        gap: 1rem;
-    }
+.brandName {
+    font-size: 1.3125rem;
+    font-weight: $weight-black;
+    letter-spacing: -0.03em;
+}
 
-    .eyebrow {
-        margin: 0;
-        color: $color-primary;
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 0;
-        text-transform: uppercase;
-    }
+.hero {
+    padding: 1.625rem 0.75rem 0;
+    text-align: center;
+}
 
-    .title {
-        word-break: keep-all;
-        max-width: 11ch;
-        margin: 0;
-        background: linear-gradient(90deg, $color-primary, $color-secondary);
-        background-clip: text;
-        color: transparent;
-        font-size: clamp(2.5rem, 12vw, 5rem);
-        font-weight: 700;
-        line-height: 1;
-        letter-spacing: 0;
-    }
+.title {
+    font-size: 1.6875rem;
+    font-weight: $weight-black;
+    letter-spacing: -0.03em;
+    line-height: 1.42;
+    margin: 0;
+    white-space: pre-line;
+}
 
-    .description {
-        max-width: 34rem;
-        margin: 0;
-        color: $color-muted;
-        font-size: 1rem;
-        font-weight: 500;
-        line-height: 1.8;
-    }
+.description {
+    color: $color-muted;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    margin: 0.75rem 0 0;
+    white-space: pre-line;
+}
 
-    .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        padding-top: 0.5rem;
-    }
+.collage {
+    flex: 1;
+    margin-top: 1.875rem;
+    min-height: 15.875rem;
+    position: relative;
+}
 
-    .memoryCard {
-        overflow: hidden;
-        border: 2px solid transparent;
-        border-radius: $radius-photo-card;
-        background: $color-surface;
-        box-shadow: $shadow-lifted;
-    }
+.cardSea,
+.cardSunset {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.13);
+    display: block;
+    overflow: hidden;
+    position: absolute;
+}
 
-    .photoGrid {
-        display: grid;
-        grid-template-columns: 1.35fr 0.85fr;
-        gap: 0.35rem;
-        min-height: 24rem;
-        padding: 0.35rem;
-        background: $color-surface;
+// 바다가 보이는 카페 — 시안의 자리표시 일러스트 그대로
+.cardSea {
+    background: linear-gradient(
+        168deg,
+        #cfe4ee 0%,
+        #a9cadd 40%,
+        #d7e0d6 41%,
+        #eef1ea 100%
+    );
+    border-radius: 1.75rem;
+    height: 13.625rem;
+    left: 11%;
+    top: 0.625rem;
+    transform: rotate(-6deg);
+    width: 11rem;
+}
 
-        @media (max-width: $breakpoint-sm) {
-            min-height: 19rem;
-        }
-    }
+.cardSeaSun {
+    background: rgba(255, 240, 222, 0.92);
+    border-radius: $radius-pill;
+    height: 2.5rem;
+    position: absolute;
+    right: 20%;
+    top: 16%;
+    width: 2.5rem;
+}
 
-    .photoPrimary,
-    .photoSecondary,
-    .photoTertiary {
-        min-height: 8rem;
-        background-color: $color-muted-surface;
-        background-position: center;
-        background-size: cover;
-        transition: transform 300ms ease;
-    }
+.cardSeaBand {
+    background: linear-gradient(
+        180deg,
+        rgba(160, 190, 178, 0.5),
+        rgba(118, 150, 138, 0.75)
+    );
+    bottom: 0;
+    height: 36%;
+    left: 0;
+    position: absolute;
+    right: 0;
+}
 
-    .photoPrimary {
-        grid-row: span 2;
-        border-radius: 1.75rem 0.75rem 0.75rem 1.75rem;
-    }
+// 노을 루프탑
+.cardSunset {
+    background: linear-gradient(
+        180deg,
+        #6f5b86 0%,
+        #c97e8a 40%,
+        #f0a877 70%,
+        #ffd2a1 100%
+    );
+    border-radius: $radius-surface;
+    height: 10.75rem;
+    right: 9%;
+    top: 2.75rem;
+    transform: rotate(7deg);
+    width: 8.625rem;
+}
 
-    .photoSecondary {
-        border-radius: 0.75rem 1.75rem 0.75rem 0.75rem;
-    }
+.cardSunsetSun {
+    background: rgba(255, 234, 200, 0.88);
+    border-radius: $radius-pill;
+    height: 2.5rem;
+    left: 50%;
+    margin-left: -1.25rem;
+    position: absolute;
+    top: 42%;
+    width: 2.5rem;
+}
 
-    .photoTertiary {
-        border-radius: 0.75rem 0.75rem 1.75rem 0.75rem;
-    }
+.cardSunsetBand {
+    background: rgba(76, 56, 72, 0.74);
+    bottom: 0;
+    height: 26%;
+    left: 0;
+    position: absolute;
+    right: 0;
+}
 
-    .memoryMeta {
-        display: grid;
-        gap: 0.4rem;
-        padding: 1rem 1.1rem 1.15rem;
+.statusChip {
+    align-items: center;
+    background: $color-surface;
+    border-radius: $radius-pill;
+    bottom: 0.25rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    display: inline-flex;
+    font-size: 0.78125rem;
+    font-weight: $weight-bold;
+    gap: 0.5rem;
+    height: 2.625rem;
+    left: 50%;
+    padding: 0 0.875rem 0 0.5rem;
+    position: absolute;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
 
-        span {
-            color: $color-muted;
-            font-size: 0.8rem;
-            font-weight: 700;
-            line-height: 1.4;
-        }
+.statusChipIcon {
+    align-items: center;
+    background: $color-primary-tint;
+    border-radius: $radius-pill;
+    color: $color-primary;
+    display: inline-flex;
+    height: 1.625rem;
+    justify-content: center;
+    width: 1.625rem;
+}
 
-        strong {
-            color: $color-text;
-            font-size: 1.5rem;
-            font-weight: 700;
-            line-height: 1.15;
-        }
-    }
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-top: 1.75rem;
+}
+
+.privacyCaption {
+    color: $color-muted-light;
+    font-size: 0.75rem;
+    margin: 0.25rem 0 0;
+    text-align: center;
 }

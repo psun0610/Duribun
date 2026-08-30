@@ -30,12 +30,14 @@ $wash-top: radial-gradient(
     rgba(255, 255, 255, 0) 100%
 );
 
-// 타이포
-$font-display: noto sans kr;
+// 타이포 — 서체는 layout.tsx의 next/font(--font-app)가 로드합니다.
 $font-body:
-    noto sans kr,
+    var(--font-app),
+    'Noto Sans KR',
     system-ui,
-    -apple-system;
+    -apple-system,
+    sans-serif;
+$font-display: $font-body;
 
 // 굵기는 400 / 500 / 700 / 800만 씁니다. 650 같은 값은 Noto Sans KR에 없습니다.
 $weight-regular: 400;

@@ -34,7 +34,7 @@
     color: $color-primary-foreground;
     display: inline-flex;
     font-size: 1rem;
-    font-weight: 850;
+    font-weight: $weight-black;
     height: 3.25rem;
     justify-content: center;
     width: 3.25rem;
@@ -57,7 +57,7 @@
     span {
         color: $color-muted;
         font-size: 0.75rem;
-        font-weight: 600;
+        font-weight: $weight-bold;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -93,7 +93,7 @@
     strong {
         color: $color-muted;
         font-size: 0.75rem;
-        font-weight: 750;
+        font-weight: $weight-bold;
     }
 
     > svg {
@@ -131,7 +131,7 @@
     p {
         color: $color-muted;
         font-size: 0.75rem;
-        font-weight: 550;
+        font-weight: $weight-medium;
         line-height: 1.5;
     }
 }
@@ -156,7 +156,7 @@
 
     strong {
         font-size: 0.86rem;
-        font-weight: 850;
+        font-weight: $weight-black;
     }
 
     ul {

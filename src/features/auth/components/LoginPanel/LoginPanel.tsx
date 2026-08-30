@@ -1,11 +1,8 @@
 import Image from 'next/image'
-import { ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
 
-import {
-    Button,
-    FieldMessage,
-    TextField,
-} from '@/components/ui'
+import { FieldMessage } from '@/components/ui'
 import { signInWithEmail, signInWithProvider } from '@/features/auth/actions'
 
 import type { LoginPanelProps } from './types/loginPanel.types'
@@ -20,22 +17,24 @@ export const LoginPanel = ({
 }: LoginPanelProps) => {
     return (
         <main className={styles.login}>
+            <div className={styles.navBar}>
+                <Link
+                    aria-label={LOGIN_PANEL_COPY.backLabel}
+                    className={styles.backLink}
+                    href="/"
+                >
+                    <ChevronLeft aria-hidden="true" size={21} />
+                </Link>
+            </div>
+
             <section className={styles.content} aria-labelledby="login-title">
-                <div className={styles.brandBlock}>
-                    <h1 className={styles.logo} id="login-title">
-                        두리번
-                    </h1>
-                    <p className={styles.title}>
-                        우리만의 장소를
-                        <br />
-                        <strong>함께</strong> 모아봐요
-                    </p>
-                </div>
-                <div
-                    aria-label={LOGIN_PANEL_COPY.heroImageLabel}
-                    className={styles.heroImage}
-                    role="img"
-                />
+                <h1 className={styles.title} id="login-title">
+                    {LOGIN_PANEL_COPY.title}
+                </h1>
+                <p className={styles.description}>
+                    {LOGIN_PANEL_COPY.description}
+                </p>
+
                 <div className={styles.providerList}>
                     {LOGIN_PROVIDERS.map(provider => (
                         <form action={signInWithProvider} key={provider.value}>
@@ -45,39 +44,43 @@ export const LoginPanel = ({
                                 value={provider.value}
                             />
                             <input name="next" type="hidden" value={next} />
-                            <Button
+                            <button
                                 className={`${styles.providerButton} ${
                                     styles[provider.value]
                                 }`}
-                                leftIcon={
+                                type="submit"
+                            >
+                                <span className={styles.providerIcon}>
                                     <Image
                                         alt={provider.iconAlt}
                                         height="22"
                                         src={provider.iconSrc}
                                         width="22"
                                     />
-                                }
-                                type="submit"
-                                variant="secondary"
-                            >
+                                </span>
                                 {provider.label}
-                            </Button>
+                            </button>
                         </form>
                     ))}
                 </div>
+
+                <div className={styles.divider} role="presentation">
+                    <span>{LOGIN_PANEL_COPY.emailDividerLabel}</span>
+                </div>
+
                 <form action={signInWithEmail} className={styles.emailForm}>
                     <input name="next" type="hidden" value={next} />
-                    <TextField
-                        className={styles.emailField}
-                        label={LOGIN_PANEL_COPY.emailLabel}
+                    <input
+                        aria-label={LOGIN_PANEL_COPY.emailLabel}
+                        className={styles.emailInput}
                         name="email"
                         placeholder={LOGIN_PANEL_COPY.emailPlaceholder}
                         required
                         type="email"
                     />
-                    <Button type="submit">
+                    <button className={styles.emailButton} type="submit">
                         {LOGIN_PANEL_COPY.emailSubmitLabel}
-                    </Button>
+                    </button>
                     {hasEmailSent ? (
                         <FieldMessage>
                             {LOGIN_PANEL_COPY.emailSentMessage}
@@ -89,9 +92,9 @@ export const LoginPanel = ({
                         </FieldMessage>
                     ) : null}
                 </form>
+
                 <p className={styles.accountHint}>
                     {LOGIN_PANEL_COPY.accountHint}
-                    <ChevronRight aria-hidden="true" size={15} />
                 </p>
             </section>
         </main>

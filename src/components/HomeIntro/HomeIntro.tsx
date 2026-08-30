@@ -1,67 +1,67 @@
-import { LinkButton, Pill } from '@/components/ui'
-import {
-    HOME_ACTIONS,
-    HOME_MEMORY_META,
-    HOME_PREVIEW_IMAGES,
-} from './const/homeIntro.const'
+import { Clock3, Heart } from 'lucide-react'
+
+import { LinkButton } from '@/components/ui'
+import { HOME_ACTIONS, HOME_COPY } from './const/homeIntro.const'
 
 import styles from './HomeIntro.module.scss'
 
 export const HomeIntro = () => {
     return (
         <main className={styles.home}>
-            <section className={styles.hero} aria-labelledby="home-title">
-                <div className={styles.copy}>
-                    <p className={styles.eyebrow}>
-                        Modern couple archive: DURIBUN
-                    </p>
-                    <h1 className={styles.title} id="home-title">
-                        우리의 데이트 기록 시작하기
-                    </h1>
-                    <p className={styles.description}>
-                        함께 다녀온 장소, 사진, 평점, 리뷰 상태를 한 화면에서
-                        보고 친구 커플에게 공유할 추천도 따로 관리해요.
-                    </p>
-                    <div className={styles.actions}>
-                        {HOME_ACTIONS.map(action => (
-                            <LinkButton
-                                href={action.href}
-                                key={action.label}
-                                size="lg"
-                                variant={
-                                    action.variant === 'primaryAction'
-                                        ? 'primary'
-                                        : 'secondary'
-                                }
-                            >
-                                {action.label}
-                            </LinkButton>
-                        ))}
-                    </div>
-                </div>
+            <div className={styles.brandRow}>
+                <span aria-hidden="true" className={styles.brandMark}>
+                    <Heart aria-hidden="true" size={14} />
+                </span>
+                <span className={styles.brandName}>{HOME_COPY.brand}</span>
+            </div>
 
-                <article className={styles.memoryCard}>
-                    <div
-                        className={styles.photoGrid}
-                        aria-label="장소 사진 미리보기"
-                    >
-                        {HOME_PREVIEW_IMAGES.map(image => (
-                            <div
-                                aria-label={image.label}
-                                className={styles[image.variant]}
-                                key={image.label}
-                                role="img"
-                                style={{ backgroundImage: `url(${image.url})` }}
-                            />
-                        ))}
-                    </div>
-                    <div className={styles.memoryMeta}>
-                        <Pill tone="primary">{HOME_MEMORY_META.category}</Pill>
-                        <strong>{HOME_MEMORY_META.placeName}</strong>
-                        <span>{HOME_MEMORY_META.status}</span>
-                    </div>
-                </article>
+            <section className={styles.hero} aria-labelledby="home-title">
+                <h1 className={styles.title} id="home-title">
+                    {HOME_COPY.title}
+                </h1>
+                <p className={styles.description}>{HOME_COPY.description}</p>
             </section>
+
+            <div
+                aria-label={HOME_COPY.collageLabel}
+                className={styles.collage}
+                role="img"
+            >
+                <span aria-hidden="true" className={styles.cardSea}>
+                    <span className={styles.cardSeaSun} />
+                    <span className={styles.cardSeaBand} />
+                </span>
+                <span aria-hidden="true" className={styles.cardSunset}>
+                    <span className={styles.cardSunsetSun} />
+                    <span className={styles.cardSunsetBand} />
+                </span>
+                <span className={styles.statusChip}>
+                    <span className={styles.statusChipIcon}>
+                        <Clock3 aria-hidden="true" size={13} />
+                    </span>
+                    {HOME_COPY.statusChip}
+                </span>
+            </div>
+
+            <div className={styles.actions}>
+                {HOME_ACTIONS.map(action => (
+                    <LinkButton
+                        href={action.href}
+                        key={action.label}
+                        size="lg"
+                        variant={
+                            action.variant === 'primaryAction'
+                                ? 'primary'
+                                : 'secondary'
+                        }
+                    >
+                        {action.label}
+                    </LinkButton>
+                ))}
+                <p className={styles.privacyCaption}>
+                    {HOME_COPY.privacyCaption}
+                </p>
+            </div>
         </main>
     )
 }
