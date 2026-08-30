@@ -91,10 +91,10 @@
 }
 
 .primaryButton {
-    background: linear-gradient(90deg, $color-primary, $color-secondary);
+    background: $color-primary;
     border: 0;
     border-radius: $radius-control;
-    box-shadow: 0 14px 30px rgba($color-primary, 0.2);
+    box-shadow: $shadow-lifted;
     color: $color-primary-foreground;
     cursor: pointer;
     font-size: 1rem;

@@ -35,8 +35,8 @@
 }
 
 .primary {
-    background: linear-gradient(90deg, $color-primary, $color-secondary);
-    box-shadow: 0 14px 30px rgba($color-primary, 0.2);
+    background: $color-primary;
+    box-shadow: $shadow-lifted;
     color: $color-primary-foreground;
 }
 

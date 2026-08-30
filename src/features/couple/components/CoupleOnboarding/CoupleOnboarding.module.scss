@@ -46,7 +46,7 @@
 .eyebrow {
     margin: 0;
     color: $color-primary;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: $weight-bold;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -64,7 +64,7 @@
 .description {
     margin: 0;
     color: $color-muted;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.55;
     word-break: keep-all;
@@ -83,7 +83,7 @@
 .panel {
     background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: 1.35rem;
+    border-radius: $radius-control;
     box-shadow: $shadow-soft;
     display: grid;
     gap: 0.35rem;
@@ -115,8 +115,8 @@
 
 .optionIcon {
     align-items: center;
-    background: linear-gradient(135deg, $color-primary, $color-secondary);
-    border-radius: 1.25rem;
+    background: $gradient-brand;
+    border-radius: $radius-control;
     box-shadow: 0 12px 28px rgba($color-primary, 0.18);
     color: $color-primary-foreground;
     display: inline-flex;
@@ -128,7 +128,7 @@
 
 .optionTitle {
     color: $color-text;
-    font-size: 1.2rem;
+    font-size: 1.0625rem;
     font-weight: 750;
     grid-column: 2;
     letter-spacing: 0;
@@ -152,7 +152,7 @@
 .panelTitle {
     margin: 0;
     color: $color-text;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 700;
     letter-spacing: 0;
     text-align: center;
@@ -175,7 +175,7 @@
     display: grid;
     gap: 0.45rem;
     color: $color-text;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 600;
 
     input {
@@ -238,12 +238,12 @@
 .copyButton {
     justify-self: start;
     border: 0;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     background: $color-surface;
     padding: 0.55rem 0.85rem;
     color: $color-primary;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: $weight-bold;
     box-shadow: $shadow-soft;
 }
@@ -256,7 +256,7 @@
 .inviteCodeCard {
     align-items: center;
     border-radius: $radius-control;
-    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    background: $gradient-brand;
     box-shadow: 0 16px 34px rgba($color-primary, 0.2);
     display: grid;
     gap: 0.65rem;
@@ -272,7 +272,7 @@
 }
 
 .inviteCodeCard span {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 700;
 }
 
@@ -287,7 +287,7 @@
 .inviteCodeCard small {
     align-items: center;
     display: inline-flex;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 700;
     gap: 0.35rem;
 }
@@ -313,7 +313,7 @@
     aspect-ratio: 1;
     background: $color-muted-surface;
     border: 1.5px solid transparent;
-    border-radius: 1rem;
+    border-radius: $radius-block;
     color: $color-text;
     font-size: clamp(1.2rem, 8vw, 2rem);
     font-weight: 750;
@@ -340,13 +340,13 @@
 
 .codeLabel {
     color: $color-muted;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
 }
 
 .codeValue {
     color: $color-text;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 750;
     letter-spacing: 0.04em;
 }
@@ -354,7 +354,7 @@
 .codeDescription {
     margin: 0;
     color: $color-muted;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.55;
 }
@@ -365,7 +365,7 @@
     background: rgba($color-primary, 0.1);
     padding: 0.85rem 1rem;
     color: $color-text;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.5;
 }

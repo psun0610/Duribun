@@ -29,8 +29,8 @@
 
 .avatar {
     align-items: center;
-    background: linear-gradient(135deg, $color-primary, $color-secondary);
-    border-radius: 999px;
+    background: $color-muted-surface;
+    border-radius: $radius-pill;
     color: $color-primary-foreground;
     display: inline-flex;
     font-size: 1rem;
@@ -56,7 +56,7 @@
 
     span {
         color: $color-muted;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 600;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -92,7 +92,7 @@
 
     strong {
         color: $color-muted;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 750;
     }
 
@@ -130,7 +130,7 @@
 
     p {
         color: $color-muted;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 550;
         line-height: 1.5;
     }
@@ -146,7 +146,7 @@
 .privateCard {
     align-items: center;
     border: 1px solid $color-line;
-    border-radius: 1.1rem;
+    border-radius: $radius-control;
     display: grid;
     gap: 0.55rem;
     justify-items: center;

@@ -45,7 +45,7 @@
         align-items: center;
         background: transparent;
         border: 0;
-        border-radius: 999px;
+        border-radius: $radius-pill;
         color: $color-text;
         cursor: pointer;
         display: inline-flex;
@@ -117,7 +117,7 @@
             radial-gradient(circle at 24% 20%, rgba($color-secondary, 0.5), transparent 28%),
             linear-gradient(135deg, rgba($color-primary, 0.18), rgba($color-secondary, 0.22));
         border: 1px solid $color-line;
-        border-radius: 1.1rem;
+        border-radius: $radius-control;
         color: $color-primary;
         display: flex;
         justify-content: center;
@@ -136,7 +136,7 @@
     .mockFeedVisual {
         border: 0;
         background: $color-muted-surface;
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+        box-shadow: $shadow-soft;
     }
 
     .registeredFeedVisual:has(.feedPhoto),
@@ -156,7 +156,7 @@
     .registeredPrivacyIcon {
         align-items: center;
         background: rgba(255, 255, 255, 0.9);
-        border-radius: 999px;
+        border-radius: $radius-pill;
         color: $color-muted;
         display: inline-flex;
         height: 1.5rem;
@@ -226,7 +226,7 @@
         align-items: center;
         background: $color-surface;
         border: 1px solid $color-line;
-        border-radius: 999px;
+        border-radius: $radius-pill;
         color: $color-muted;
         display: inline-flex;
         font-size: 0.7rem;
@@ -247,7 +247,7 @@
         align-items: center;
         background: $color-surface;
         border: 1px solid $color-line;
-        border-radius: 1.15rem;
+        border-radius: $radius-control;
         display: grid;
         gap: 0.75rem;
         grid-template-columns: auto 1fr;
@@ -266,7 +266,7 @@
     .registeredListVisual {
         align-items: center;
         background: linear-gradient(135deg, rgba($color-primary, 0.18), rgba($color-secondary, 0.24));
-        border-radius: 0.9rem;
+        border-radius: $radius-block;
         color: $color-primary;
         display: inline-flex;
         height: 4.4rem;
@@ -321,7 +321,7 @@
     .registeredPrivacyIconInline {
         align-items: center;
         background: $color-muted-surface;
-        border-radius: 999px;
+        border-radius: $radius-pill;
         color: $color-muted;
         display: inline-flex;
         flex-shrink: 0;
@@ -375,7 +375,7 @@
         align-items: center;
         background: transparent;
         border: 0;
-        border-radius: 1rem;
+        border-radius: $radius-block;
         color: $color-muted;
         cursor: pointer;
         display: grid;

@@ -74,7 +74,7 @@
 .avatarPreviewFallback {
     align-items: center;
     background: linear-gradient(135deg, $color-primary, $color-secondary);
-    border-radius: 999px;
+    border-radius: $radius-pill;
     color: $color-primary-foreground;
     display: inline-flex;
     height: 3.6rem;

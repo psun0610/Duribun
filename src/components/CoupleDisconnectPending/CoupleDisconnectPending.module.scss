@@ -12,8 +12,8 @@
     align-items: center;
     background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: 2rem;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.1);
+    border-radius: $radius-surface;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -24,7 +24,7 @@
 }
 
 .brand {
-    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    background: $color-text;
     background-clip: text;
     color: transparent;
     font-size: 2rem;
@@ -52,7 +52,7 @@
     div {
         align-items: center;
         background: $color-muted-surface;
-        border-radius: 1.25rem;
+        border-radius: $radius-control;
         display: flex;
         justify-content: space-between;
         padding: 1rem;

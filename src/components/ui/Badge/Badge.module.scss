@@ -3,7 +3,7 @@
 .badge {
     align-items: center;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     display: inline-flex;
     font-weight: $weight-bold;
     gap: 0.25rem;
