@@ -21,6 +21,14 @@ const appPageSource = readFileSync(
     path.resolve(process.cwd(), 'src/app/app/page.tsx'),
     'utf8'
 )
+const cleanupRouteSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/api/cron/couple-cleanup/route.ts'),
+    'utf8'
+)
+const vercelConfigSource = readFileSync(
+    path.resolve(process.cwd(), 'vercel.json'),
+    'utf8'
+)
 const appDataSource = readFileSync(
     path.resolve(process.cwd(), 'src/app/app/getProtectedAppData.ts'),
     'utf8'
@@ -75,6 +83,17 @@ describe('couple disconnect lifecycle', () => {
         expect(initialSchemaSql).toContain(
             'grant execute on function public.delete_expired_disconnected_couples() to service_role;'
         )
+    })
+
+    it('actually invokes the cleanup function from a scheduled, secret-gated route', () => {
+        expect(cleanupRouteSource).toContain(
+            "supabase.rpc('delete_expired_disconnected_couples')"
+        )
+        expect(cleanupRouteSource).toContain('createAdminSupabaseClient')
+        expect(cleanupRouteSource).toContain("getEnv('CRON_SECRET')")
+        expect(cleanupRouteSource).toContain('`Bearer ${cronSecret}`')
+        expect(cleanupRouteSource).toContain('status: 401')
+        expect(vercelConfigSource).toContain('/api/cron/couple-cleanup')
     })
 
     it('keeps pending couples out of ordinary couple-space rendering', () => {
