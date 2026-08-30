@@ -80,7 +80,7 @@ export const saveProfileWithAvatar = async (
     if (!displayName) {
         return {
             ...previousState,
-            errorMessage: '닉네임을 입력해 주세요.',
+            errorMessage: '이름을 적어주세요.',
         }
     }
 

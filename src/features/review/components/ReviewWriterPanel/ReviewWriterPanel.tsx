@@ -303,7 +303,7 @@ export const ReviewWriterPanel = ({
                             <div className={styles.photoHeader}>
                                 <span className={styles.label}>
                                     {REVIEW_WRITER_COPY.photoLabel}
-                                    <small>최대 10장</small>
+                                    <small>{REVIEW_WRITER_COPY.photoLimitHelp}</small>
                                 </span>
                             </div>
                             <p className={styles.helpText}>

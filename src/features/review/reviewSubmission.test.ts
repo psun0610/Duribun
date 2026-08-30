@@ -90,11 +90,13 @@ describe('review submission', () => {
 
     it('requires rating metrics, tags, one-line text, and at least one photo', () => {
         expect(reviewActionsSource).toContain(
-            '카테고리에 맞는 모든 평점을 0.5점에서 5점 사이로 선택해 주세요.'
+            '별점을 모두 골라주세요. 반 칸 단위로 고를 수 있어요.'
         )
-        expect(reviewActionsSource).toContain('태그를 하나 이상 선택해 주세요.')
         expect(reviewActionsSource).toContain(
-            '사진은 최소 1장 필요하고 각 사진의 유형을 선택해야 해요.'
+            '어떤 점이 좋았는지 하나만 골라주세요.'
+        )
+        expect(reviewActionsSource).toContain(
+            '사진을 한 장 이상 넣고, 어디까지 보여줄지 골라주세요.'
         )
         expect(reviewPanelSource).toContain('reviewState.errorMessage')
         expect(reviewPanelSource).toContain('reviewState.successMessage')

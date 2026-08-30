@@ -20,7 +20,7 @@ const normalizeText = (value: FormDataEntryValue | null) => {
 
 const mapFriendErrorMessage = (message?: string, code?: string) => {
     if (!message) {
-        return '친구 커플 연결을 완료하지 못했어요. 다시 시도해 주세요.'
+        return '친구를 더하지 못했어요. 다시 해볼까요?'
     }
 
     if (message.includes('Active couple required')) {
@@ -28,15 +28,15 @@ const mapFriendErrorMessage = (message?: string, code?: string) => {
     }
 
     if (message.includes('Invalid friend code')) {
-        return '유효하지 않은 친구 코드예요.'
+        return '이 친구 코드는 안 맞는 것 같아요. 다시 확인해 주세요.'
     }
 
     if (message.includes('Cannot add own couple as friend')) {
-        return '내 커플 코드는 친구로 추가할 수 없어요.'
+        return '우리 코드예요. 친구에게 받은 코드를 넣어주세요.'
     }
 
     if (message.includes('permission denied')) {
-        return '친구 코드 권한이 아직 적용되지 않았어요. Supabase 마이그레이션을 확인해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (
@@ -44,7 +44,7 @@ const mapFriendErrorMessage = (message?: string, code?: string) => {
         message.includes('function') ||
         message.includes('schema cache')
     ) {
-        return '친구 코드 DB 함수가 아직 적용되지 않았어요. Supabase 마이그레이션을 확인해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     return `친구 커플 연결을 완료하지 못했어요. (${code ?? 'unknown'})`
@@ -59,7 +59,7 @@ export const addFriendCoupleByCode = async (
     if (!friendCode) {
         return {
             ...previousState,
-            errorMessage: '친구 코드를 입력해 주세요.',
+            errorMessage: '친구 코드를 넣어주세요.',
             succeeded: false,
         }
     }

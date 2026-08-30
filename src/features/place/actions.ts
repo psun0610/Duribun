@@ -106,16 +106,16 @@ const mergeSearchResults = (
 }
 
 const mapKakaoSearchErrorMessage = (status: number, responseBody: string) => {
-    if (responseBody.includes('disabled OPEN_MAP_AND_LOCAL service')) {
-        return 'Kakao Developers에서 지도/로컬 서비스가 비활성화되어 있어요. 앱 설정에서 OPEN_MAP_AND_LOCAL 서비스를 활성화해 주세요.'
+    if (responseBody.includes('지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.')) {
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (status === 401 || status === 403) {
-        return 'Kakao Local API 권한을 확인해 주세요. REST API 키와 Kakao Developers 서비스 설정이 필요해요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (status === 429) {
-        return 'Kakao Local API 호출 한도를 초과했어요. 잠시 후 다시 시도해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     return 'Kakao 장소 검색에 실패했어요. 잠시 후 다시 시도해 주세요.'
@@ -123,7 +123,7 @@ const mapKakaoSearchErrorMessage = (status: number, responseBody: string) => {
 
 const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
     if (!message) {
-        return '장소를 등록하지 못했어요. 다시 시도해 주세요.'
+        return '장소를 담지 못했어요. 다시 해볼까요?'
     }
 
     if (message.includes('Active couple required')) {
@@ -135,11 +135,11 @@ const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
     }
 
     if (message.includes('Manual place name required')) {
-        return '장소명을 입력해 주세요.'
+        return '어디였는지 이름을 적어주세요.'
     }
 
     if (message.includes('permission denied')) {
-        return '장소 등록 권한이 아직 적용되지 않았어요. Supabase 마이그레이션을 확인해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (
@@ -147,10 +147,10 @@ const mapPlaceRegistrationErrorMessage = (message?: string, code?: string) => {
         message.includes('function') ||
         message.includes('schema cache')
     ) {
-        return '장소 등록 DB 함수가 아직 적용되지 않았어요. Supabase 마이그레이션을 확인해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
-    return `장소를 등록하지 못했어요. (${code ?? 'unknown'})`
+    return `장소를 담지 못했어요. (${code ?? 'unknown'})`
 }
 
 export const searchKakaoPlaces = async (
@@ -177,7 +177,7 @@ export const searchKakaoPlaces = async (
         return {
             ...EMPTY_SEARCH_STATE,
             errorMessage:
-                'Kakao Local API 키가 설정되지 않았어요. KAKAO_REST_API_KEY를 확인해 주세요.',
+                '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.',
             query,
         }
     }
@@ -355,7 +355,7 @@ export const updateCouplePlaceSharing = async (
     if (!couplePlaceId) {
         return {
             ...previousState,
-            errorMessage: '공유 설정을 변경할 장소를 찾지 못했어요.',
+            errorMessage: '그 곳을 찾지 못했어요.',
         }
     }
 
@@ -368,7 +368,7 @@ export const updateCouplePlaceSharing = async (
     if (!couplePlace) {
         return {
             ...previousState,
-            errorMessage: '공유 설정을 변경할 장소를 찾지 못했어요.',
+            errorMessage: '그 곳을 찾지 못했어요.',
         }
     }
 
@@ -412,7 +412,7 @@ export const updateCouplePlaceSharing = async (
 
         return {
             ...previousState,
-            errorMessage: '공유 설정을 저장하지 못했어요. 다시 시도해 주세요.',
+            errorMessage: '공개 설정을 바꾸지 못했어요. 다시 해볼까요?',
         }
     }
 

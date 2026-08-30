@@ -65,6 +65,25 @@ export const MOCK_PLACES: CouplePlace[] = [
     },
 ]
 
+export const SETTINGS_COPY = {
+    menuLabel: '설정 메뉴',
+    publicPlaces: '밖에도 보여주는 곳',
+    friends: '친구 목록',
+    couple: '우리 정보',
+    notifications: '알림',
+    shareGuideLabel: '어디까지 보이나요?',
+    shareGuideTitle: '어디까지 보이나요?',
+    shareGuideDescription:
+        '보여주기로 한 곳만 친구와 둘러보기에 나와요. 보여줘도 한 줄 리뷰와 각자 평점은 밖으로 나가지 않아요.',
+    publicTitle: '밖에도 보여요',
+    publicPoints: ['둘러보기에 나와요', '친구에게도 보여요', '장소·음식 사진만 나가요'],
+    privateTitle: '우리끼리만',
+    privatePoints: ['둘러보기에 안 나와요', '친구에게도 안 보여요', '기본값이 여기예요'],
+    dataLabel: '내 정보',
+    myData: '내 정보 관리',
+    faq: '궁금한 점',
+} as const
+
 export const CATEGORY_LABEL: Record<PlaceCategory, string> = {
     activity: '활동',
     cafe: '카페',

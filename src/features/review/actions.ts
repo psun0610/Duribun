@@ -31,23 +31,23 @@ const INITIAL_REVIEW_STATE: ReviewSubmissionState = {
 
 const mapReviewErrorMessage = (message?: string, code?: string) => {
     if (!message) {
-        return '리뷰를 저장하지 못했어요. 다시 시도해 주세요.'
+        return '리뷰를 저장하지 못했어요. 다시 해볼까요?'
     }
 
     if (message.includes('Authentication required')) {
-        return '로그인 세션이 만료됐어요. 다시 로그인해 주세요.'
+        return '로그인이 풀렸어요. 다시 들어와 주세요.'
     }
 
     if (message.includes('Active couple required')) {
-        return '활성 커플만 리뷰를 작성할 수 있어요.'
+        return '연결된 상태에서만 리뷰를 남길 수 있어요.'
     }
 
     if (message.includes('permission denied')) {
-        return '리뷰 저장 권한이 아직 적용되지 않았어요. Supabase 마이그레이션을 확인해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (code === '23505' || message.includes('duplicate key')) {
-        return '이미 작성한 리뷰가 있어 기존 리뷰를 수정하는 방식으로 저장됩니다.'
+        return '이미 남긴 리뷰가 있어서, 그 리뷰를 고쳐 저장했어요.'
     }
 
     if (
@@ -55,7 +55,7 @@ const mapReviewErrorMessage = (message?: string, code?: string) => {
         message.includes('function') ||
         message.includes('schema cache')
     ) {
-        return '리뷰 관련 DB 함수가 아직 적용되지 않았어요. Supabase 마이그레이션을 확인해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     return `리뷰를 저장하지 못했어요. (${code ?? 'unknown'})`
@@ -185,21 +185,21 @@ export const submitReview = async (
         if (!couplePlaceId) {
             return {
                 ...previousState,
-                errorMessage: '리뷰할 장소를 선택해 주세요.',
+                errorMessage: '어느 곳에 남길지 골라주세요.',
             }
         }
 
         if (!oneLineReview) {
             return {
                 ...previousState,
-                errorMessage: '한 줄 리뷰를 입력해 주세요.',
+                errorMessage: '한 줄만 남겨주세요.',
             }
         }
 
         if (selectedTags.length === 0) {
             return {
                 ...previousState,
-                errorMessage: '태그를 하나 이상 선택해 주세요.',
+                errorMessage: '어떤 점이 좋았는지 하나만 골라주세요.',
             }
         }
 
@@ -207,7 +207,7 @@ export const submitReview = async (
             return {
                 ...previousState,
                 errorMessage:
-                    '사진은 최소 1장 필요하고 각 사진의 유형을 선택해야 해요.',
+                    '사진을 한 장 이상 넣고, 어디까지 보여줄지 골라주세요.',
             }
         }
 
@@ -220,7 +220,7 @@ export const submitReview = async (
         if (couplePlaceError || !couplePlace) {
             return {
                 ...previousState,
-                errorMessage: '리뷰할 장소를 찾지 못했어요.',
+                errorMessage: '그 곳을 찾지 못했어요.',
             }
         }
 
@@ -234,7 +234,7 @@ export const submitReview = async (
         if (!membership) {
             return {
                 ...previousState,
-                errorMessage: '활성 커플만 리뷰를 작성할 수 있어요.',
+                errorMessage: '연결된 상태에서만 리뷰를 남길 수 있어요.',
             }
         }
 
@@ -247,7 +247,7 @@ export const submitReview = async (
         if (!couple || couple.status !== 'active') {
             return {
                 ...previousState,
-                errorMessage: '활성 커플만 리뷰를 작성할 수 있어요.',
+                errorMessage: '연결된 상태에서만 리뷰를 남길 수 있어요.',
             }
         }
 
@@ -260,7 +260,7 @@ export const submitReview = async (
         if (!place) {
             return {
                 ...previousState,
-                errorMessage: '장소 정보를 찾지 못했어요.',
+                errorMessage: '그 곳의 정보를 찾지 못했어요.',
             }
         }
 
@@ -273,7 +273,7 @@ export const submitReview = async (
             return {
                 ...previousState,
                 errorMessage:
-                    '카테고리에 맞는 모든 평점을 0.5점에서 5점 사이로 선택해 주세요.',
+                    '별점을 모두 골라주세요. 반 칸 단위로 고를 수 있어요.',
             }
         }
 
@@ -333,7 +333,7 @@ export const submitReview = async (
         if (resolvedTagRows.length === 0) {
             return {
                 ...previousState,
-                errorMessage: '선택한 태그를 찾지 못했어요.',
+                errorMessage: '고른 태그를 찾지 못했어요.',
             }
         }
 
@@ -359,7 +359,7 @@ export const submitReview = async (
             if (uploadError) {
                 return {
                     ...previousState,
-                    errorMessage: '사진 업로드에 실패했어요. 다시 시도해 주세요.',
+                    errorMessage: '사진을 올리지 못했어요. 다시 해볼까요?',
                 }
             }
 
@@ -454,7 +454,7 @@ export const submitReview = async (
 
         return {
             errorMessage: '',
-            successMessage: '리뷰를 저장했어요.',
+            successMessage: '리뷰를 남겼어요.',
         }
     } catch (error) {
         if (error instanceof Error && error.message === 'Authentication required') {
@@ -468,7 +468,7 @@ export const submitReview = async (
 
         return {
             ...previousState,
-            errorMessage: '리뷰를 저장하지 못했어요. 다시 시도해 주세요.',
+            errorMessage: '리뷰를 저장하지 못했어요. 다시 해볼까요?',
         }
     }
 }
