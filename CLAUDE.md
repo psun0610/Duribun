@@ -9,7 +9,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `AGENTS.md` — AI 에이전트 운영 규칙의 정본 (범위, 변경 규율, 검증, 이슈 처리)
 - `docs/product-decisions.md` — 도메인 규칙 (공개 조건, 커플 생명주기, 리뷰 상태 문구, 사진 분류)
 - `docs/component-rule.md` / `docs/frontend.md` — 컴포넌트·프론트엔드 코드 규칙
-- `docs/design-system.md` + `docs/design-image-files/` — 색/모양/레이아웃과 UI 목업
+- `docs/design-system.md` — **디자인 시스템 v2.1의 정본.** 색·타이포·모서리·컴포넌트·문구 원칙.
+  UI나 사용자 문구를 건드리기 전에 반드시 읽습니다. `docs/design-image-files/`는 원본 목업입니다.
 - `docs/external-providers.md` — Supabase Auth·Kakao 설정
 - `docs/prds/duribun-mvp-prd.md`, `issues/` — 계획된 제품 작업
 - 저장소: `psun0610/Duribun` (`main` ← PR ← `develop`)
@@ -17,6 +18,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 아래 rules 파일은 위 문서에서 **실제 코드와 어긋나거나 강제해야 하는 부분**만 추린 것입니다.
 
 @.claude/rules/workflow.md
+@.claude/rules/design-system.md
 @.claude/rules/code-style.md
 @.claude/rules/supabase.md
 @.claude/rules/testing.md
@@ -136,6 +138,19 @@ RPC는 영어로 예외를 던지고(`Authentication required`, `Invalid friend 
 | `src/components/ui/` | 디자인 시스템 프리미티브 12종. **배럴 `@/components/ui`로만** import |
 | `src/components/` | 도메인 없는 셸 — `AppShell`, `CoupleDisconnectPending`, `HomeIntro` |
 | `src/features/<도메인>/components/` | 도메인 화면. 새 컴포넌트는 기본적으로 여기 |
+
+### 디자인 시스템 v2.1
+
+색·타이포·모서리·그림자·버튼·상태 뱃지·문구 원칙은 [docs/design-system.md](docs/design-system.md)가
+정본입니다. 값을 새로 정하지 말고 거기서 가져오세요. 시각 기준은
+[리디자인 캔버스](https://claude.ai/code/artifact/6c3bf9c6-e8a2-4a2a-8c61-5b0b6045cc95)에
+전체 화면 16개와 시스템 시트로 정리돼 있습니다.
+
+**아직 코드에 반영되지 않았습니다.** 문서와 캔버스가 앞서 있고 코드는 예전 값과 문구를 쓰고 있어요.
+
+문구에서 자주 걸리는 두 가지: **"우리 장소"라는 표현은 쓰지 않습니다**(화면 제목은 "우리가 다녀온 곳",
+탭은 "홈"). 그리고 개발자 말투 대신 `-어요`체로 씁니다 — 탐색이 아니라 둘러보기, 공개/비공개가 아니라
+"밖에도 보여요 / 우리끼리만".
 
 ### 스타일 — Tailwind는 죽어 있습니다
 

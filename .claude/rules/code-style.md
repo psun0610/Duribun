@@ -35,6 +35,8 @@ ComponentName/
 
 ## 스타일
 
+색·타이포·모서리·그림자·컴포넌트 값은 `.claude/rules/design-system.md`와 `docs/design-system.md`가 정본입니다. 여기서 반복하지 않습니다.
+
 - **SCSS Modules만 씁니다.** Tailwind는 설치돼 있지만 스타일시트가 어디에도 import되지 않아, Tailwind 클래스를 쓰면 아무 일도 일어나지 않습니다.
 - 색/반경/그림자는 `src/styles/variables.scss` 토큰을 거칩니다. 컴포넌트에 hex를 직접 쓰지 않습니다.
 - 모바일 퍼스트, iOS Safari 동작을 먼저 고려합니다.

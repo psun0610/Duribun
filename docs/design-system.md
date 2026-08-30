@@ -1,160 +1,203 @@
-# Duribun Design System
+# 두리번 디자인 시스템 v2.1
 
-Duribun now uses the visual language from the Modern Cute App Design reference:
-bright, playful, mobile-first, photo-led, and icon-heavy. The product should
-feel like a modern cute couple archive rather than a quiet premium journal.
+이 문서가 UI 결정의 정본입니다. 프론트엔드 화면·레이아웃·스타일·인터랙션·사용자 문구를
+만들거나 고치기 전에 반드시 읽으세요.
 
-## Required Image References
+시각 기준: [화면 리디자인 캔버스](https://claude.ai/code/artifact/6c3bf9c6-e8a2-4a2a-8c61-5b0b6045cc95)
+— 전체 화면 16개와 디자인 시스템 시트가 들어 있습니다. 값이 이 문서와 어긋나 보이면 문서가 기준이고,
+그림이 더 구체적인 부분(간격, 배치)은 캔버스를 따르세요.
 
-Before creating or changing frontend UI, layout, styling, interaction patterns,
-or visual copy, inspect the relevant files under `docs/design-image-files/`.
-These images are required design references, not optional inspiration.
+`docs/design-image-files/`의 원본 목업 4장도 함께 참고합니다. v2.1은 이 목업의 시각 언어
+(핑크·옐로, 그라디언트, pill, 큰 라운드, 사진 중심)를 유지하되 정보 위계와 문구를 정리한 것입니다.
 
-- `duribun_design_system.png`: source of truth for brand feeling, color,
-  typography, radius, shadow, navigation, badges, empty states, and card
-  patterns.
-- `duribun_uiux_mockup_01.png`: reference for login, onboarding, profile
-  creation, couple connection, invite code, and connection-complete flows.
-- `duribun_uiux_mockup_02.png`: reference for our-place home, feed/list
-  switching, place registration, place detail, review state, and review writing.
-- `duribun_uiux_mockup_03.png`: reference for friend recommendations, friend
-  code management, explore, settings, sharing criteria, privacy, and couple
-  disconnect flows.
+## 제품 성격
 
-When a UI decision is more specific in these images than in written rules, use
-the image as the primary reference while preserving product behavior and privacy
-rules from the docs.
+- 커플의 장소 기록장 70%, 추천 앱 30%.
+- 밝고 친근하고 빠르게 훑히는, 모바일 네이티브.
+- 사진이 주인공입니다. 카드는 흰 바탕을 유지해 사진이 죽지 않게 합니다.
+- 하트·마스코트 같은 장식은 기본으로 넣지 않습니다. 기능을 설명할 때만 씁니다.
 
-## Product Feeling
+## 컬러
 
-- Default personality: cute couple place archive 70%, recommendation app 30%.
-- Primary emotional cue: cheerful, friendly, quick to scan, and mobile native.
-- Visual references: the imported Modern Cute App Design, shadcn-style rounded
-  controls, bright app icons, and photo-first mobile feeds.
-- Use strong rounded shapes, bold labels, soft shadows, and clear icon states.
-- Romantic cliches are allowed only when they serve a real feature. Do not add
-  decorative hearts or mascots by default.
+| 이름 | 값 | 쓰는 곳 |
+|---|---|---|
+| Primary | `#FF6B9D` | 주요 버튼, 선택 상태, 평점 pill, 활성 탭 |
+| Primary deep | `#E8437E` | 핑크 배경 위 텍스트, 강조 라벨 |
+| Secondary | `#FFC75F` | 완료 상태, 노랑 tint 아이콘 |
+| Text | `#1A1A1A` | 본문 |
+| Muted text | `#737373` | 보조 설명 |
+| Light text | `#A3A3A3` | 카운터, 플레이스홀더, 비활성 탭 |
+| Muted surface | `#F5F5F5` | 비활성 칩, 회색 pill |
+| Border | `rgba(0, 0, 0, 0.08)` | 카드·입력 경계선 |
+| Pink tint | `#FFEEF4` | 진행 중 상태 뱃지, 연한 버튼 |
+| Yellow tint | `#FFF6E3` | 완료 상태 뱃지 |
 
-## Core Layout Principle
+그라디언트는 `linear-gradient(135deg, #FF7BA9 0%, #FF8F9C 45%, #FFB26B 100%)` 하나만 씁니다.
+**쓰는 곳은 장소 담기 FAB와 코드 카드뿐입니다.** 배경 전체나 일반 버튼에 쓰지 마세요.
+주요 버튼은 그라디언트가 아니라 단색 `#FF6B9D`입니다.
 
-The private app home defaults to a photo-first place feed.
+화면 상단에는 아주 옅은 분홍 웨시를 깝니다:
+`radial-gradient(120% 100% at 50% 0%, rgba(255,107,157,0.10) 0%, rgba(255,199,95,0.06) 45%, rgba(255,255,255,0) 100%)`
 
-- One couple place is one card.
-- Use a two-column photo feed on mobile when space allows.
-- Each card must show photo, place name, review state, and public/private state.
-- Rating appears as a compact pill when available.
-- Users can switch between feed and list view using icon controls.
+## 타이포그래피
 
-List layout is for scanning and management:
+Noto Sans KR. 18px 이상은 자간 `-0.02em`, 24px 이상은 `-0.03em`.
 
-- Small thumbnail.
-- Place name.
-- Category and visit date.
-- Review status.
-- Rating when available.
-- Public/private state.
+| 용도 | 크기 / 굵기 |
+|---|---|
+| Display | 30 / 800 |
+| Title | 20 / 700 |
+| Nav 타이틀 | 17 / 700 |
+| 섹션 제목 | 16 / 700 |
+| 카드 제목 | 15 / 700 |
+| 본문 | 14 / 400 |
+| 라벨 | 13.5 / 500 |
+| 캡션 | 12 / 400 |
+| 마이크로(뱃지) | 11.5 / 700 |
 
-## Color Palette
+`font-weight: 650`처럼 Noto Sans KR에 없는 굵기는 쓰지 마세요. 400 / 500 / 700 / 800만 씁니다.
 
-Use this palette as the default app language.
+## 모서리 & 그림자
 
-- Background: `#FFFFFF`
-- Surface/Card: `#FFFFFF`
-- Primary: `#FF6B9D`
-- Primary foreground: `#FFFFFF`
-- Secondary: `#FFC75F`
-- Text: `#1A1A1A`
-- Muted surface: `#F5F5F5`
-- Muted text: `#737373`
-- Border: `rgba(0, 0, 0, 0.08)`
+| 값 | 쓰는 곳 |
+|---|---|
+| 24px | 사진 카드, 패널, 시트, 리스트 행 |
+| 20px | 입력 필드, 사진 썸네일 |
+| 14px | 작은 아이콘 블록 |
+| 999px | 버튼, pill, 칩, 세그먼트 |
 
-The UI may use pink-to-yellow gradients for brand text, add buttons, empty
-states, and playful emphasis. Avoid making every surface tinted; keep cards
-white so photos remain readable.
+- 카드 그림자: `0 8px 24px rgba(0, 0, 0, 0.08)`
+- 브랜드 그림자(FAB, 주요 버튼): `0 10px 22px rgba(255, 107, 157, 0.34)`
 
-## Tailwind And SCSS
+사진 카드는 24px입니다. 예전 가이드의 32px는 카드 폭이 174px일 때 과하게 둥글어 보여서 낮췄습니다.
 
-- SCSS Modules are the only styling mechanism in use. Tailwind is installed but
-  its stylesheet is not imported anywhere, so Tailwind classes have no effect.
-- SCSS Modules own component styling, generated background behavior, safe-area
-  rules, non-trivial shadows, and reusable design token composition.
-- Keep reusable tokens in `src/styles/variables.scss`.
-- Expose app theme values as CSS custom properties in `src/styles/globals.scss`.
-- Do not copy the entire shadcn component kit from reference projects. Install
-  or create only components that are actually needed.
+## 버튼
 
-## Shape And Shadow
+- 주요: 높이 54px, `#FF6B9D`, 흰 글씨 15.5/700, 브랜드 그림자, radius 999px
+- 보조: 높이 54px, 흰 배경 + `rgba(0,0,0,0.08)` 경계선
+- 연한: 높이 46px, `#FFEEF4` 배경 + `#E8437E` 글씨
+- 비활성: `#F5F5F5` 배경 + `#A3A3A3` 글씨
+- FAB: 58px 원형, 그라디언트, 흰 테두리 4px, 하단 네비 위로 29px 올라옴
 
-- Use large rounded corners by default.
-- Photo cards: `2rem`.
-- Panels and list cards: `1.5rem`.
-- Small controls: `1.25rem` or pill radius.
-- Use soft but visible shadows for cards and floating actions.
-- Keep card borders subtle but present.
+## 리뷰 상태 뱃지
 
-## Typography
+연한 배경 + 16px 원형 아이콘 + 11.5/700 텍스트로 고정합니다. 원은 진행 중이면 핑크, 끝났으면
+옐로, 아직이면 회색 테두리입니다.
 
-- Prefer system sans-serif.
-- Use bold to black weights for app labels, buttons, card titles, tabs, and
-  important states.
-- Do not use serif display type for the main app.
-- Gradient text is allowed for the brand and landing hero only.
-- Korean labels must be short enough to fit compact mobile controls.
+| 상태값 | 뜻 | 문구 | 배경 / 아이콘 |
+|---|---|---|---|
+| `none` | 둘 다 안 씀 | 아직 안 썼어요 | `#F5F5F5` / 회색 테두리 원 |
+| `waiting-partner` | 내가 썼고 상대를 기다림 | 상대 기다리는 중 | `#FFEEF4` / 핑크 테두리 + 시계 |
+| `partner-waiting` | 상대가 썼고 내 차례 | 내 차례예요 | `#FFEEF4` / 핑크 채움 + 연필 |
+| `complete` | 둘 다 씀 | 둘 다 썼어요 | `#FFF6E3` / 옐로 채움 + 체크 |
 
-## Navigation
+**값 이름이 헷갈리니 주의하세요.** `waiting-partner`는 내가 이미 쓴 상태입니다.
+문구는 `src/features/review/const/reviewStatus.const.ts` 한 곳에만 정의합니다.
 
-The primary mobile navigation supports:
+상세 화면에서 쓰는 긴 문구는 `docs/product-decisions.md`의 "Review Status Copy"를 따릅니다.
 
-- Our places.
-- Add place.
-- Friend recommendations.
-- Explore.
-- Settings.
+## 입력 & 컨트롤
 
-Use a bottom navigation pattern in the protected app. The add-place control is a
-center floating circular action with a pink-to-yellow gradient.
+- 입력 필드: 높이 52~54px, radius 20px, 경계선 `rgba(0,0,0,0.08)`
+- 포커스: 경계선 `1.5px solid #FF6B9D` + `box-shadow: 0 0 0 4px rgba(255,107,157,0.14)`
+- 오류: 경계선 `1.5px solid #E8437E` + 아래에 11.5px 핑크 안내 문구
+- 세그먼트: 흰 배경 + 경계선, 안쪽 padding 4px, 선택된 칸만 `#FF6B9D` 채움
+- 칩: 높이 36px, radius 999px. 선택 시 핑크 채움, 아니면 흰 배경 + 경계선
 
-## Controls
+## 카드 패턴
 
-- Use icons for tabs, view switching, privacy state, rating, and common actions.
-- Use segmented icon controls for feed/list switching.
-- Use bright primary buttons for main actions.
-- Use muted rounded buttons for secondary actions.
-- Keep destructive actions restrained but clearly labeled.
+사진 카드(2열 피드): 1:1 사진, radius 24px, 카드 그림자. 아래 정보는 **세 줄로 고정**합니다.
 
-## Review And Privacy States
+1. 장소 이름 (15/700, 한 줄 말줄임)
+2. 리뷰 상태 뱃지
+3. 평점 pill + 공개 여부
 
-Review and privacy states must be visible on place cards.
+리스트 행: 68px 정사각 썸네일(radius 20px) + 이름 / 카테고리·날짜 / 상태·공개여부, 오른쪽에 평점 pill.
 
-- `none`: muted badge.
-- `waiting-partner`: light primary badge.
-- `partner-waiting`: primary badge.
-- `complete`: secondary badge.
-- Public state uses a globe icon.
-- Private state uses a lock icon.
+정보를 네 줄 이상으로 늘리지 마세요. 이름이 먼저 읽혀야 합니다.
 
-Sharing eligibility must still follow product rules; the cute visual language
-does not relax privacy constraints.
+## 네비게이션
 
-## Photos
+하단 5칸: **홈 · 친구 · (담기 FAB) · 둘러보기 · 설정**. 높이 84px, 흰 배경,
+`0 -8px 24px rgba(0,0,0,0.06)` 그림자. 활성 탭은 핑크 + 굵게, 나머지는 `#A3A3A3`.
 
-- Photos are the main visual material.
-- Use large, inspectable images in the feed.
-- Feed cards may crop square for a cute mobile grid.
-- List rows use stable square thumbnails.
-- Empty states should use large gradient icon blocks, not long text walls.
+상단은 가운데 정렬 타이틀 + 오른쪽 아이콘 한 개. 좌우에 버튼을 여럿 두지 않습니다.
 
-## Do
+## 사진 & 프라이버시
 
-- Use bright pink and warm yellow as the main identity.
-- Use rounded, mobile-native, touch-friendly controls.
-- Use photos as the primary content.
-- Use icon-first navigation and state display.
-- Keep implementation aligned with current Next app structure.
+- 사진은 `place_food`(장소·음식) 또는 `couple_private`(우리끼리) 중 하나로 분류됩니다.
+- **새 사진의 기본값은 항상 `couple_private`입니다.** 밖으로 나갈 수 있는 건 `place_food`뿐입니다.
+- 공개 조건은 `docs/product-decisions.md`가 정본입니다. 시각 스타일이 프라이버시 규칙을 느슨하게
+  만들 수 없습니다.
+- 공개 상태는 지구 아이콘, 비공개는 자물쇠 아이콘.
 
-## Do Not
+## 문구 원칙
 
-- Do not copy unused shadcn components into the repo.
-- Do not introduce MUI or the reference Vite app structure.
-- Do not hide privacy and sharing rules behind decorative UI.
-- Do not use broken imported Korean strings; rewrite copy in clear Korean.
+**개발자 말투를 쓰지 않습니다.** 화면에 보이는 모든 글은 옆에서 말해주듯 씁니다.
+
+- "우리 장소"라는 표현은 쓰지 않습니다. 화면 제목은 "우리가 다녀온 곳", 탭 이름은 "홈"입니다.
+- 명사로 끝나는 기능 이름 대신 사람이 하는 말로 씁니다.
+- 존댓말 `-어요` / `-예요`체. `-습니다`는 쓰지 않습니다.
+- 슬래시(`/`)로 개념을 나열하지 않습니다. 가운뎃점이나 문장으로 풉니다.
+- 괄호 설명을 붙이지 않습니다. 필요하면 아래에 캡션 한 줄로 씁니다.
+
+| 쓰지 않을 말 | 쓸 말 |
+|---|---|
+| 우리 장소 | 우리가 다녀온 곳 / 홈 |
+| 탐색 | 둘러보기 |
+| 친구 추천 | 친구 |
+| 피드 / 리스트 | 사진으로 / 목록으로 |
+| 공개 / 비공개 | 밖에도 보여요 / 우리끼리만 |
+| 장소/음식 · 커플/개인 | 장소·음식 · 우리끼리 |
+| 별점 | 얼마나 좋았나요? |
+| 카테고리 (복수 선택) | 어떤 점이 좋았나요? · 여러 개 골라도 돼요 |
+| 한 줄 리뷰 | 한 줄로 남긴다면? |
+| 사진 추가 (최대 10장) | 사진도 남겨볼까요? · 10장까지 |
+| 리뷰 저장하기 | 리뷰 남기기 |
+| 장소 등록 / 장소 추가하기 | 장소 담기 / 여기로 담기 |
+| 커플 연결 해제 | 연결 끊기 |
+| 요청일 / 삭제 예정일 | 신청한 날 / 기록이 지워지는 날 |
+| 내 데이터 관리 | 내 정보 관리 |
+| 자주 묻는 질문 | 궁금한 점 |
+| 임시저장 | 잠깐 저장 |
+| 초대코드 만들기 | 내가 코드 만들기 |
+| 코드로 연결하기 | 받은 코드 넣기 |
+| 확인했어요 / 선택했어요 | 다음 / 이 사진으로 할래요 |
+
+오류 문구도 같습니다. 원인을 탓하지 말고 다음에 할 일을 알려줍니다.
+예: "유효하지 않은 커플 코드예요" 대신 "이 코드는 안 맞는 것 같아요. 다시 확인해 주세요."
+
+### 무거운 화면에서는 밝기를 낮춥니다
+
+커플 연결 끊기처럼 헤어짐이 전제된 화면에서는 발랄한 말투를 쓰지 않습니다. "잠시 닫아뒀어요"
+같은 표현은 상황을 가볍게 만들어 어색합니다. 담담하게, 그리고 무엇보다 **정확하게** 씁니다.
+
+- 무슨 일이 일어났는지 그대로: "연결 끊기를 신청했어요"
+- 되돌릴 수 있다는 사실을 가장 크게: "되돌릴 수 있는 기간 7일"
+- 지나면 어떻게 되는지 숨기지 않기: "7일이 지나면 기록이 모두 지워지고, 그 뒤에는 되돌릴 수 없어요"
+- 되돌리는 버튼은 귀엽게 돌려 말하지 말고 그대로: "연결 끊기 취소하기"
+
+시각도 같이 낮춥니다. 이 화면에는 브랜드 그라디언트를 쓰지 않고 회색 면과 회색 아이콘을 씁니다.
+핑크는 되돌릴 수 있는 기간과 삭제 예정일에만 남깁니다.
+
+사용자 문구는 각 컴포넌트의 `const/`에 COPY 상수로 모읍니다. JSX에 문자열을 흩뿌리지 않습니다.
+
+## 스타일 구현
+
+- **SCSS Modules만 씁니다.** Tailwind는 설치돼 있지만 스타일시트가 어디에도 import되지 않아
+  Tailwind 클래스는 아무 효과가 없습니다.
+- 토큰 체인: `src/styles/variables.scss` → `src/styles/globals.scss`(CSS 커스텀 프로퍼티)
+  → 각 컴포넌트의 `*.module.scss`.
+- 컴포넌트에 hex를 직접 쓰지 않습니다. 새 색이 필요하면 이 문서와 토큰에 먼저 추가하세요.
+- 공용 프리미티브는 `src/components/ui`에 두고 배럴로만 import합니다.
+- 모바일 퍼스트. 터치 영역은 최소 44px를 확보합니다. 칩의 시각 높이가 36px라면 padding으로
+  터치 영역을 넓히세요.
+
+## 하지 말 것
+
+- 그라디언트를 FAB·코드 카드 밖에 쓰기
+- 사진 카드 정보를 네 줄 이상으로 늘리기
+- 같은 의미의 상수를 두 파일에 정의하기 (리뷰 상태 라벨이 실제로 그렇게 갈라진 적이 있습니다)
+- Tailwind 클래스 추가하기
+- 이모지를 UI에 쓰기 (아이콘은 인라인 SVG)
+- 새 폰트나 UI 라이브러리를 상의 없이 추가하기
