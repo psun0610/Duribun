@@ -16,7 +16,6 @@ import type {
     ActiveTab,
     CouplePlace,
     PlaceCategory,
-    ReviewStatus,
 } from '../types/couplePlaceApp.types'
 
 export const MOCK_PLACES: CouplePlace[] = [
@@ -65,13 +64,6 @@ export const MOCK_PLACES: CouplePlace[] = [
         visitDate: '2026.04.20',
     },
 ]
-
-export const REVIEW_STATUS_LABEL: Record<ReviewStatus, string> = {
-    complete: '작성 완료',
-    none: '내가 작성할 차례',
-    'partner-waiting': '상대 기다림',
-    'waiting-partner': '내가 작성할 차례',
-}
 
 export const CATEGORY_LABEL: Record<PlaceCategory, string> = {
     activity: '활동',

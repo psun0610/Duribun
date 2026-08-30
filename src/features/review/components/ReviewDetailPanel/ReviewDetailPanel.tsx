@@ -5,12 +5,16 @@ import { Heart, Lock, ShieldCheck, Star, X } from 'lucide-react'
 
 import { Button, FieldMessage, IconButton, Pill } from '@/components/ui'
 import { updateCouplePlaceSharing } from '@/features/place/actions'
+import {
+    REVIEW_AUTHOR_STATUS_LABEL,
+    REVIEW_STATUS_BADGE,
+    REVIEW_STATUS_MESSAGE,
+} from '@/features/review/const/reviewStatus.const'
 
 import { ReviewCard } from './components/ReviewCard'
 import {
     MODAL_CLOSE_ANIMATION_MS,
     REVIEW_DETAIL_COPY,
-    REVIEW_STATUS_LABEL,
 } from './const/reviewDetailPanel.const'
 import type { ReviewDetailPanelProps } from './types/reviewDetailPanel.types'
 import { formatRating } from './utils/reviewDetailPanel.utils'
@@ -32,6 +36,12 @@ export const ReviewDetailPanel = ({
     const [sharingState, updateSharingAction] = useActionState(
         updateCouplePlaceSharing,
         INITIAL_SHARING_STATE
+    )
+    const hasMyReview = Boolean(
+        detail?.reviews.some(review => review.authorId === currentUserId)
+    )
+    const hasPartnerReview = Boolean(
+        detail?.reviews.some(review => review.authorId !== currentUserId)
     )
     const canShowPublicly = Boolean(
         detail &&
@@ -89,7 +99,7 @@ export const ReviewDetailPanel = ({
                         <p className={styles.subtitle}>
                             {REVIEW_DETAIL_COPY.reviewTitle} ·{' '}
                             {
-                                REVIEW_STATUS_LABEL[
+                                REVIEW_STATUS_BADGE[
                                     detail?.reviewStatus ?? 'none'
                                 ]
                             }
@@ -114,6 +124,9 @@ export const ReviewDetailPanel = ({
 
                             <div className={styles.reviewStatusBox}>
                                 <h3>{REVIEW_DETAIL_COPY.ourReviewStatus}</h3>
+                                <p className={styles.statusMessage}>
+                                    {REVIEW_STATUS_MESSAGE[detail.reviewStatus]}
+                                </p>
                                 <div className={styles.statusCards}>
                                     <div className={styles.statusCardMine}>
                                         <span>
@@ -122,7 +135,11 @@ export const ReviewDetailPanel = ({
                                         <strong>
                                             {REVIEW_DETAIL_COPY.myReviewShort}
                                         </strong>
-                                        <p>{REVIEW_STATUS_LABEL[detail.reviewStatus]}</p>
+                                        <p>
+                                            {hasMyReview
+                                                ? REVIEW_AUTHOR_STATUS_LABEL.done
+                                                : REVIEW_AUTHOR_STATUS_LABEL.pending}
+                                        </p>
                                     </div>
                                     <div className={styles.statusCardPartner}>
                                         <span>
@@ -131,7 +148,11 @@ export const ReviewDetailPanel = ({
                                         <strong>
                                             {REVIEW_DETAIL_COPY.partnerReviewShort}
                                         </strong>
-                                        <p>{detail.reviewCount} / 2</p>
+                                        <p>
+                                            {hasPartnerReview
+                                                ? REVIEW_AUTHOR_STATUS_LABEL.done
+                                                : REVIEW_AUTHOR_STATUS_LABEL.pending}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

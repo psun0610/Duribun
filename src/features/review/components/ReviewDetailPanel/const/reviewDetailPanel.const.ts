@@ -1,13 +1,4 @@
-import type { ReviewStatus } from '@/features/review/types/reviewDetail.types'
-
 export const MODAL_CLOSE_ANIMATION_MS = 220
-
-export const REVIEW_STATUS_LABEL: Record<ReviewStatus, string> = {
-    complete: '작성 완료',
-    none: '작성 전',
-    'partner-waiting': '상대가 기다려요',
-    'waiting-partner': '내가 작성한 차례',
-}
 
 export const REVIEW_DETAIL_COPY = {
     averageRating: '평균 평점',

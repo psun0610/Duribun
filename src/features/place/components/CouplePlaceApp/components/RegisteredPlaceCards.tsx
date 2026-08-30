@@ -2,11 +2,11 @@ import Link from 'next/link'
 import { Ellipsis, Globe, Lock, MapPin, Star } from 'lucide-react'
 
 import { Badge, Pill } from '@/components/ui'
+import { REVIEW_STATUS_BADGE } from '@/features/review/const/reviewStatus.const'
 
 import {
     CATEGORY_LABEL,
     COUPLE_PLACE_APP_COPY,
-    REVIEW_STATUS_LABEL,
 } from '../const/couplePlaceApp.const'
 import type { RegisteredPlaceCardProps } from '../types/couplePlaceAppComponent.types'
 import {
@@ -75,7 +75,7 @@ export const RegisteredPlaceFeedCard = ({
                         size="sm"
                         variant={getReviewStatusBadgeVariant(status)}
                     >
-                        {REVIEW_STATUS_LABEL[status]}
+                        {REVIEW_STATUS_BADGE[status]}
                     </Badge>
                     <span className={styles.cardPrivacyText}>
                         {place.isPublic ? (
@@ -164,7 +164,7 @@ export const RegisteredPlaceListCard = ({
                     size="sm"
                     variant={getReviewStatusBadgeVariant(status)}
                 >
-                    {REVIEW_STATUS_LABEL[status]}
+                    {REVIEW_STATUS_BADGE[status]}
                 </Badge>
                 <span className={styles.cardPrivacyText}>
                     {place.isPublic ? (

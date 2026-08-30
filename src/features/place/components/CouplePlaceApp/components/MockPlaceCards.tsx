@@ -1,11 +1,11 @@
 import { Ellipsis, Globe, Lock, Star } from 'lucide-react'
 
 import { Badge, Pill } from '@/components/ui'
+import { REVIEW_STATUS_BADGE } from '@/features/review/const/reviewStatus.const'
 
 import {
     CATEGORY_LABEL,
     COUPLE_PLACE_APP_COPY,
-    REVIEW_STATUS_LABEL,
 } from '../const/couplePlaceApp.const'
 import type { MockPlaceCardProps } from '../types/couplePlaceAppComponent.types'
 import { getReviewStatusBadgeVariant } from '../utils/couplePlaceApp.utils'
@@ -39,7 +39,7 @@ export const PlaceCardFeed = ({ place }: MockPlaceCardProps) => {
                         size="sm"
                         variant={getReviewStatusBadgeVariant(place.reviewStatus)}
                     >
-                        {REVIEW_STATUS_LABEL[place.reviewStatus]}
+                        {REVIEW_STATUS_BADGE[place.reviewStatus]}
                     </Badge>
                     <span className={styles.cardPrivacyText}>
                         {place.isPublic ? (
@@ -107,7 +107,7 @@ export const PlaceCardList = ({ place }: MockPlaceCardProps) => {
                         size="sm"
                         variant={getReviewStatusBadgeVariant(place.reviewStatus)}
                     >
-                        {REVIEW_STATUS_LABEL[place.reviewStatus]}
+                        {REVIEW_STATUS_BADGE[place.reviewStatus]}
                     </Badge>
                     <span className={styles.cardPrivacyText}>
                         {place.isPublic ? (
