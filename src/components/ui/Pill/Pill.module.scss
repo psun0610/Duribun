@@ -3,15 +3,15 @@
 .pill {
     align-items: center;
     border: 1px solid $color-line;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     display: inline-flex;
-    font-size: 0.8rem;
-    font-weight: 650;
+    font-size: 0.71875rem;
+    font-weight: $weight-bold;
     gap: 0.35rem;
     line-height: 1;
-    min-height: 2rem;
+    min-height: 1.5rem;
     min-width: 0;
-    padding: 0.45rem 0.7rem;
+    padding: 0.35rem 0.5625rem;
     white-space: nowrap;
 
     svg {
@@ -31,19 +31,32 @@
 }
 
 .primary {
-    background: rgba($color-primary, 0.1);
-    border-color: rgba($color-primary, 0.16);
-    color: $color-primary;
+    background: $color-primary-tint;
+    border-color: transparent;
+    color: $color-primary-deep;
 }
 
+// 평점은 핑크 면에 흰 글씨입니다.
 .rating {
-    background: rgba($color-primary, 0.08);
-    border-color: rgba($color-primary, 0.16);
-    color: $color-primary;
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-primary-foreground;
 
     svg {
-        color: $color-primary;
-        fill: $color-primary;
+        color: $color-primary-foreground;
+        fill: $color-primary-foreground;
+    }
+}
+
+// 평점이 아직 없을 때
+.ratingEmpty {
+    background: $color-muted-surface;
+    border-color: transparent;
+    color: $color-muted-light;
+
+    svg {
+        color: #c4c4c4;
+        fill: #c4c4c4;
     }
 }
 

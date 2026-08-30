@@ -85,3 +85,12 @@
         display: grid;
     }
 }
+
+.graceNotice {
+    color: $color-text;
+    font-size: 0.875rem;
+    font-weight: $weight-bold;
+    line-height: 1.7;
+    margin: 0;
+    text-align: center;
+}

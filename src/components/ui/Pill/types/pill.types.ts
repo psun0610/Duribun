@@ -1,6 +1,11 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 
-export type PillTone = 'neutral' | 'primary' | 'rating' | 'privacy'
+export type PillTone =
+    | 'neutral'
+    | 'primary'
+    | 'rating'
+    | 'ratingEmpty'
+    | 'privacy'
 
 export interface PillProps extends HTMLAttributes<HTMLSpanElement> {
     children: ReactNode

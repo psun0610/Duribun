@@ -82,7 +82,7 @@ describe('review submission', () => {
         expect(reviewPanelSource).toContain('ReviewPhotoGrid')
         expect(reviewPanelSource).toContain('photoFile')
         expect(reviewPanelSource).toContain('photoKind')
-        expect(reviewPanelCopySource).toContain("addPhoto: '사진 추가'")
+        expect(reviewPanelCopySource).toContain("addPhoto: '사진 넣기'")
         expect(reviewActionsSource).toContain('buildReviewPhotoInputs')
         expect(reviewActionsSource).toContain('review-photos')
         expect(reviewActionsSource).toContain('storage_path')

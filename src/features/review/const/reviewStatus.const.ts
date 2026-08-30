@@ -10,7 +10,7 @@ import type { ReviewStatus } from '@/features/review/types/reviewDetail.types'
  * - complete: 둘 다 작성
  */
 export const REVIEW_STATUS_MESSAGE: Record<ReviewStatus, string> = {
-    complete: '리뷰 작성 완료',
+    complete: '둘 다 남겼어요',
     none: '이 장소는 어땠나요?',
     'partner-waiting': '상대가 기다리고 있어요',
     'waiting-partner': '상대를 기다리는 중...',
@@ -18,13 +18,13 @@ export const REVIEW_STATUS_MESSAGE: Record<ReviewStatus, string> = {
 
 /** 장소 카드 뱃지처럼 좁은 자리에 쓰는 짧은 라벨입니다. */
 export const REVIEW_STATUS_BADGE: Record<ReviewStatus, string> = {
-    complete: '작성 완료',
-    none: '작성 전',
-    'partner-waiting': '내 차례',
+    complete: '둘 다 썼어요',
+    none: '아직 안 썼어요',
+    'partner-waiting': '내 차례예요',
     'waiting-partner': '상대 기다리는 중',
 }
 
 export const REVIEW_AUTHOR_STATUS_LABEL = {
-    done: '작성 완료',
-    pending: '작성 전',
+    done: '다 썼어요',
+    pending: '아직이에요',
 } as const

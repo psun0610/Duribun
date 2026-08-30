@@ -1,27 +1,65 @@
+// 디자인 시스템 v2.1 — 정본은 docs/design-system.md 입니다.
+// 컴포넌트 scss에 hex를 직접 쓰지 말고 여기 토큰을 거치세요.
+
+// 색
 $color-background: #ffffff;
 $color-surface: #ffffff;
 $color-primary: #ff6b9d;
+$color-primary-deep: #e8437e;
 $color-primary-foreground: #ffffff;
 $color-accent: #ff6b9d;
 $color-secondary: #ffc75f;
 $color-text: #1a1a1a;
 $color-muted: #737373;
+$color-muted-light: #a3a3a3;
 $color-muted-surface: #f5f5f5;
+$color-primary-tint: #ffeef4;
+$color-secondary-tint: #fff6e3;
+$color-secondary-ink: #a06d05;
 $color-line: rgba(0, 0, 0, 0.08);
 $color-line-strong: rgba(0, 0, 0, 0.14);
 
+// 그라디언트는 이 하나뿐이고, 장소 담기 FAB와 코드 카드에만 씁니다.
+$gradient-brand: linear-gradient(135deg, #ff7ba9 0%, #ff8f9c 45%, #ffb26b 100%);
+
+// 화면 상단 웨시
+$wash-top: radial-gradient(
+    120% 100% at 50% 0%,
+    rgba(255, 107, 157, 0.1) 0%,
+    rgba(255, 199, 95, 0.06) 45%,
+    rgba(255, 255, 255, 0) 100%
+);
+
+// 타이포
 $font-display: noto sans kr;
 $font-body:
     noto sans kr,
     system-ui,
     -apple-system;
 
-$radius-control: 1.25rem;
-$radius-surface: 1.5rem;
-$radius-photo-card: 2rem;
+// 굵기는 400 / 500 / 700 / 800만 씁니다. 650 같은 값은 Noto Sans KR에 없습니다.
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-bold: 700;
+$weight-black: 800;
 
+// 모서리
+$radius-block: 0.875rem; // 14px — 작은 아이콘 블록
+$radius-control: 1.25rem; // 20px — 입력 필드, 사진 썸네일
+$radius-surface: 1.5rem; // 24px — 패널, 시트, 리스트 행
+$radius-photo-card: 1.5rem; // 24px — 사진 카드
+$radius-pill: 999px; // 버튼, pill, 칩, 세그먼트
+
+// 그림자
 $shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.08);
-$shadow-lifted: 0 18px 48px rgba(255, 107, 157, 0.24);
+$shadow-lifted: 0 10px 22px rgba(255, 107, 157, 0.34);
+$shadow-nav: 0 -8px 24px rgba(0, 0, 0, 0.06);
+
+// 컨트롤 높이
+$height-button: 3.375rem; // 54px
+$height-button-sm: 2.875rem; // 46px
+$height-field: 3.25rem; // 52px
+$height-chip: 2.25rem; // 36px
 
 $breakpoint-sm: 480px;
 $breakpoint-md: 768px;

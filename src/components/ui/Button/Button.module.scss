@@ -3,11 +3,11 @@
 .button {
     align-items: center;
     border: 0;
-    border-radius: $radius-control;
+    border-radius: $radius-pill;
     cursor: pointer;
     display: inline-flex;
     font: inherit;
-    font-weight: 650;
+    font-weight: $weight-bold;
     gap: 0.5rem;
     justify-content: center;
     letter-spacing: 0;
@@ -29,8 +29,10 @@
     }
 
     &:disabled {
+        background: $color-muted-surface;
+        box-shadow: none;
+        color: $color-muted-light;
         cursor: not-allowed;
-        opacity: 0.58;
         transform: none;
     }
 }
@@ -42,25 +44,34 @@
     white-space: nowrap;
 }
 
+// 주요 버튼은 단색입니다. 그라디언트는 장소 담기 FAB와 코드 카드에만 씁니다.
 .primary {
-    background: linear-gradient(90deg, $color-primary, $color-secondary);
-    box-shadow: 0 14px 30px rgba($color-primary, 0.2);
+    background: $color-primary;
+    box-shadow: $shadow-lifted;
     color: $color-primary-foreground;
 
     &:hover:not(:disabled) {
-        box-shadow: 0 18px 34px rgba($color-primary, 0.24);
+        box-shadow: 0 12px 26px rgba($color-primary, 0.4);
     }
 }
 
 .secondary {
-    background: $color-muted-surface;
+    background: $color-surface;
     border: 1px solid $color-line;
     color: $color-text;
 
     &:hover:not(:disabled) {
-        background: $color-surface;
-        border-color: rgba($color-primary, 0.24);
+        border-color: rgba($color-primary, 0.3);
         box-shadow: $shadow-soft;
+    }
+}
+
+.soft {
+    background: $color-primary-tint;
+    color: $color-primary-deep;
+
+    &:hover:not(:disabled) {
+        background: rgba($color-primary, 0.18);
     }
 }
 
@@ -76,20 +87,20 @@
 }
 
 .sm {
-    min-height: 2.25rem;
-    padding: 0.5rem 0.85rem;
-    font-size: 0.9rem;
+    min-height: $height-button-sm;
+    padding: 0.5rem 1.15rem;
+    font-size: 0.875rem;
 }
 
 .md {
-    min-height: 2.75rem;
-    padding: 0.65rem 1rem;
-    font-size: 0.9rem;
+    min-height: $height-button;
+    padding: 0.75rem 1.35rem;
+    font-size: 0.96875rem;
 }
 
 .lg {
-    min-height: 3rem;
-    padding: 0.75rem 1.15rem;
+    min-height: $height-button;
+    padding: 0.85rem 1.5rem;
     font-size: 1rem;
 }
 

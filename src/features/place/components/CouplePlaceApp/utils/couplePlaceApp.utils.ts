@@ -46,6 +46,10 @@ export const getListStatusClassName = (status: ReviewStatus) => {
     return `${baseClassName} bg-muted text-muted-foreground`
 }
 
+/**
+ * 리뷰 상태 뱃지 색은 docs/design-system.md v2.1을 따릅니다.
+ * 진행 중(내가 썼든 상대가 썼든)이면 핑크, 끝났으면 옐로, 아직이면 회색입니다.
+ */
 export const getReviewStatusBadgeVariant = (
     status: ReviewStatus
 ): BadgeVariant => {
@@ -53,15 +57,11 @@ export const getReviewStatusBadgeVariant = (
         return 'secondary'
     }
 
-    if (status === 'partner-waiting') {
-        return 'secondary'
+    if (status === 'partner-waiting' || status === 'waiting-partner') {
+        return 'primarySoft'
     }
 
-    if (status === 'waiting-partner') {
-        return 'primary'
-    }
-
-    return 'primarySoft'
+    return 'muted'
 }
 
 export const formatRating = (rating: number) => {

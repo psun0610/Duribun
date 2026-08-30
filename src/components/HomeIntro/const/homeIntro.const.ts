@@ -1,12 +1,12 @@
 export const HOME_ACTIONS = [
     {
         href: '/login',
-        label: '시작하기',
+        label: '우리 공간 만들기',
         variant: 'primaryAction',
     },
     {
         href: '/app',
-        label: '우리 기록 보기',
+        label: '이미 쓰고 있어요',
         variant: 'secondaryAction',
     },
 ] as const

@@ -33,6 +33,10 @@ export const CoupleDisconnectPending = ({
                     title={COUPLE_DISCONNECT_PENDING_COPY.title}
                 />
 
+                <p className={styles.graceNotice}>
+                    {COUPLE_DISCONNECT_PENDING_COPY.graceNotice}
+                </p>
+
                 <dl className={styles.details}>
                     <div>
                         <dt>
