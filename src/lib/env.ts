@@ -2,6 +2,8 @@ type RequiredEnvKey =
     | 'NEXT_PUBLIC_SUPABASE_URL'
     | 'NEXT_PUBLIC_SUPABASE_ANON_KEY'
     | 'NEXT_PUBLIC_SITE_URL'
+    | 'SUPABASE_SERVICE_ROLE_KEY'
+    | 'CRON_SECRET'
 
 export const getEnv = (name: RequiredEnvKey) => {
     const value = process.env[name]

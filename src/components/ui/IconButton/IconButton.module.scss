@@ -3,7 +3,7 @@
 .button {
     align-items: center;
     border: 0;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     cursor: pointer;
     display: inline-flex;
     height: 2.25rem;
@@ -36,7 +36,7 @@
 }
 
 .primary {
-    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    background: $color-primary;
     box-shadow: 0 12px 28px rgba($color-primary, 0.24);
     color: $color-primary-foreground;
 

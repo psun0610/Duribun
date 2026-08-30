@@ -5,8 +5,12 @@
 - React
 - TypeScript
 - Zustand
-- Tailwind CSS for utility-first layout and common states
-- SCSS Modules for component-owned custom styles
+- SCSS Modules for all component styling
+
+Tailwind is installed and `src/app/tailwind.css` still exists, but **nothing
+imports it and no component uses a Tailwind utility class**. Styling is SCSS
+Modules only. Do not add Tailwind classes to JSX: they will silently do nothing
+until someone re-imports the stylesheet.
 
 ## General
 
@@ -48,12 +52,11 @@
 ## Styling
 
 - Follow `docs/design-system.md` for Duribun's product visual language.
-- Use Tailwind for layout, spacing, responsive utilities, and simple states.
-- Use SCSS Modules for component-specific custom styles, non-trivial selectors,
-  safe-area handling, custom shadows, and design-token composition.
+- Use SCSS Modules for layout, spacing, responsive rules, states, safe-area
+  handling, custom shadows, and design-token composition.
 - Use nested SCSS selectors where they clarify ownership, keeping nesting shallow.
 - Store reusable styling variables in `src/styles/variables.scss`.
-- Keep Tailwind theme mapping in `src/app/tailwind.css`.
+- Expose them as CSS custom properties in `src/styles/globals.scss`.
 - Design mobile-first and account for responsive behavior before desktop polish.
 - Account for cross-browser behavior, especially iOS Safari.
 - Follow the styling approach already used in the target file.

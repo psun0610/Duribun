@@ -22,7 +22,7 @@
 .emptyRecommendations {
     background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: 1.15rem;
+    border-radius: $radius-control;
 }
 
 .searchPanel {
@@ -35,11 +35,11 @@
     align-items: center;
     background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: 1.15rem;
+    border-radius: $radius-control;
     color: $color-muted;
     display: grid;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: $weight-bold;
     gap: 0.45rem;
     grid-template-columns: auto 1fr auto;
     min-height: 2.75rem;
@@ -83,8 +83,8 @@
     display: inline-flex;
     flex: 0 0 auto;
     font: inherit;
-    font-size: 0.72rem;
-    font-weight: 750;
+    font-size: 0.71875rem;
+    font-weight: $weight-bold;
     gap: 0.22rem;
     justify-content: center;
     white-space: nowrap;
@@ -92,7 +92,7 @@
 
 .filterChip,
 .filterChipActive {
-    border-radius: 999px;
+    border-radius: $radius-pill;
     padding: 0.42rem 0.72rem;
 }
 
@@ -111,7 +111,7 @@
         align-items: center;
         background: $color-surface;
         border: 1px solid $color-line;
-        border-radius: 999px;
+        border-radius: $radius-pill;
         color: $color-muted;
         display: inline-flex;
         height: 2.45rem;
@@ -156,7 +156,7 @@
     align-items: center;
     aspect-ratio: 1;
     background: linear-gradient(135deg, rgba($color-primary, 0.16), rgba($color-secondary, 0.24));
-    border-radius: 0.85rem;
+    border-radius: $radius-block;
     color: $color-primary;
     display: flex;
     justify-content: center;
@@ -189,7 +189,7 @@
     h3 {
         color: $color-text;
         font-size: 0.88rem;
-        font-weight: 750;
+        font-weight: $weight-bold;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -197,8 +197,8 @@
 
     p {
         color: $color-muted;
-        font-size: 0.72rem;
-        font-weight: 550;
+        font-size: 0.71875rem;
+        font-weight: $weight-medium;
         margin-top: 0.16rem;
     }
 }
@@ -213,8 +213,8 @@
         align-items: center;
         color: $color-muted;
         display: inline-flex;
-        font-size: 0.7rem;
-        font-weight: 650;
+        font-size: 0.71875rem;
+        font-weight: $weight-bold;
         gap: 0.16rem;
         min-width: 0;
         overflow: hidden;
@@ -227,7 +227,7 @@
     align-items: center;
     background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     color: $color-muted;
     cursor: pointer;
     display: inline-flex;
@@ -244,8 +244,8 @@
 
     > span:not([class]) {
         color: $color-muted;
-        font-size: 0.7rem;
-        font-weight: 650;
+        font-size: 0.71875rem;
+        font-weight: $weight-bold;
     }
 }
 
@@ -256,10 +256,10 @@
 
     span {
         background: $color-muted-surface;
-        border-radius: 999px;
+        border-radius: $radius-pill;
         color: $color-muted;
-        font-size: 0.72rem;
-        font-weight: 650;
+        font-size: 0.71875rem;
+        font-weight: $weight-bold;
         padding: 0.3rem 0.5rem;
     }
 }
@@ -280,7 +280,7 @@
     strong {
         color: $color-text;
         font-size: 0.98rem;
-        font-weight: 750;
+        font-weight: $weight-bold;
     }
 
     p {

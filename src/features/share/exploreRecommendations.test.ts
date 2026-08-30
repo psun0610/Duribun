@@ -28,8 +28,12 @@ const explorePanelSource = readFileSync(
     ),
     'utf8'
 )
-const appPageSource = readFileSync(
-    path.resolve(process.cwd(), 'src/app/app/page.tsx'),
+const appDataSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/app/getProtectedAppData.ts'),
+    'utf8'
+)
+const explorePageSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/app/explore/page.tsx'),
     'utf8'
 )
 
@@ -38,7 +42,11 @@ describe('explore recommendations', () => {
         expect(initialSchemaSql).toContain('public.explore_couple_place_summaries')
         expect(initialSchemaSql).toContain('public.is_couple_place_explore_ready(cp.id)')
         expect(initialSchemaSql).toContain("and c.status = 'active'")
-        expect(appPageSource).toContain('getExploreCouplePlaceSummaries')
+        expect(appDataSource).toContain('getExploreCouplePlaceSummaries')
+        expect(explorePageSource).toContain('ExploreRecommendationsPanel')
+        expect(explorePageSource).toContain(
+            'recommendations={appState.data.exploreRecommendations}'
+        )
     })
 
     it('excludes private, incomplete, photo-less, and disconnect-pending places', () => {

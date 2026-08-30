@@ -1,14 +1,10 @@
 'use client'
 
-import { useActionState, useState, type FormEvent } from 'react'
+import { useActionState } from 'react'
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
 
-import {
-    Button,
-    FieldMessage,
-    FormCard,
-    ProgressDots,
-    TextField,
-} from '@/components/ui'
+import { Button, FieldMessage, ProgressDots } from '@/components/ui'
 import { saveProfileWithAvatar } from '@/features/profile/actions'
 import type { ProfileFormState } from '@/features/profile/types/profileAction.types'
 
@@ -23,118 +19,121 @@ export const ProfileSetupForm = ({ initialValues }: ProfileSetupFormProps) => {
         avatarUrl: initialValues.avatarUrl,
         errorMessage: '',
     }
-    const [formState, formAction] = useActionState(
+    const [formState, formAction, isSaving] = useActionState(
         saveProfileWithAvatar,
         initialFormState
     )
-    const [step, setStep] = useState<'identity' | 'avatar'>('identity')
-    const [email, setEmail] = useState(initialValues.email)
-    const [displayName, setDisplayName] = useState(initialValues.displayName)
-    const [identityErrorMessage, setIdentityErrorMessage] = useState('')
-    const isAvatarStep = step === 'avatar'
-
-    const handleIdentitySubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-
-        const nextEmail = email.trim()
-        const nextDisplayName = displayName.trim()
-
-        if (!nextEmail) {
-            setIdentityErrorMessage('이메일을 입력해 주세요.')
-            return
-        }
-
-        if (!nextDisplayName) {
-            setIdentityErrorMessage('닉네임을 입력해 주세요.')
-            return
-        }
-
-        setEmail(nextEmail)
-        setDisplayName(nextDisplayName)
-        setIdentityErrorMessage('')
-        setStep('avatar')
-    }
 
     return (
         <main className={styles.profileSetup}>
-            <FormCard
-                description={
-                    isAvatarStep
-                        ? PROFILE_SETUP_COPY.avatarDescription
-                        : PROFILE_SETUP_COPY.description
-                }
-                eyebrow={PROFILE_SETUP_COPY.eyebrow}
-                title={PROFILE_SETUP_COPY.title}
-                titleId="profile-title"
-            >
+            <div className={styles.navBar}>
+                <Link
+                    aria-label={PROFILE_SETUP_COPY.backLabel}
+                    className={styles.backLink}
+                    href="/login"
+                >
+                    <ChevronLeft aria-hidden="true" size={21} />
+                </Link>
                 <ProgressDots
-                    activeIndex={isAvatarStep ? 1 : 0}
+                    activeIndex={0}
                     className={styles.progressDots}
-                    count={4}
+                    count={3}
                 />
-                {isAvatarStep ? (
-                    <form
-                        action={formAction}
-                        className={styles.form}
-                        encType="multipart/form-data"
-                    >
-                        <input name="email" type="hidden" value={email} />
-                        <input
-                            name="displayName"
-                            type="hidden"
-                            value={displayName}
-                        />
+                <span aria-hidden="true" className={styles.navSpacer} />
+            </div>
+
+            <section aria-labelledby="profile-title" className={styles.content}>
+                <h1 className={styles.title} id="profile-title">
+                    {PROFILE_SETUP_COPY.title}
+                </h1>
+                <p className={styles.description}>
+                    {PROFILE_SETUP_COPY.description}
+                </p>
+
+                <form
+                    action={formAction}
+                    className={styles.form}
+                    encType="multipart/form-data"
+                >
+                    <div className={styles.avatarArea}>
                         <AvatarFileField
                             initialAvatarUrl={formState.avatarUrl}
                             inputId="avatarFile"
                             label={PROFILE_SETUP_COPY.avatarLabel}
                         />
-                        {formState.errorMessage ? (
-                            <FieldMessage variant="error" role="alert">
-                                {formState.errorMessage}
-                            </FieldMessage>
-                        ) : null}
-                        <Button type="submit">
-                            {PROFILE_SETUP_COPY.avatarSubmitLabel}
-                        </Button>
-                    </form>
-                ) : (
-                    <form className={styles.form} onSubmit={handleIdentitySubmit}>
-                        {initialValues.isEmailDisabled ? (
-                            <input name="email" type="hidden" value={email} />
-                        ) : null}
-                        <TextField
-                            disabled={initialValues.isEmailDisabled}
-                            label={PROFILE_SETUP_COPY.emailLabel}
-                            name="email"
-                            onChange={event => setEmail(event.target.value)}
-                            placeholder={PROFILE_SETUP_COPY.emailPlaceholder}
-                            required
-                            type="email"
-                            value={email}
-                        />
-                        <TextField
-                            label={PROFILE_SETUP_COPY.displayNameLabel}
+                        <p className={styles.avatarCaption}>
+                            {PROFILE_SETUP_COPY.avatarCaption}
+                        </p>
+                    </div>
+
+                    <div className={styles.fieldGroup}>
+                        <label
+                            className={styles.fieldLabel}
+                            htmlFor="profile-display-name"
+                        >
+                            {PROFILE_SETUP_COPY.displayNameLabel}
+                        </label>
+                        <input
+                            className={styles.fieldInput}
+                            defaultValue={initialValues.displayName}
+                            id="profile-display-name"
                             name="displayName"
-                            onChange={event => setDisplayName(event.target.value)}
                             placeholder={
                                 PROFILE_SETUP_COPY.displayNamePlaceholder
                             }
                             required
                             type="text"
-                            value={displayName}
                         />
-                        {identityErrorMessage ? (
-                            <FieldMessage variant="error" role="alert">
-                                {identityErrorMessage}
-                            </FieldMessage>
+                    </div>
+
+                    <div className={styles.fieldGroup}>
+                        <div className={styles.fieldLabelRow}>
+                            <label
+                                className={styles.fieldLabel}
+                                htmlFor="profile-email"
+                            >
+                                {PROFILE_SETUP_COPY.emailLabel}
+                            </label>
+                            <span className={styles.fieldHint}>
+                                {PROFILE_SETUP_COPY.emailHint}
+                            </span>
+                        </div>
+                        <input
+                            className={styles.fieldInput}
+                            defaultValue={initialValues.email}
+                            disabled={initialValues.isEmailDisabled}
+                            id="profile-email"
+                            name="email"
+                            placeholder={PROFILE_SETUP_COPY.emailPlaceholder}
+                            required
+                            type="email"
+                        />
+                        {initialValues.isEmailDisabled ? (
+                            <input
+                                name="email"
+                                type="hidden"
+                                value={initialValues.email}
+                            />
                         ) : null}
-                        <Button type="submit">
-                            {PROFILE_SETUP_COPY.identitySubmitLabel}
+                    </div>
+
+                    {formState.errorMessage ? (
+                        <FieldMessage role="alert" variant="error">
+                            {formState.errorMessage}
+                        </FieldMessage>
+                    ) : null}
+
+                    <div className={styles.submitArea}>
+                        <Button
+                            disabled={isSaving}
+                            isLoading={isSaving}
+                            type="submit"
+                        >
+                            {PROFILE_SETUP_COPY.submitLabel}
                         </Button>
-                    </form>
-                )}
-            </FormCard>
+                    </div>
+                </form>
+            </section>
         </main>
     )
 }

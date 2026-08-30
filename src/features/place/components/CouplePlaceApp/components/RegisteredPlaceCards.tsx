@@ -2,11 +2,11 @@ import Link from 'next/link'
 import { Ellipsis, Globe, Lock, MapPin, Star } from 'lucide-react'
 
 import { Badge, Pill } from '@/components/ui'
+import { REVIEW_STATUS_BADGE } from '@/features/review/const/reviewStatus.const'
 
 import {
     CATEGORY_LABEL,
     COUPLE_PLACE_APP_COPY,
-    REVIEW_STATUS_LABEL,
 } from '../const/couplePlaceApp.const'
 import type { RegisteredPlaceCardProps } from '../types/couplePlaceAppComponent.types'
 import {
@@ -67,16 +67,16 @@ export const RegisteredPlaceFeedCard = ({
             </span>
             <span className={styles.registeredFeedBody}>
                 <strong>{place.name}</strong>
-                <span className={styles.registeredMeta}>
-                    {CATEGORY_LABEL[place.category]}
-                </span>
+                <Badge size="sm" variant={getReviewStatusBadgeVariant(status)}>
+                    {REVIEW_STATUS_BADGE[status]}
+                </Badge>
                 <span className={styles.cardStatusRows}>
-                    <Badge
-                        size="sm"
-                        variant={getReviewStatusBadgeVariant(status)}
+                    <Pill
+                        icon={<Star aria-hidden="true" size={12} />}
+                        tone={rating ? 'rating' : 'ratingEmpty'}
                     >
-                        {REVIEW_STATUS_LABEL[status]}
-                    </Badge>
+                        {rating ?? '-'}
+                    </Pill>
                     <span className={styles.cardPrivacyText}>
                         {place.isPublic ? (
                             <Globe aria-hidden="true" size={12} />
@@ -87,12 +87,6 @@ export const RegisteredPlaceFeedCard = ({
                             ? COUPLE_PLACE_APP_COPY.public
                             : COUPLE_PLACE_APP_COPY.private}
                     </span>
-                    <Pill
-                        icon={<Star aria-hidden="true" size={12} />}
-                        tone="rating"
-                    >
-                        {rating ?? '-'}
-                    </Pill>
                 </span>
             </span>
         </Link>
@@ -156,7 +150,7 @@ export const RegisteredPlaceListCard = ({
                 <Pill
                     className={styles.registeredListRating}
                     icon={<Star aria-hidden="true" size={12} />}
-                    tone="rating"
+                    tone={rating ? 'rating' : 'ratingEmpty'}
                 >
                     {rating ?? '-'}
                 </Pill>
@@ -164,7 +158,7 @@ export const RegisteredPlaceListCard = ({
                     size="sm"
                     variant={getReviewStatusBadgeVariant(status)}
                 >
-                    {REVIEW_STATUS_LABEL[status]}
+                    {REVIEW_STATUS_BADGE[status]}
                 </Badge>
                 <span className={styles.cardPrivacyText}>
                     {place.isPublic ? (

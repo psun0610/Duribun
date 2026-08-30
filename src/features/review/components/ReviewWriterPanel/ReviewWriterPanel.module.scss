@@ -22,7 +22,7 @@
     background: $color-surface;
     border: 1px solid $color-line;
     border-radius: $radius-photo-card;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     max-height: min(92dvh, calc(100dvh - 2rem));
@@ -68,7 +68,7 @@
 
 .title {
     color: $color-text;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 800;
     line-height: 1.2;
     margin: 0;
@@ -76,8 +76,8 @@
 
 .subtitle {
     color: $color-muted;
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: $weight-bold;
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -105,14 +105,14 @@
     align-items: center;
     color: $color-text;
     display: flex;
-    font-size: 0.9rem;
-    font-weight: 650;
+    font-size: 1rem;
+    font-weight: $weight-bold;
     gap: 0.45rem;
     justify-content: space-between;
 
     small {
         color: $color-muted;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         font-weight: 500;
     }
 }
@@ -129,7 +129,7 @@
     &:focus-visible {
         outline: 2px solid rgba($color-primary, 0.4);
         outline-offset: 4px;
-        border-radius: 1rem;
+        border-radius: $radius-block;
     }
 }
 
@@ -141,7 +141,7 @@
 .ratingRow {
     background: rgba($color-muted-surface, 0.72);
     border: 1px solid $color-line;
-    border-radius: 1.15rem;
+    border-radius: $radius-control;
     display: grid;
     gap: 0.35rem;
     padding: 0.7rem 0.75rem 0.65rem;
@@ -154,8 +154,8 @@
 
     span {
         color: $color-text;
-        font-size: 0.82rem;
-        font-weight: 750;
+        font-size: 0.84375rem;
+        font-weight: $weight-bold;
     }
 
     strong {
@@ -170,7 +170,7 @@
     color: $color-muted-surface;
     display: inline-flex;
     flex: 0 0 1.85rem;
-    height: 1.85rem;
+    height: 1.3125rem;
     justify-content: center;
     min-width: 1.85rem;
     position: relative;
@@ -214,15 +214,15 @@
     align-items: center;
     background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     color: $color-muted;
     cursor: pointer;
     display: inline-flex;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.8125rem;
+    font-weight: $weight-bold;
     gap: 0.3rem;
     justify-content: center;
-    min-height: 2.25rem;
+    min-height: $height-chip;
     padding: 0.55rem 0.7rem;
     transition:
         border-color 0.15s,
@@ -240,19 +240,19 @@
     &:has(input:checked) {
         background: $color-primary;
         border-color: $color-primary;
-        box-shadow: 0 8px 20px rgba($color-primary, 0.2);
+        box-shadow: $shadow-lifted;
         color: $color-primary-foreground;
     }
 }
 
 .tagChip {
-    min-height: 2rem;
+    min-height: $height-chip;
     padding-inline: 0.8rem;
 }
 
 .helpText {
     color: $color-muted;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 500;
     line-height: 1.5;
     margin: 0;
@@ -280,7 +280,7 @@
 .photoPreviewFrame,
 .photoAddTile {
     aspect-ratio: 1;
-    border-radius: 1rem;
+    border-radius: $radius-block;
     overflow: hidden;
     position: relative;
 }
@@ -301,8 +301,8 @@
     align-items: center;
     background: rgba(255, 255, 255, 0.9);
     border: 0;
-    border-radius: 999px;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    border-radius: $radius-pill;
+    box-shadow: $shadow-soft;
     color: $color-text;
     cursor: pointer;
     display: inline-flex;
@@ -318,7 +318,7 @@
 .photoKindSegment {
     background: $color-muted-surface;
     border: 1px solid $color-line;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 0.18rem;
@@ -327,12 +327,12 @@
 .photoKindOption,
 .photoKindOptionActive {
     align-items: center;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     color: $color-muted;
     cursor: pointer;
     display: inline-flex;
     font-size: 0.63rem;
-    font-weight: 750;
+    font-weight: $weight-bold;
     justify-content: center;
     min-height: 1.45rem;
     overflow: hidden;
@@ -363,7 +363,7 @@
     flex-direction: column;
     font: inherit;
     font-size: 0.72rem;
-    font-weight: 750;
+    font-weight: $weight-bold;
     gap: 0.25rem;
     justify-content: center;
     padding: 0.75rem;
@@ -384,7 +384,7 @@
 
 .kindChip {
     border: 0;
-    min-height: 2rem;
+    min-height: $height-chip;
 }
 
 @media (max-width: $breakpoint-sm) {

@@ -22,22 +22,23 @@ export const AppHeader = ({
         onListView()
     }
 
-    const title = COUPLE_PLACE_APP_COPY.tabTitle[activeTab]
+    const title =
+        activeTab === 'places'
+            ? COUPLE_PLACE_APP_COPY.placesTitle
+            : COUPLE_PLACE_APP_COPY.tabTitle[activeTab]
 
     return (
         <header className={styles.appHeader}>
-            {activeTab === 'places' ? null : (
-                <div className={styles.topNav}>
-                    <h1>{title}</h1>
-                    <button
-                        aria-label={COUPLE_PLACE_APP_COPY.notification}
-                        className={styles.headerIconButton}
-                        type="button"
-                    >
-                        <Bell aria-hidden="true" size={18} />
-                    </button>
-                </div>
-            )}
+            <div className={styles.topNav}>
+                <h1>{title}</h1>
+                <button
+                    aria-label={COUPLE_PLACE_APP_COPY.notification}
+                    className={styles.headerIconButton}
+                    type="button"
+                >
+                    <Bell aria-hidden="true" size={18} />
+                </button>
+            </div>
 
             {activeTab === 'places' ? (
                 <SegmentedControl

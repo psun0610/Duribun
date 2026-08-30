@@ -113,4 +113,9 @@ Each metric is scored from 0.5 to 5.0 in 0.5 increments. A review's representati
 
 Use Supabase Auth with Kakao, Naver, and Google providers. Email auth can remain enabled for development and testing.
 Kakao auth requests `account_email`; when Kakao returns an email, use it as the app profile email and disable editing in the profile setup form. Other social auth providers do not use provider email as the app profile email. After social sign-in, the profile setup form asks for email directly while pre-filling nickname and avatar when the provider returns them.
+Profile setup is a two-step form: identity (email, nickname) then profile photo.
+A profile photo is **required**, not optional. The photo is uploaded to the
+`profile-avatars` bucket and only its public URL is stored on `profiles.avatar_url`.
+This tightens the original MVP story, which treated the avatar as optional.
+
 The login page must validate the current session before rendering. If the user already has a valid session, route them to the requested `next` path when present, otherwise continue into profile setup. If the refresh token is stale or expired, clear the stale auth cookies and keep the user on the login screen so they can sign in again. OAuth and email login flows must preserve `next` through the callback so users return to the destination they originally requested.

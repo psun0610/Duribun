@@ -16,7 +16,6 @@ import type {
     ActiveTab,
     CouplePlace,
     PlaceCategory,
-    ReviewStatus,
 } from '../types/couplePlaceApp.types'
 
 export const MOCK_PLACES: CouplePlace[] = [
@@ -66,12 +65,24 @@ export const MOCK_PLACES: CouplePlace[] = [
     },
 ]
 
-export const REVIEW_STATUS_LABEL: Record<ReviewStatus, string> = {
-    complete: '작성 완료',
-    none: '내가 작성할 차례',
-    'partner-waiting': '상대 기다림',
-    'waiting-partner': '내가 작성할 차례',
-}
+export const SETTINGS_COPY = {
+    menuLabel: '설정 메뉴',
+    publicPlaces: '밖에도 보여주는 곳',
+    friends: '친구 목록',
+    couple: '우리 정보',
+    notifications: '알림',
+    shareGuideLabel: '어디까지 보이나요?',
+    shareGuideTitle: '어디까지 보이나요?',
+    shareGuideDescription:
+        '보여주기로 한 곳만 친구와 둘러보기에 나와요. 보여줘도 한 줄 리뷰와 각자 평점은 밖으로 나가지 않아요.',
+    publicTitle: '밖에도 보여요',
+    publicPoints: ['둘러보기에 나와요', '친구에게도 보여요', '장소·음식 사진만 나가요'],
+    privateTitle: '우리끼리만',
+    privatePoints: ['둘러보기에 안 나와요', '친구에게도 안 보여요', '기본값이 여기예요'],
+    dataLabel: '내 정보',
+    myData: '내 정보 관리',
+    faq: '궁금한 점',
+} as const
 
 export const CATEGORY_LABEL: Record<PlaceCategory, string> = {
     activity: '활동',
@@ -80,53 +91,53 @@ export const CATEGORY_LABEL: Record<PlaceCategory, string> = {
 }
 
 export const COUPLE_PLACE_APP_COPY = {
-    addPlace: '장소 추가',
+    addPlace: '장소 담기',
     appTitle: '두리번',
-    exploreDescription: '다른 커플들이 공개한 좋은 장소를 발견하는 공간입니다.',
+    exploreDescription: '다른 커플이 좋았다고 남긴 곳들이에요.',
     exploreEmptyDescription:
-        '필터를 바꾸거나 공개 가능한 장소가 쌓이면 탐색 추천이 표시돼요.',
-    exploreEmptyTitle: '아직 표시할 탐색 추천이 없어요',
-    exploreRegionAll: '전체 지역',
-    exploreSearchPlaceholder: '장소, 지역, 키워드 검색',
-    exploreSortLabel: '탐색 정렬',
-    exploreTitle: '새로운 장소 탐색',
-    feedView: '피드 보기',
-    feedViewShort: '피드',
-    addFriendCode: '친구 추가',
-    addFriendCodeLabel: '친구 커플 코드',
-    addFriendCodePlaceholder: '예: DURI7A',
-    addFriendCodeSuccess: '친구 커플을 추가했어요.',
-    copyFriendCode: '코드 복사',
-    friendCodeCopied: '복사 완료',
+        '다른 조건으로 찾아보거나, 조금만 기다려 주세요.',
+    exploreEmptyTitle: '아직 보여드릴 곳이 없어요',
+    exploreRegionAll: '어디든',
+    exploreSearchPlaceholder: '가고 싶은 동네나 이름으로 찾기',
+    exploreSortLabel: '정렬 기준',
+    exploreTitle: '둘러보기',
+    feedView: '사진으로 보기',
+    feedViewShort: '사진으로',
+    addFriendCode: '더하기',
+    addFriendCodeLabel: '친구 코드',
+    addFriendCodePlaceholder: '받은 친구 코드를 넣어보세요',
+    addFriendCodeSuccess: '친구를 더했어요.',
+    copyFriendCode: '복사',
+    friendCodeCopied: '복사했어요',
     friendCodeDescription:
-        '이 코드를 공유하면 친구 커플이 공개 가능한 장소만 볼 수 있어요.',
-    friendCodeTitle: '우리 친구 코드',
+        '이 코드를 건네면, 서로 보여주기로 한 곳만 볼 수 있어요.',
+    friendCodeTitle: '우리 코드',
     friendDescription:
-        '친구 커플과 연결하면 서로 공개 가능한 추천 장소를 볼 수 있어요.',
+        '친구와 코드를 나누면, 서로 보여주기로 한 곳만 볼 수 있어요.',
     friendEmptyDescription:
-        '친구 커플을 추가하거나 필터를 켜면 공개 가능한 추천 장소가 표시돼요.',
-    friendEmptyTitle: '아직 표시할 추천이 없어요',
-    friendTitle: '친구 커플 추천',
-    listView: '리스트 보기',
-    listViewShort: '리스트',
+        '친구를 더하거나 필터를 켜면 여기에 보여요.',
+    friendEmptyTitle: '아직 보여드릴 곳이 없어요',
+    friendTitle: '친구가 다녀온 곳',
+    listView: '목록으로 보기',
+    listViewShort: '목록으로',
     logout: '로그아웃',
-    manualExplorePending: '탐색 승인 중',
+    manualExplorePending: '확인 중이에요',
     notification: '알림',
-    placesTitle: '우리 장소',
-    private: '비공개',
-    public: '공개',
-    recordSuffix: '개의 장소 기록',
-    regenerateFriendCode: '새 코드 생성',
-    requestDisconnect: '커플 연결 해제 요청',
-    settingsDescription: '프로필과 커플 공간을 관리합니다.',
+    placesTitle: '우리가 다녀온 곳',
+    private: '우리끼리만',
+    public: '밖에도 보여요',
+    recordSuffix: '곳',
+    regenerateFriendCode: '새로 만들기',
+    requestDisconnect: '연결 끊기',
+    settingsDescription: '프로필과 우리 공간을 관리해요.',
     settingsTitle: '설정',
     tabTitle: {
-        explore: '탐색',
-        friends: '친구 추천',
+        explore: '둘러보기',
+        friends: '친구가 다녀온 곳',
         places: '',
         settings: '설정',
     },
-    viewModeLabel: '장소 보기 방식',
+    viewModeLabel: '보기 방식',
 } as const
 
 export const EXPLORE_SORT_OPTIONS = [
@@ -186,17 +197,17 @@ export const TAB_ITEMS: Array<{
 }> = [
     {
         icon: Home,
-        label: '우리 장소',
+        label: '홈',
         value: 'places',
     },
     {
         icon: Users,
-        label: '친구 추천',
+        label: '친구',
         value: 'friends',
     },
     {
         icon: Compass,
-        label: '탐색',
+        label: '둘러보기',
         value: 'explore',
     },
     {

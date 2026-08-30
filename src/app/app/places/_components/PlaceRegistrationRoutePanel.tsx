@@ -1,11 +1,11 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { PlaceRegistrationPanel } from '@/features/place/components/PlaceRegistrationPanel'
 
-export const PlaceRegistrationRoutePanel = () => {
-    const router = useRouter()
+import { useModalRouteClose } from './useModalRouteClose'
 
-    return <PlaceRegistrationPanel onClose={() => router.back()} />
+export const PlaceRegistrationRoutePanel = () => {
+    const handleClose = useModalRouteClose('/app/places')
+
+    return <PlaceRegistrationPanel onClose={handleClose} />
 }

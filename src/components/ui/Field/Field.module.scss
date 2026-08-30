@@ -4,7 +4,7 @@
     color: $color-text;
     display: grid;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: $weight-bold;
     gap: 0.5rem;
 }
 
@@ -34,7 +34,7 @@
     &:focus {
         background: $color-surface;
         border-color: rgba($color-primary, 0.5);
-        box-shadow: 0 0 0 4px rgba($color-primary, 0.08);
+        box-shadow: 0 0 0 4px rgba($color-primary, 0.14);
         outline: 0;
     }
 

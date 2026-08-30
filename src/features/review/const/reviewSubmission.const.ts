@@ -4,13 +4,21 @@ import type {
     ReviewTagOption,
 } from '../types/reviewSubmission.types'
 
+/**
+ * 새로 추가한 사진의 기본 유형입니다.
+ * 기본값은 항상 비공개(couple_private)여야 합니다. 사용자가 유형을 바꾸지 않은
+ * 사진이 커플 공간 밖으로 나가는 일이 없도록, 공개 후보가 되려면 반드시
+ * 명시적으로 place_food를 선택하게 합니다.
+ */
+export const DEFAULT_REVIEW_PHOTO_KIND = 'couple_private'
+
 export const REVIEW_KIND_OPTIONS = [
     {
-        label: '장소/음식',
+        label: '장소·음식',
         value: 'place_food',
     },
     {
-        label: '커플/개인',
+        label: '우리끼리',
         value: 'couple_private',
     },
 ] as const
@@ -68,19 +76,19 @@ export const REVIEW_TAG_OPTIONS: Record<ReviewCategory, ReviewTagOption[]> = {
 }
 
 export const REVIEW_WRITER_COPY = {
-    addPhoto: '사진 추가',
+    addPhoto: '사진 넣기',
     close: '닫기',
-    kindLabel: '사진 유형',
-    oneLineLabel: '한 줄 리뷰',
-    panelTitle: '이 장소 어땠나요?',
+    kindLabel: '어디까지 보여줄까요?',
+    oneLineLabel: '한 줄로 남긴다면?',
+    panelTitle: '어땠는지 들려주세요',
     photoHelp:
-        '각 사진마다 장소/음식 또는 커플/개인 유형을 선택해 주세요. 공개는 장소/음식 사진만 가능해요.',
-    photoLabel: '사진 추가',
-    photoLimitHelp: '최대 10장까지 추가할 수 있어요.',
+        '사진마다 어디까지 보여줄지 골라주세요. 밖으로 나갈 수 있는 건 장소·음식 사진뿐이에요.',
+    photoLabel: '사진도 남겨볼까요?',
+    photoLimitHelp: '10장까지 담을 수 있어요.',
     photoRowLabel: '사진',
-    ratingHelp: '각 항목을 0.5점 단위로 선택해 주세요.',
-    ratingLabel: '평점',
-    save: '리뷰 저장하기',
-    tagLabel: '카테고리',
-    tagsHelp: '이 장소의 매력을 태그로 골라주세요.',
+    ratingHelp: '별로 알려주세요. 반 칸도 괜찮아요.',
+    ratingLabel: '얼마나 좋았나요?',
+    save: '리뷰 남기기',
+    tagLabel: '어떤 점이 좋았나요?',
+    tagsHelp: '여러 개 골라도 돼요.',
 } as const

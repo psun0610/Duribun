@@ -21,27 +21,27 @@ const normalizeText = (value: FormDataEntryValue | null) => {
 
 const mapCoupleErrorMessage = (message?: string, code?: string) => {
     if (!message) {
-        return '커플 연결을 완료하지 못했어요. 다시 시도해 주세요.'
+        return '연결을 마치지 못했어요. 다시 해볼까요?'
     }
 
     if (message.includes('Authentication required')) {
-        return '로그인 세션이 만료됐어요. 다시 로그인해 주세요.'
+        return '로그인이 풀렸어요. 다시 들어와 주세요.'
     }
 
     if (message.includes('already in a couple')) {
-        return '이미 커플에 연결되어 있어요. 화면을 새로고침해 주세요.'
+        return '이미 연결되어 있어요. 화면을 새로고침해 주세요.'
     }
 
     if (message.includes('already full')) {
-        return '이미 두 명이 연결된 커플 코드예요.'
+        return '이 코드는 이미 둘이 다 쓰고 있어요.'
     }
 
     if (message.includes('Inactive couple invite code')) {
-        return '비활성화된 커플 코드예요.'
+        return '더 이상 쓸 수 없는 코드예요.'
     }
 
     if (message.includes('Invalid couple invite code')) {
-        return '유효하지 않은 커플 코드예요.'
+        return '이 코드는 안 맞는 것 같아요. 다시 확인해 주세요.'
     }
 
     if (message.includes('violates foreign key constraint')) {
@@ -49,19 +49,19 @@ const mapCoupleErrorMessage = (message?: string, code?: string) => {
     }
 
     if (message.includes('gen_random_bytes')) {
-        return '커플 코드 생성 함수 설정이 필요해요. pgcrypto 마이그레이션을 적용해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (message.includes('permission denied')) {
-        return '커플 생성 권한이 아직 적용되지 않았어요. Supabase RPC 권한 마이그레이션을 적용해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (code === '42883' || message.includes('function') || message.includes('schema cache')) {
-        return '커플 생성 DB 함수가 아직 적용되지 않았어요. Supabase 마이그레이션을 적용해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (code === '42P01' || message.includes('does not exist')) {
-        return '커플 테이블이 아직 적용되지 않았어요. Supabase 마이그레이션을 적용해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     return `커플 연결을 완료하지 못했어요. (${code ?? 'unknown'})`
@@ -69,11 +69,11 @@ const mapCoupleErrorMessage = (message?: string, code?: string) => {
 
 const mapCoupleDisconnectErrorMessage = (message?: string, code?: string) => {
     if (!message) {
-        return '커플 연결 해제 상태를 변경하지 못했어요. 다시 시도해 주세요.'
+        return '지금은 처리할 수 없어요. 다시 해볼까요?'
     }
 
     if (message.includes('Authentication required')) {
-        return '로그인 세션이 만료됐어요. 다시 로그인해 주세요.'
+        return '로그인이 풀렸어요. 다시 들어와 주세요.'
     }
 
     if (message.includes('Active couple required')) {
@@ -84,11 +84,11 @@ const mapCoupleDisconnectErrorMessage = (message?: string, code?: string) => {
         message.includes('Disconnect pending couple required') ||
         message.includes('Unexpired disconnect pending couple required')
     ) {
-        return '취소할 수 있는 연결 해제 대기 상태가 아니에요.'
+        return '지금은 되돌릴 수 있는 상태가 아니에요.'
     }
 
     if (message.includes('permission denied')) {
-        return '커플 연결 해제 권한이 아직 적용되지 않았어요. Supabase RPC 권한 마이그레이션을 적용해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     if (
@@ -96,7 +96,7 @@ const mapCoupleDisconnectErrorMessage = (message?: string, code?: string) => {
         message.includes('function') ||
         message.includes('schema cache')
     ) {
-        return '커플 연결 해제 DB 함수가 아직 적용되지 않았어요. Supabase 마이그레이션을 적용해 주세요.'
+        return '지금은 처리할 수 없어요. 잠시 뒤에 다시 해주세요.'
     }
 
     return `커플 연결 해제 상태를 변경하지 못했어요. (${code ?? 'unknown'})`
@@ -173,7 +173,7 @@ export const createCouple = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
 
     return {
@@ -212,7 +212,7 @@ export const joinCouple = async (
         }
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
     redirect('/app')
 }
@@ -234,7 +234,7 @@ export const requestCoupleDisconnect = async () => {
         )
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
     redirect('/app')
 }
@@ -256,7 +256,7 @@ export const cancelCoupleDisconnect = async () => {
         )
     }
 
-    revalidatePath('/app')
+    revalidatePath('/app', 'layout')
     revalidatePath('/couple/connect')
     redirect('/app')
 }

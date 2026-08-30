@@ -29,12 +29,12 @@
 
 .avatar {
     align-items: center;
-    background: linear-gradient(135deg, $color-primary, $color-secondary);
-    border-radius: 999px;
+    background: $color-muted-surface;
+    border-radius: $radius-pill;
     color: $color-primary-foreground;
     display: inline-flex;
     font-size: 1rem;
-    font-weight: 850;
+    font-weight: $weight-black;
     height: 3.25rem;
     justify-content: center;
     width: 3.25rem;
@@ -56,8 +56,8 @@
 
     span {
         color: $color-muted;
-        font-size: 0.78rem;
-        font-weight: 600;
+        font-size: 0.75rem;
+        font-weight: $weight-bold;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -92,8 +92,8 @@
 
     strong {
         color: $color-muted;
-        font-size: 0.78rem;
-        font-weight: 750;
+        font-size: 0.75rem;
+        font-weight: $weight-bold;
     }
 
     > svg {
@@ -130,8 +130,8 @@
 
     p {
         color: $color-muted;
-        font-size: 0.78rem;
-        font-weight: 550;
+        font-size: 0.75rem;
+        font-weight: $weight-medium;
         line-height: 1.5;
     }
 }
@@ -146,7 +146,7 @@
 .privateCard {
     align-items: center;
     border: 1px solid $color-line;
-    border-radius: 1.1rem;
+    border-radius: $radius-control;
     display: grid;
     gap: 0.55rem;
     justify-items: center;
@@ -156,7 +156,7 @@
 
     strong {
         font-size: 0.86rem;
-        font-weight: 850;
+        font-weight: $weight-black;
     }
 
     ul {
@@ -172,7 +172,7 @@
     li {
         color: $color-muted;
         font-size: 0.66rem;
-        font-weight: 650;
+        font-weight: $weight-bold;
         line-height: 1.25;
 
         &::before {

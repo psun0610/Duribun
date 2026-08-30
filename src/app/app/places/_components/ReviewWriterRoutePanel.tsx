@@ -1,9 +1,9 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { ReviewWriterPanel } from '@/features/review/components/ReviewWriterPanel'
 import type { ReviewTargetPlace } from '@/features/review/types/reviewSubmission.types'
+
+import { useModalRouteClose } from './useModalRouteClose'
 
 interface ReviewWriterRoutePanelProps {
     place: ReviewTargetPlace
@@ -12,7 +12,7 @@ interface ReviewWriterRoutePanelProps {
 export const ReviewWriterRoutePanel = ({
     place,
 }: ReviewWriterRoutePanelProps) => {
-    const router = useRouter()
+    const handleClose = useModalRouteClose('/app/places')
 
-    return <ReviewWriterPanel onClose={() => router.back()} place={place} />
+    return <ReviewWriterPanel onClose={handleClose} place={place} />
 }

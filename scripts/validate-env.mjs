@@ -20,6 +20,14 @@ const required = [
     'SUPABASE_AUTH_NAVER_CLIENT_SECRET',
 ];
 
+// 없어도 앱은 뜨지만, 비어 있으면 해당 기능이 조용히 동작하지 않는 값들.
+const optional = [
+    {
+        key: 'CRON_SECRET',
+        reason: '만료된 연결 해제 커플 정리(/api/cron/couple-cleanup)가 동작하지 않습니다.',
+    },
+];
+
 const parseDotEnv = contents => {
     const values = new Map();
 
@@ -72,6 +80,15 @@ if (missing.length > 0) {
         'Fill these values in your local env file before starting the app.'
     );
     process.exit(1);
+}
+
+const missingOptional = optional.filter(entry => !values.get(entry.key));
+
+if (missingOptional.length > 0) {
+    console.warn('Optional environment variables are not set:');
+    for (const entry of missingOptional) {
+        console.warn(`- ${entry.key}: ${entry.reason}`);
+    }
 }
 
 console.log(`Provider environment looks complete: ${envPath}`);

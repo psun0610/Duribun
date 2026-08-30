@@ -13,7 +13,10 @@ import { Button } from '@/components/ui'
 import { signOut } from '@/features/auth/actions'
 import { requestCoupleDisconnect } from '@/features/couple/actions'
 
-import { COUPLE_PLACE_APP_COPY } from '../const/couplePlaceApp.const'
+import {
+    COUPLE_PLACE_APP_COPY,
+    SETTINGS_COPY,
+} from '../const/couplePlaceApp.const'
 import type { SettingsPanelProps } from '../types/couplePlaceAppComponent.types'
 
 import styles from './SettingsPanel.module.scss'
@@ -37,12 +40,12 @@ export const SettingsPanel = ({
                 <ChevronRight aria-hidden="true" size={18} />
             </section>
 
-            <section className={styles.menuGroup} aria-label="설정 메뉴">
+            <section className={styles.menuGroup} aria-label={SETTINGS_COPY.menuLabel}>
                 <button className={styles.menuRow} type="button">
                     <span className={styles.menuIcon}>
                         <Lock size={17} />
                     </span>
-                    <span>공개한 장소</span>
+                    <span>{SETTINGS_COPY.publicPlaces}</span>
                     <strong>{publicPlaceCount}</strong>
                     <ChevronRight aria-hidden="true" size={16} />
                 </button>
@@ -50,7 +53,7 @@ export const SettingsPanel = ({
                     <span className={styles.menuIcon}>
                         <Users size={17} />
                     </span>
-                    <span>친구 관리</span>
+                    <span>{SETTINGS_COPY.friends}</span>
                     <strong>{friendCoupleCount}</strong>
                     <ChevronRight aria-hidden="true" size={16} />
                 </button>
@@ -58,59 +61,56 @@ export const SettingsPanel = ({
                     <span className={styles.menuIcon}>
                         <ShieldCheck size={17} />
                     </span>
-                    <span>커플 관리</span>
+                    <span>{SETTINGS_COPY.couple}</span>
                     <ChevronRight aria-hidden="true" size={16} />
                 </button>
                 <button className={styles.menuRow} type="button">
                     <span className={styles.menuIcon}>
                         <Bell size={17} />
                     </span>
-                    <span>알림 설정</span>
+                    <span>{SETTINGS_COPY.notifications}</span>
                     <ChevronRight aria-hidden="true" size={16} />
                 </button>
             </section>
 
-            <section className={styles.shareGuide} aria-label="공유 기준 안내">
-                <h2>공유 기준 안내</h2>
-                <p>
-                    공개로 설정한 장소만 친구 추천과 탐색에 노출돼요. 공개해도
-                    한 줄 리뷰와 개인 평점은 밖으로 나가지 않아요.
-                </p>
+            <section className={styles.shareGuide} aria-label={SETTINGS_COPY.shareGuideLabel}>
+                <h2>{SETTINGS_COPY.shareGuideTitle}</h2>
+                <p>{SETTINGS_COPY.shareGuideDescription}</p>
                 <div className={styles.shareCards}>
                     <article className={styles.publicCard}>
                         <Globe2 size={30} />
-                        <strong>공개 가능</strong>
+                        <strong>{SETTINGS_COPY.publicTitle}</strong>
                         <ul>
-                            <li>탐색 탭에 노출</li>
-                            <li>친구 추천에 노출</li>
-                            <li>장소/음식 사진만 공유</li>
+                            {SETTINGS_COPY.publicPoints.map(point => (
+                                <li key={point}>{point}</li>
+                            ))}
                         </ul>
                     </article>
                     <article className={styles.privateCard}>
                         <Lock size={30} />
-                        <strong>비공개</strong>
+                        <strong>{SETTINGS_COPY.privateTitle}</strong>
                         <ul>
-                            <li>탐색 탭에 노출 안됨</li>
-                            <li>친구 추천에 숨김</li>
-                            <li>공유 범위 내가 결정</li>
+                            {SETTINGS_COPY.privatePoints.map(point => (
+                                <li key={point}>{point}</li>
+                            ))}
                         </ul>
                     </article>
                 </div>
             </section>
 
-            <section className={styles.menuGroup} aria-label="데이터 관리">
+            <section className={styles.menuGroup} aria-label={SETTINGS_COPY.dataLabel}>
                 <button className={styles.menuRow} type="button">
                     <span className={styles.menuIcon}>
                         <Database size={17} />
                     </span>
-                    <span>내 데이터 관리</span>
+                    <span>{SETTINGS_COPY.myData}</span>
                     <ChevronRight aria-hidden="true" size={16} />
                 </button>
                 <button className={styles.menuRow} type="button">
                     <span className={styles.menuIcon}>
                         <HelpCircle size={17} />
                     </span>
-                    <span>자주 묻는 질문</span>
+                    <span>{SETTINGS_COPY.faq}</span>
                     <ChevronRight aria-hidden="true" size={16} />
                 </button>
             </section>

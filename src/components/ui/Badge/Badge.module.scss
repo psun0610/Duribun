@@ -3,9 +3,9 @@
 .badge {
     align-items: center;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: $radius-pill;
     display: inline-flex;
-    font-weight: 650;
+    font-weight: $weight-bold;
     gap: 0.25rem;
     line-height: 1;
     max-width: 100%;
@@ -18,39 +18,37 @@
 }
 
 .sm {
-    font-size: 0.8rem;
-    min-height: 1.5rem;
-    padding: 0.3rem 0.5rem;
+    font-size: 0.71875rem; // 11.5px
+    min-height: 1.625rem; // 26px
+    padding: 0.3rem 0.625rem;
 }
 
 .md {
-    font-size: 0.8rem;
-    min-height: 1.85rem;
-    padding: 0.4rem 0.65rem;
+    font-size: 0.78125rem;
+    min-height: 1.875rem;
+    padding: 0.4rem 0.75rem;
 }
 
 .primary {
     background: $color-primary;
-    border-color: $color-primary;
-    box-shadow: 0 8px 18px rgba($color-primary, 0.18);
     color: $color-primary-foreground;
 }
 
+// 진행 중인 리뷰 상태 — 상대 기다리는 중 / 내 차례예요
 .primarySoft {
-    background: rgba($color-primary, 0.1);
-    border-color: rgba($color-primary, 0.22);
-    color: $color-primary;
+    background: $color-primary-tint;
+    color: $color-primary-deep;
 }
 
+// 끝난 리뷰 상태 — 둘 다 썼어요
 .secondary {
-    background: rgba($color-secondary, 0.24);
-    border-color: rgba($color-secondary, 0.38);
-    color: $color-text;
+    background: $color-secondary-tint;
+    color: $color-secondary-ink;
 }
 
+// 아직인 상태 — 아직 안 썼어요
 .muted {
     background: $color-muted-surface;
-    border-color: $color-line;
     color: $color-muted;
 }
 

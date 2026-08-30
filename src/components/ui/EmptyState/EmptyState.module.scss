@@ -11,7 +11,7 @@
 
 .iconBox {
     align-items: center;
-    background: linear-gradient(135deg, $color-primary, $color-secondary);
+    background: $gradient-brand;
     border-radius: $radius-photo-card;
     box-shadow: 0 18px 38px rgba($color-primary, 0.24);
     color: $color-primary-foreground;

@@ -4,7 +4,7 @@
     align-items: center;
     border-radius: $radius-control;
     display: inline-flex;
-    font-weight: 600;
+    font-weight: $weight-bold;
     gap: 0.5rem;
     justify-content: center;
     letter-spacing: 0;
@@ -35,8 +35,8 @@
 }
 
 .primary {
-    background: linear-gradient(90deg, $color-primary, $color-secondary);
-    box-shadow: 0 14px 30px rgba($color-primary, 0.2);
+    background: $color-primary;
+    box-shadow: $shadow-lifted;
     color: $color-primary-foreground;
 }
 

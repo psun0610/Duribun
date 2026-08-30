@@ -28,8 +28,12 @@ const friendPanelSource = readFileSync(
     ),
     'utf8'
 )
-const appPageSource = readFileSync(
-    path.resolve(process.cwd(), 'src/app/app/page.tsx'),
+const appDataSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/app/getProtectedAppData.ts'),
+    'utf8'
+)
+const friendsPageSource = readFileSync(
+    path.resolve(process.cwd(), 'src/app/app/friends/page.tsx'),
     'utf8'
 )
 
@@ -57,14 +61,20 @@ describe('friend relationships and filters', () => {
             "raise exception 'Cannot add own couple as friend'"
         )
         expect(friendActionsSource).toContain('addFriendCoupleByCode')
-        expect(friendActionsSource).toContain('내 커플 코드는 친구로 추가할 수 없어요.')
+        expect(friendActionsSource).toContain(
+            '우리 코드예요. 친구에게 받은 코드를 넣어주세요.'
+        )
     })
 
     it('shows friend couple names and only public-ready friend recommendations', () => {
         expect(initialSchemaSql).toContain('public.friend_couple_place_summaries')
         expect(initialSchemaSql).toContain('public.is_couple_place_public_ready(cp.id)')
         expect(initialSchemaSql).toContain('c.name as couple_name')
-        expect(appPageSource).toContain('getFriendCouplePlaceSummaries')
+        expect(appDataSource).toContain('getFriendCouplePlaceSummaries')
+        expect(friendsPageSource).toContain('FriendRecommendationsPanel')
+        expect(friendsPageSource).toContain(
+            'recommendations={appState.data.friendRecommendations}'
+        )
         expect(friendPanelSource).toContain('recommendation.coupleName')
     })
 

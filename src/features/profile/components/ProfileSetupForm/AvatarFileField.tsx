@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, type ChangeEvent, type CSSProperties } from 'react'
-import { Camera } from 'lucide-react'
+import { Camera, User } from 'lucide-react'
 
 import type { AvatarFileFieldProps } from './types/profileSetupForm.types'
 
@@ -62,9 +62,12 @@ export const AvatarFileField = ({
                 >
                     {previewUrl ? null : (
                         <span className={styles.avatarPreviewFallback}>
-                            <Camera aria-hidden="true" size={34} />
+                            <User aria-hidden="true" size={52} />
                         </span>
                     )}
+                </span>
+                <span aria-hidden="true" className={styles.avatarCameraBadge}>
+                    <Camera aria-hidden="true" size={18} />
                 </span>
                 <span className={styles.avatarPickerLabel}>{label}</span>
             </label>

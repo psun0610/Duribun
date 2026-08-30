@@ -60,6 +60,17 @@ const reviewDetailCopySource = readFileSync(
     ),
     'utf8'
 )
+const reviewStatusCopySource = readFileSync(
+    path.resolve(process.cwd(), 'src/features/review/const/reviewStatus.const.ts'),
+    'utf8'
+)
+const couplePlaceAppCopySource = readFileSync(
+    path.resolve(
+        process.cwd(),
+        'src/features/place/components/CouplePlaceApp/const/couplePlaceApp.const.ts'
+    ),
+    'utf8'
+)
 
 describe('review detail', () => {
     it('loads review detail data for protected couple places', () => {
@@ -74,11 +85,36 @@ describe('review detail', () => {
         expect(registeredPlaceCardsSource).toContain(
             'getReviewDetailTargetPlace'
         )
-        expect(reviewDetailCopySource).toContain("'partner-waiting': '상대가 기다려요'")
-        expect(reviewDetailCopySource).toContain("none: '작성 전'")
-        expect(reviewDetailCopySource).toContain(
-            "'waiting-partner': '내가 작성한 차례'"
+        expect(reviewDetailPanelSource).toContain(
+            'REVIEW_STATUS_MESSAGE[detail.reviewStatus]'
         )
+    })
+
+    it('uses the documented review status copy from a single definition', () => {
+        expect(reviewStatusCopySource).toContain("none: '이 장소는 어땠나요?'")
+        expect(reviewStatusCopySource).toContain(
+            "'waiting-partner': '상대를 기다리는 중...'"
+        )
+        expect(reviewStatusCopySource).toContain(
+            "'partner-waiting': '상대가 기다리고 있어요'"
+        )
+        expect(reviewStatusCopySource).toContain("complete: '둘 다 남겼어요'")
+    })
+
+    it('keeps every review status label distinct and defined in one place', () => {
+        expect(reviewDetailCopySource).not.toContain('REVIEW_STATUS_LABEL')
+        expect(couplePlaceAppCopySource).not.toContain('REVIEW_STATUS_LABEL')
+        expect(registeredPlaceCardsSource).toContain('REVIEW_STATUS_BADGE')
+
+        const badgeBlock = reviewStatusCopySource
+            .split('REVIEW_STATUS_BADGE')[1]
+            .split('}')[0]
+        const badgeLabels = [...badgeBlock.matchAll(/'([^']+)',/g)].map(
+            match => match[1]
+        )
+
+        expect(badgeLabels).toHaveLength(4)
+        expect(new Set(badgeLabels).size).toBe(4)
     })
 
     it('shows private one-line reviews, rating metrics, tags, and photos only inside the couple space', () => {
@@ -88,15 +124,15 @@ describe('review detail', () => {
         expect(reviewCardSource).toContain('photoGrid')
         expect(reviewCardSource).toContain('REVIEW_PHOTO_KIND_LABEL')
         expect(reviewActionsSource).toContain('review_ratings')
-        expect(reviewDetailCopySource).toContain("myReview: '내 리뷰'")
-        expect(reviewDetailCopySource).toContain("partnerReview: '상대 리뷰'")
+        expect(reviewDetailCopySource).toContain("myReview: '내가 남긴 말'")
+        expect(reviewDetailCopySource).toContain("partnerReview: '상대가 남긴 말'")
     })
 
     it('keeps completed review state aligned with average rating and photo visibility rules', () => {
         expect(reviewDetailPanelSource).toContain('averageRating')
-        expect(reviewDetailCopySource).toContain("complete: '작성 완료'")
-        expect(reviewDetailCopySource).toContain("privateBadge: '비공개'")
-        expect(reviewDetailCopySource).toContain("publicBadge: '공개'")
+        expect(reviewStatusCopySource).toContain("complete: '둘 다 남겼어요'")
+        expect(reviewDetailCopySource).toContain("privateBadge: '우리끼리만'")
+        expect(reviewDetailCopySource).toContain("publicBadge: '밖에도 보여요'")
     })
 
     it('routes unrevised registered places to the review writer', () => {
