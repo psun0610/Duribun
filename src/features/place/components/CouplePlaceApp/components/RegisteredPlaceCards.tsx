@@ -67,16 +67,16 @@ export const RegisteredPlaceFeedCard = ({
             </span>
             <span className={styles.registeredFeedBody}>
                 <strong>{place.name}</strong>
-                <span className={styles.registeredMeta}>
-                    {CATEGORY_LABEL[place.category]}
-                </span>
+                <Badge size="sm" variant={getReviewStatusBadgeVariant(status)}>
+                    {REVIEW_STATUS_BADGE[status]}
+                </Badge>
                 <span className={styles.cardStatusRows}>
-                    <Badge
-                        size="sm"
-                        variant={getReviewStatusBadgeVariant(status)}
+                    <Pill
+                        icon={<Star aria-hidden="true" size={12} />}
+                        tone={rating ? 'rating' : 'ratingEmpty'}
                     >
-                        {REVIEW_STATUS_BADGE[status]}
-                    </Badge>
+                        {rating ?? '-'}
+                    </Pill>
                     <span className={styles.cardPrivacyText}>
                         {place.isPublic ? (
                             <Globe aria-hidden="true" size={12} />
@@ -87,12 +87,6 @@ export const RegisteredPlaceFeedCard = ({
                             ? COUPLE_PLACE_APP_COPY.public
                             : COUPLE_PLACE_APP_COPY.private}
                     </span>
-                    <Pill
-                        icon={<Star aria-hidden="true" size={12} />}
-                        tone="rating"
-                    >
-                        {rating ?? '-'}
-                    </Pill>
                 </span>
             </span>
         </Link>
@@ -156,7 +150,7 @@ export const RegisteredPlaceListCard = ({
                 <Pill
                     className={styles.registeredListRating}
                     icon={<Star aria-hidden="true" size={12} />}
-                    tone="rating"
+                    tone={rating ? 'rating' : 'ratingEmpty'}
                 >
                     {rating ?? '-'}
                 </Pill>

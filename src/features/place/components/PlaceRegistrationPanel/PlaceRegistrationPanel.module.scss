@@ -229,7 +229,7 @@
     color: $color-muted;
     display: flex;
     font-size: 0.8rem;
-    font-weight: 650;
+    font-weight: $weight-bold;
     gap: 0.375rem;
     justify-content: center;
 }
@@ -300,7 +300,7 @@
     span {
         color: $color-muted;
         font-size: 0.7rem;
-        font-weight: 650;
+        font-weight: $weight-bold;
     }
 }
 
@@ -370,7 +370,7 @@
     small {
         color: $color-muted;
         font-size: 0.7rem;
-        font-weight: 650;
+        font-weight: $weight-bold;
     }
 }
 

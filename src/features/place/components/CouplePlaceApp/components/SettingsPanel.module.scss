@@ -172,7 +172,7 @@
     li {
         color: $color-muted;
         font-size: 0.66rem;
-        font-weight: 650;
+        font-weight: $weight-bold;
         line-height: 1.25;
 
         &::before {

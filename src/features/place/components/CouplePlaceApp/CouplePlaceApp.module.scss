@@ -198,14 +198,15 @@
     .mockFeedBody,
     .registeredFeedBody {
         display: grid;
-        gap: 0.38rem;
+        gap: 0.44rem;
+        justify-items: start;
         min-width: 0;
 
         h3,
         strong {
             color: $color-text;
-            font-size: 0.9rem;
-            font-weight: 650;
+            font-size: 0.9375rem;
+            font-weight: $weight-bold;
             margin: 0;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -297,8 +298,8 @@
         h3,
         strong {
             color: $color-text;
-            font-size: 0.9rem;
-            font-weight: 650;
+            font-size: 0.9375rem;
+            font-weight: $weight-bold;
             margin: 0;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -350,10 +351,9 @@
     }
 
     .bottomNav {
-        background: rgba(255, 255, 255, 0.96);
-        border-top: 1px solid $color-line;
+        background: $color-surface;
         bottom: 0;
-        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+        box-shadow: $shadow-nav;
         left: 0;
         position: fixed;
         transform: none;
@@ -380,38 +380,40 @@
         cursor: pointer;
         display: grid;
         font: inherit;
-        font-size: 0.7rem;
-        font-weight: 600;
-        gap: 0.18rem;
+        font-size: 0.625rem;
+        font-weight: $weight-medium;
+        gap: 0.3125rem;
         justify-items: center;
         min-width: 3rem;
         text-decoration: none;
         padding: 0.35rem 0.3rem;
 
         svg {
-            height: 1.25rem;
-            width: 1.25rem;
+            height: 1.3125rem;
+            width: 1.3125rem;
         }
     }
 
     .navItemActive {
         color: $color-primary;
+        font-weight: $weight-bold;
     }
 
     .centerAction {
         align-items: center;
-        background: linear-gradient(135deg, $color-primary, $color-secondary);
+        // 그라디언트는 이 버튼과 코드 카드에만 씁니다. docs/design-system.md 참고
+        background: $gradient-brand;
         border: 4px solid $color-surface;
-        border-radius: 999px;
-        box-shadow: 0 12px 32px rgba($color-primary, 0.32);
+        border-radius: $radius-pill;
+        box-shadow: 0 10px 22px rgba($color-primary, 0.42);
         color: $color-primary-foreground;
         cursor: pointer;
         display: inline-flex;
-        height: 3.65rem;
+        height: 3.625rem;
         justify-content: center;
-        margin-top: -2rem;
+        margin-top: -1.8125rem;
         text-decoration: none;
-        width: 3.65rem;
+        width: 3.625rem;
 
         svg {
             height: 1.65rem;

@@ -214,7 +214,7 @@
         color: $color-muted;
         display: inline-flex;
         font-size: 0.7rem;
-        font-weight: 650;
+        font-weight: $weight-bold;
         gap: 0.16rem;
         min-width: 0;
         overflow: hidden;
@@ -245,7 +245,7 @@
     > span:not([class]) {
         color: $color-muted;
         font-size: 0.7rem;
-        font-weight: 650;
+        font-weight: $weight-bold;
     }
 }
 
@@ -259,7 +259,7 @@
         border-radius: 999px;
         color: $color-muted;
         font-size: 0.72rem;
-        font-weight: 650;
+        font-weight: $weight-bold;
         padding: 0.3rem 0.5rem;
     }
 }
