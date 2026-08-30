@@ -74,14 +74,12 @@ white so photos remain readable.
 
 ## Tailwind And SCSS
 
-- Tailwind is allowed and should be used for layout, spacing, typography
-  utilities, responsive rules, and common state styles.
-- SCSS Modules remain the place for component-owned custom styling, generated
-  background behavior, safe-area rules, non-trivial shadows, and reusable design
-  token composition.
+- SCSS Modules are the only styling mechanism in use. Tailwind is installed but
+  its stylesheet is not imported anywhere, so Tailwind classes have no effect.
+- SCSS Modules own component styling, generated background behavior, safe-area
+  rules, non-trivial shadows, and reusable design token composition.
 - Keep reusable tokens in `src/styles/variables.scss`.
-- Expose app theme values as CSS custom properties in `src/app/globals.scss`.
-- Tailwind theme values are mapped in `src/app/tailwind.css`.
+- Expose app theme values as CSS custom properties in `src/styles/globals.scss`.
 - Do not copy the entire shadcn component kit from reference projects. Install
   or create only components that are actually needed.
 
