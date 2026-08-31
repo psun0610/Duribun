@@ -22,6 +22,8 @@ export interface ReadyProtectedAppData {
     friendRecommendations: Awaited<
         ReturnType<typeof getFriendCouplePlaceSummaries>
     >
+    myName: string
+    partnerName: string
     places: Awaited<ReturnType<typeof getCouplePlaces>>
     publicPlaceCount: number
     reviewDetailsByPlaceId: Awaited<
@@ -124,6 +126,16 @@ export const getProtectedAppData = async (
         redirect('/couple/connect')
     }
 
+    // 목록 상단에 "상대 이름 ♥ 내 이름"을 보여주기 위해 두 사람 이름을 읽습니다.
+    const { data: memberProfiles } = await supabase
+        .from('couple_member_profiles')
+        .select('display_name, is_me')
+
+    const partnerName =
+        memberProfiles?.find(member => !member.is_me)?.display_name ?? ''
+    const myName =
+        memberProfiles?.find(member => member.is_me)?.display_name ?? userLabel
+
     const places = await getCouplePlaces(couple.id)
     const reviewDetailsByPlaceId = await getCouplePlaceReviewDetailsMap(
         places.map(place => place.couplePlaceId),
@@ -139,6 +151,8 @@ export const getProtectedAppData = async (
         data: {
             coupleId: couple.id,
             coupleName: coupleSummary.name,
+            myName,
+            partnerName,
             currentUserId: user.id,
             exploreRecommendations,
             friendCode: coupleSummary.friendCode,

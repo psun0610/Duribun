@@ -76,6 +76,28 @@ export const getRegisteredPlaceStatus = (
     return detail?.reviewStatus ?? 'none'
 }
 
+/** 목록 카드에 보여줄 리뷰 태그입니다. 두 사람이 고른 태그를 합쳐 앞의 두 개만 씁니다. */
+export const getRegisteredPlaceTags = (
+    detail: CouplePlaceReviewDetail | undefined,
+    limit = 2
+) => {
+    if (!detail) {
+        return []
+    }
+
+    const uniqueTags: string[] = []
+
+    for (const review of detail.reviews) {
+        for (const tag of review.tags) {
+            if (!uniqueTags.includes(tag)) {
+                uniqueTags.push(tag)
+            }
+        }
+    }
+
+    return uniqueTags.slice(0, limit)
+}
+
 export const getRegisteredPlaceRating = (
     detail: CouplePlaceReviewDetail | undefined
 ) => {

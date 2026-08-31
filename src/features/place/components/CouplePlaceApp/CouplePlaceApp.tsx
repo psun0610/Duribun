@@ -15,11 +15,18 @@ type CouplePlaceAppShellProps = Pick<
     'activeTab' | 'viewMode'
 > & {
     children: ReactNode
+    // 우리 장소 탭에서만 씁니다. 다른 탭은 제목이 탭 이름이라 필요 없습니다.
+    myName?: string
+    partnerName?: string
+    placeCount?: number
 }
 
 export const CouplePlaceApp = ({
     activeTab,
     children,
+    myName = '',
+    partnerName = '',
+    placeCount = 0,
     viewMode,
 }: CouplePlaceAppShellProps) => {
     const router = useRouter()
@@ -37,8 +44,11 @@ export const CouplePlaceApp = ({
             <section className={styles.content}>
                 <AppHeader
                     activeTab={activeTab}
+                    myName={myName}
                     onFeedView={handleFeedView}
                     onListView={handleListView}
+                    partnerName={partnerName}
+                    placeCount={placeCount}
                     viewMode={viewMode}
                 />
                 {children}

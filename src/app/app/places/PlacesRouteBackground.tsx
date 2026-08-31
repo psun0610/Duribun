@@ -17,7 +17,13 @@ export const PlacesRouteBackground = ({
     viewMode,
 }: PlacesRouteBackgroundProps) => {
     return (
-        <CouplePlaceApp activeTab="places" viewMode={viewMode}>
+        <CouplePlaceApp
+            activeTab="places"
+            myName={appData.myName}
+            partnerName={appData.partnerName}
+            placeCount={appData.places.length}
+            viewMode={viewMode}
+        >
             <PlacesTabPanel
                 onOpenReviewDetail={place =>
                     getAppReviewDetailHref(place.couplePlaceId, viewMode)

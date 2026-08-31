@@ -40,6 +40,7 @@ export const MOCK_PLACES: CouplePlace[] = [
             'https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&auto=format&fit=crop',
         rating: 4.7,
         reviewStatus: 'partner-waiting',
+        tags: ['분위기', '사진 명소'],
         visitDate: '2026.05.03',
     },
     {
@@ -51,6 +52,7 @@ export const MOCK_PLACES: CouplePlace[] = [
             'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&auto=format&fit=crop',
         rating: 4.8,
         reviewStatus: 'waiting-partner',
+        tags: ['뷰', '데이트 추천'],
         visitDate: '2026.04.28',
     },
     {

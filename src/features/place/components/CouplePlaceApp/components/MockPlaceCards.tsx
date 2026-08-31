@@ -1,14 +1,8 @@
-import { Ellipsis, Globe, Lock, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 
-import { Badge, Pill } from '@/components/ui'
 import { REVIEW_STATUS_BADGE } from '@/features/review/const/reviewStatus.const'
 
-import {
-    CATEGORY_LABEL,
-    COUPLE_PLACE_APP_COPY,
-} from '../const/couplePlaceApp.const'
 import type { MockPlaceCardProps } from '../types/couplePlaceAppComponent.types'
-import { getReviewStatusBadgeVariant } from '../utils/couplePlaceApp.utils'
 
 import styles from '../CouplePlaceApp.module.scss'
 
@@ -23,43 +17,56 @@ const PlacePhoto = ({ place }: MockPlaceCardProps) => {
     )
 }
 
+const StatusDot = ({ place }: MockPlaceCardProps) => {
+    if (place.reviewStatus === 'complete') {
+        return null
+    }
+
+    return (
+        <span
+            aria-label={REVIEW_STATUS_BADGE[place.reviewStatus]}
+            className={`${styles.statusDot} ${
+                styles[`statusDot_${place.reviewStatus}`]
+            }`}
+            role="img"
+        />
+    )
+}
+
+const PlaceInfo = ({ place, starSize }: MockPlaceCardProps & { starSize: number }) => {
+    return (
+        <>
+            <div className={styles.cardTitleRow}>
+                <strong>{place.name}</strong>
+                {place.rating ? (
+                    <span className={styles.cardRating}>
+                        <Star aria-hidden="true" size={starSize} />
+                        {place.rating}
+                    </span>
+                ) : null}
+            </div>
+            {place.tags && place.tags.length > 0 ? (
+                <div className={styles.cardTagRow}>
+                    {place.tags.slice(0, 2).map(tag => (
+                        <span className={styles.cardTag} key={tag}>
+                            {tag}
+                        </span>
+                    ))}
+                </div>
+            ) : null}
+        </>
+    )
+}
+
 export const PlaceCardFeed = ({ place }: MockPlaceCardProps) => {
     return (
         <article className={styles.mockFeedCard}>
             <div className={styles.mockFeedVisual}>
                 <PlacePhoto place={place} />
-                <span className={styles.cardMenu}>
-                    <Ellipsis aria-hidden="true" size={13} />
-                </span>
+                <StatusDot place={place} />
             </div>
             <div className={styles.mockFeedBody}>
-                <h3>{place.name}</h3>
-                <div className={styles.cardStatusRows}>
-                    <Badge
-                        size="sm"
-                        variant={getReviewStatusBadgeVariant(place.reviewStatus)}
-                    >
-                        {REVIEW_STATUS_BADGE[place.reviewStatus]}
-                    </Badge>
-                    <span className={styles.cardPrivacyText}>
-                        {place.isPublic ? (
-                            <Globe aria-hidden="true" size={12} />
-                        ) : (
-                            <Lock aria-hidden="true" size={12} />
-                        )}
-                        {place.isPublic
-                            ? COUPLE_PLACE_APP_COPY.public
-                            : COUPLE_PLACE_APP_COPY.private}
-                    </span>
-                    {place.rating ? (
-                        <Pill
-                            icon={<Star aria-hidden="true" size={12} />}
-                            tone="rating"
-                        >
-                            {place.rating}
-                        </Pill>
-                    ) : null}
-                </div>
+                <PlaceInfo place={place} starSize={9} />
             </div>
         </article>
     )
@@ -70,56 +77,10 @@ export const PlaceCardList = ({ place }: MockPlaceCardProps) => {
         <article className={styles.mockListCard}>
             <div className={styles.mockListVisual}>
                 <PlacePhoto place={place} />
+                <StatusDot place={place} />
             </div>
             <div className={styles.mockListBody}>
-                <div className={styles.mockListHeader}>
-                    <div>
-                        <h3>{place.name}</h3>
-                        <p>
-                            {CATEGORY_LABEL[place.category]}
-                            {place.visitDate ? ` · ${place.visitDate}` : ''}
-                        </p>
-                    </div>
-                    <span className={styles.cardPrivacyInline}>
-                        {place.isPublic ? (
-                            <Globe
-                                aria-label={COUPLE_PLACE_APP_COPY.public}
-                                size={12}
-                            />
-                        ) : (
-                            <Lock
-                                aria-label={COUPLE_PLACE_APP_COPY.private}
-                                size={12}
-                            />
-                        )}
-                    </span>
-                </div>
-                <div className={styles.mockListMeta}>
-                    {place.rating ? (
-                        <Pill
-                            icon={<Star aria-hidden="true" size={12} />}
-                            tone="rating"
-                        >
-                            {place.rating}
-                        </Pill>
-                    ) : null}
-                    <Badge
-                        size="sm"
-                        variant={getReviewStatusBadgeVariant(place.reviewStatus)}
-                    >
-                        {REVIEW_STATUS_BADGE[place.reviewStatus]}
-                    </Badge>
-                    <span className={styles.cardPrivacyText}>
-                        {place.isPublic ? (
-                            <Globe aria-hidden="true" size={12} />
-                        ) : (
-                            <Lock aria-hidden="true" size={12} />
-                        )}
-                        {place.isPublic
-                            ? COUPLE_PLACE_APP_COPY.public
-                            : COUPLE_PLACE_APP_COPY.private}
-                    </span>
-                </div>
+                <PlaceInfo place={place} starSize={10} />
             </div>
         </article>
     )
