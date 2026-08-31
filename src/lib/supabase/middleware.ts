@@ -75,11 +75,17 @@ export const updateSession = async (request: NextRequest) => {
             hasStaleAuthTokens = true
         }
     } catch (error) {
-        if (!isStaleRefreshTokenError(error)) {
-            throw error
+        // 미들웨어는 어떤 경우에도 화면을 막지 않습니다. 조회가 실패하면
+        // 로그인하지 않은 상태로 보고 넘어갑니다. 여기서 throw하면
+        // 네트워크가 잠깐 흔들릴 때마다 /login과 /app이 통째로 열리지 않습니다.
+        if (isStaleRefreshTokenError(error)) {
+            hasStaleAuthTokens = true
+        } else {
+            console.error('Failed to resolve the session in middleware', {
+                message: error instanceof Error ? error.message : String(error),
+                pathname,
+            })
         }
-
-        hasStaleAuthTokens = true
     }
 
     if (hasStaleAuthTokens) {
