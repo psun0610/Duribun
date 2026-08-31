@@ -135,6 +135,22 @@ describe('review detail', () => {
         expect(reviewDetailCopySource).toContain("publicBadge: '밖에도 보여요'")
     })
 
+    it('shows review status as a dot on the photo, not a badge below', () => {
+        // 목록에서는 뱃지 대신 사진 위 색점 하나만 씁니다. docs/design-system.md 참고
+        expect(registeredPlaceCardsSource).toContain('StatusDot')
+        expect(registeredPlaceCardsSource).toContain("status === 'complete'")
+        expect(registeredPlaceCardsSource).not.toContain('<Badge')
+    })
+
+    it('keeps the list card to a title row and review tags only', () => {
+        expect(registeredPlaceCardsSource).toContain('cardTitleRow')
+        expect(registeredPlaceCardsSource).toContain('getRegisteredPlaceTags')
+        // 공개 여부와 다녀온 날짜는 목록에 표시하지 않습니다.
+        expect(registeredPlaceCardsSource).not.toContain('COUPLE_PLACE_APP_COPY.public')
+        expect(registeredPlaceCardsSource).not.toContain('visitDate')
+        expect(registeredPlaceCardsSource).not.toContain('CATEGORY_LABEL')
+    })
+
     it('routes unrevised registered places to the review writer', () => {
         expect(reviewWriterPageSource).toContain('ReviewWriterRoutePanel')
         expect(registeredPlaceCardsSource).toContain('getReviewTargetPlace')

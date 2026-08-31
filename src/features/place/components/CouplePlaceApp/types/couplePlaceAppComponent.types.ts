@@ -16,8 +16,11 @@ import type {
 
 export interface AppHeaderProps {
     activeTab: ActiveTab
+    myName: string
     onFeedView: () => void
     onListView: () => void
+    partnerName: string
+    placeCount: number
     viewMode: ViewMode
 }
 

@@ -1,18 +1,13 @@
 import Link from 'next/link'
-import { Ellipsis, Globe, Lock, MapPin, Star } from 'lucide-react'
+import { MapPin, Star } from 'lucide-react'
 
-import { Badge, Pill } from '@/components/ui'
 import { REVIEW_STATUS_BADGE } from '@/features/review/const/reviewStatus.const'
 
-import {
-    CATEGORY_LABEL,
-    COUPLE_PLACE_APP_COPY,
-} from '../const/couplePlaceApp.const'
 import type { RegisteredPlaceCardProps } from '../types/couplePlaceAppComponent.types'
 import {
     getRegisteredPlaceRating,
     getRegisteredPlaceStatus,
-    getReviewStatusBadgeVariant,
+    getRegisteredPlaceTags,
     getReviewDetailTargetPlace,
     getReviewTargetPlace,
 } from '../utils/couplePlaceApp.utils'
@@ -31,6 +26,44 @@ const getRegisteredPlacePhotoUrl = (
     )
 }
 
+/**
+ * 리뷰 상태는 사진 위 색점 하나로만 알립니다.
+ * 둘 다 썼으면 알릴 것이 없으므로 점을 두지 않습니다.
+ */
+const StatusDot = ({
+    status,
+}: {
+    status: ReturnType<typeof getRegisteredPlaceStatus>
+}) => {
+    if (status === 'complete') {
+        return null
+    }
+
+    return (
+        <span
+            aria-label={REVIEW_STATUS_BADGE[status]}
+            className={`${styles.statusDot} ${styles[`statusDot_${status}`]}`}
+            role="img"
+        />
+    )
+}
+
+const PlaceTags = ({ tags }: { tags: string[] }) => {
+    if (tags.length === 0) {
+        return null
+    }
+
+    return (
+        <span className={styles.cardTagRow}>
+            {tags.map(tag => (
+                <span className={styles.cardTag} key={tag}>
+                    {tag}
+                </span>
+            ))}
+        </span>
+    )
+}
+
 export const RegisteredPlaceFeedCard = ({
     detail,
     onOpenReviewDetail,
@@ -39,14 +72,13 @@ export const RegisteredPlaceFeedCard = ({
 }: RegisteredPlaceCardProps) => {
     const status = getRegisteredPlaceStatus(detail)
     const rating = getRegisteredPlaceRating(detail)
+    const tags = getRegisteredPlaceTags(detail)
     const photoUrl = getRegisteredPlacePhotoUrl(detail)
     const shouldOpenReviewWriter =
         status === 'none' || status === 'partner-waiting'
-    const reviewDetailTargetPlace = getReviewDetailTargetPlace(place)
-    const reviewTargetPlace = getReviewTargetPlace(place)
     const href = shouldOpenReviewWriter
-        ? onOpenReviewWriter(reviewTargetPlace)
-        : onOpenReviewDetail(reviewDetailTargetPlace)
+        ? onOpenReviewWriter(getReviewTargetPlace(place))
+        : onOpenReviewDetail(getReviewDetailTargetPlace(place))
 
     return (
         <Link className={styles.registeredFeedCard} href={href}>
@@ -61,33 +93,19 @@ export const RegisteredPlaceFeedCard = ({
                 ) : (
                     <MapPin aria-hidden="true" />
                 )}
-                <span className={styles.registeredPrivacyIcon}>
-                    <Ellipsis aria-hidden="true" size={13} />
-                </span>
+                <StatusDot status={status} />
             </span>
             <span className={styles.registeredFeedBody}>
-                <strong>{place.name}</strong>
-                <Badge size="sm" variant={getReviewStatusBadgeVariant(status)}>
-                    {REVIEW_STATUS_BADGE[status]}
-                </Badge>
-                <span className={styles.cardStatusRows}>
-                    <Pill
-                        icon={<Star aria-hidden="true" size={12} />}
-                        tone={rating ? 'rating' : 'ratingEmpty'}
-                    >
-                        {rating ?? '-'}
-                    </Pill>
-                    <span className={styles.cardPrivacyText}>
-                        {place.isPublic ? (
-                            <Globe aria-hidden="true" size={12} />
-                        ) : (
-                            <Lock aria-hidden="true" size={12} />
-                        )}
-                        {place.isPublic
-                            ? COUPLE_PLACE_APP_COPY.public
-                            : COUPLE_PLACE_APP_COPY.private}
-                    </span>
+                <span className={styles.cardTitleRow}>
+                    <strong>{place.name}</strong>
+                    {rating ? (
+                        <span className={styles.cardRating}>
+                            <Star aria-hidden="true" size={9} />
+                            {rating}
+                        </span>
+                    ) : null}
                 </span>
+                <PlaceTags tags={tags} />
             </span>
         </Link>
     )
@@ -101,14 +119,13 @@ export const RegisteredPlaceListCard = ({
 }: RegisteredPlaceCardProps) => {
     const status = getRegisteredPlaceStatus(detail)
     const rating = getRegisteredPlaceRating(detail)
+    const tags = getRegisteredPlaceTags(detail)
     const photoUrl = getRegisteredPlacePhotoUrl(detail)
     const shouldOpenReviewWriter =
         status === 'none' || status === 'partner-waiting'
-    const reviewDetailTargetPlace = getReviewDetailTargetPlace(place)
-    const reviewTargetPlace = getReviewTargetPlace(place)
     const href = shouldOpenReviewWriter
-        ? onOpenReviewWriter(reviewTargetPlace)
-        : onOpenReviewDetail(reviewDetailTargetPlace)
+        ? onOpenReviewWriter(getReviewTargetPlace(place))
+        : onOpenReviewDetail(getReviewDetailTargetPlace(place))
 
     return (
         <Link className={styles.registeredListCard} href={href}>
@@ -123,53 +140,19 @@ export const RegisteredPlaceListCard = ({
                 ) : (
                     <MapPin aria-hidden="true" />
                 )}
+                <StatusDot status={status} />
             </span>
             <span className={styles.registeredListBody}>
-                <span className={styles.registeredListHeader}>
+                <span className={styles.cardTitleRow}>
                     <strong>{place.name}</strong>
-                    <span className={styles.registeredPrivacyIconInline}>
-                        {place.isPublic ? (
-                            <Globe
-                                aria-label={COUPLE_PLACE_APP_COPY.public}
-                                size={13}
-                            />
-                        ) : (
-                            <Lock
-                                aria-label={COUPLE_PLACE_APP_COPY.private}
-                                size={13}
-                            />
-                        )}
-                    </span>
+                    {rating ? (
+                        <span className={styles.cardRating}>
+                            <Star aria-hidden="true" size={10} />
+                            {rating}
+                        </span>
+                    ) : null}
                 </span>
-                <span className={styles.registeredMeta}>
-                    {CATEGORY_LABEL[place.category]}
-                    {place.roadAddress || place.address
-                        ? ` / ${place.roadAddress || place.address}`
-                        : ''}
-                </span>
-                <Pill
-                    className={styles.registeredListRating}
-                    icon={<Star aria-hidden="true" size={12} />}
-                    tone={rating ? 'rating' : 'ratingEmpty'}
-                >
-                    {rating ?? '-'}
-                </Pill>
-                <Badge
-                    size="sm"
-                    variant={getReviewStatusBadgeVariant(status)}
-                >
-                    {REVIEW_STATUS_BADGE[status]}
-                </Badge>
-                <span className={styles.cardPrivacyText}>
-                    {place.isPublic ? (
-                        <Globe aria-hidden="true" size={12} />
-                    ) : (
-                        <Lock aria-hidden="true" size={12} />
-                    )}
-                    {place.isPublic
-                        ? COUPLE_PLACE_APP_COPY.public
-                        : COUPLE_PLACE_APP_COPY.private}
-                </span>
+                <PlaceTags tags={tags} />
             </span>
         </Link>
     )

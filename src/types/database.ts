@@ -357,6 +357,16 @@ export type Database = {
             };
         };
         Views: {
+            couple_member_profiles: {
+                Row: {
+                    avatar_url: string | null;
+                    couple_id: string;
+                    display_name: string | null;
+                    id: string;
+                    is_me: boolean | null;
+                };
+                Relationships: [];
+            };
             friend_couple_filter_summaries: {
                 Row: {
                     created_at: string;
