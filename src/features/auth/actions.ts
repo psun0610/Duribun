@@ -1,6 +1,5 @@
 'use server'
 
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import type { Provider } from '@supabase/supabase-js'
 import { getSiteUrl } from '@/lib/env'
@@ -35,6 +34,15 @@ const parseNextPath = (value: FormDataEntryValue | null) => {
     return normalizeInternalRedirectPath(value, '/app')
 }
 
+/**
+ * OAuth 콜백 주소는 요청의 origin 헤더가 아니라 설정된 사이트 주소로 고정합니다.
+ * 카카오톡 인앱 브라우저처럼 origin이 비거나 다르게 오는 환경에서는
+ * Supabase 허용 목록과 어긋나 로그인이 카카오 화면으로 되돌아갑니다.
+ */
+const buildCallbackUrl = (nextPath: string) => {
+    return `${getSiteUrl()}/auth/callback?next=${encodeURIComponent(nextPath)}`
+}
+
 const parseProvider = (value: FormDataEntryValue | null): SupportedProvider => {
     if (value === 'kakao' || value === 'naver' || value === 'google') {
         return value
@@ -47,14 +55,12 @@ export const signInWithProvider = async (formData: FormData) => {
     const selectedProvider = parseProvider(formData.get('provider'))
     const nextPath = parseNextPath(formData.get('next'))
     const provider = providerMap[selectedProvider] as Provider
-    const headerStore = await headers()
-    const origin = headerStore.get('origin') ?? getSiteUrl()
     const supabase = await createServerSupabaseClient()
 
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-            redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
+            redirectTo: buildCallbackUrl(nextPath),
             scopes: providerScopes[selectedProvider],
         },
     })
@@ -78,13 +84,11 @@ export const signInWithEmail = async (formData: FormData) => {
         throw new Error('이메일을 입력해 주세요.')
     }
 
-    const headerStore = await headers()
-    const origin = headerStore.get('origin') ?? getSiteUrl()
     const supabase = await createServerSupabaseClient()
     const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-            emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
+            emailRedirectTo: buildCallbackUrl(nextPath),
             shouldCreateUser: true,
         },
     })
