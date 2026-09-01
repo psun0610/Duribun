@@ -22,7 +22,10 @@ $color-line-strong: rgba(0, 0, 0, 0.14);
 // 그라디언트는 이 하나뿐이고, 장소 담기 FAB와 코드 카드에만 씁니다.
 $gradient-brand: linear-gradient(135deg, #ff7ba9 0%, #ff8f9c 45%, #ffb26b 100%);
 
-// 화면 상단 웨시
+// 화면 상단 웨시 — 화면 전체가 아니라 위쪽 띠에만 깝니다.
+// 항상 $wash-top-height와 짝으로 씁니다:
+//   background: $wash-top no-repeat top / 100% $wash-top-height, $color-background;
+$wash-top-height: 14.375rem; // 230px
 $wash-top: radial-gradient(
     120% 100% at 50% 0%,
     rgba(255, 107, 157, 0.1) 0%,

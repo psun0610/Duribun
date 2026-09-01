@@ -19,7 +19,9 @@
 
 .panel {
     animation: modalPanelIn 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-    background: $color-surface;
+    background:
+        $wash-top no-repeat top / 100% 13.125rem,
+        $color-surface;
     border: 1px solid $color-line;
     border-radius: $radius-photo-card;
     box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
