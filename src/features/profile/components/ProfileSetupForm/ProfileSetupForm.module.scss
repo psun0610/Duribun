@@ -2,7 +2,7 @@
 
 .profileSetup {
     background:
-        $wash-top,
+        $wash-top no-repeat top / 100% $wash-top-height,
         $color-background;
     display: flex;
     flex-direction: column;
