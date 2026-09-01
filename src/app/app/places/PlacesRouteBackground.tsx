@@ -1,6 +1,7 @@
 import { CouplePlaceApp } from '@/features/place/components/CouplePlaceApp'
 import { PlacesTabPanel } from '@/features/place/components/CouplePlaceApp/components/PlacesTabPanel'
 import {
+    getAppAddPlaceHref,
     getAppReviewDetailHref,
     getAppReviewWriterHref,
 } from '@/features/place/components/CouplePlaceApp/utils/couplePlaceRoute.utils'
@@ -25,6 +26,7 @@ export const PlacesRouteBackground = ({
             viewMode={viewMode}
         >
             <PlacesTabPanel
+                addPlaceHref={getAppAddPlaceHref(viewMode)}
                 onOpenReviewDetail={place =>
                     getAppReviewDetailHref(place.couplePlaceId, viewMode)
                 }

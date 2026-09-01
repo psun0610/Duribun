@@ -5,7 +5,7 @@ import { ExploreRecommendationsPanel } from '@/features/place/components/CoupleP
 import { getProtectedAppData } from '@/app/app/getProtectedAppData'
 
 const AppExplorePage = async () => {
-    const appState = await getProtectedAppData()
+    const appState = await getProtectedAppData({ sections: ['explore'] })
 
     if (appState.kind === 'disconnect-pending') {
         return (

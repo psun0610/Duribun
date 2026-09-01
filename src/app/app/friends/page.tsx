@@ -5,7 +5,7 @@ import { FriendRecommendationsPanel } from '@/features/place/components/CouplePl
 import { getProtectedAppData } from '@/app/app/getProtectedAppData'
 
 const AppFriendsPage = async () => {
-    const appState = await getProtectedAppData()
+    const appState = await getProtectedAppData({ sections: ['friends'] })
 
     if (appState.kind === 'disconnect-pending') {
         return (

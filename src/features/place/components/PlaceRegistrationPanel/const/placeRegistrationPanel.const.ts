@@ -33,6 +33,8 @@ export const PLACE_REGISTRATION_COPY = {
     loadMore: '더보기',
     manualCta: '직접 적기',
     manualHint: '찾는 곳이 안 보이나요?',
+    manualHintSub: '이름만 적어서 담아도 괜찮아요',
+    resultsLabel: '이 중에 있나요?',
     manualNameLabel: '이름',
     manualNamePlaceholder: '어디였나요?',
     manualRegister: '담기',

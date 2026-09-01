@@ -48,11 +48,8 @@ const StatusDot = ({
     )
 }
 
+// 태그가 없어도 자리를 비워 둡니다. 그래야 격자 줄이 어긋나지 않습니다.
 const PlaceTags = ({ tags }: { tags: string[] }) => {
-    if (tags.length === 0) {
-        return null
-    }
-
     return (
         <span className={styles.cardTagRow}>
             {tags.map(tag => (

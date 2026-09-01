@@ -14,7 +14,10 @@ interface AppPlacesPageProps {
 const AppPlacesPage = async ({ searchParams }: AppPlacesPageProps) => {
     const resolvedSearchParams = await searchParams
     const appState = await getProtectedAppData({
-        disconnectError: resolvedSearchParams?.disconnectError,
+        searchParams: {
+            disconnectError: resolvedSearchParams?.disconnectError,
+        },
+        sections: ['places'],
     })
 
     if (appState.kind === 'disconnect-pending') {

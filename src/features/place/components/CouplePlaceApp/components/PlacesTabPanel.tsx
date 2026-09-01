@@ -1,6 +1,5 @@
-import { MOCK_PLACES } from '../const/couplePlaceApp.const'
 import type { PlacesTabPanelProps } from '../types/couplePlaceAppComponent.types'
-import { PlaceCardFeed, PlaceCardList } from './MockPlaceCards'
+import { PlacesEmptyState } from './PlacesEmptyState'
 import {
     RegisteredPlaceFeedCard,
     RegisteredPlaceListCard,
@@ -9,6 +8,7 @@ import {
 import styles from '../CouplePlaceApp.module.scss'
 
 export const PlacesTabPanel = ({
+    addPlaceHref,
     onOpenReviewDetail,
     onOpenReviewWriter,
     places,
@@ -16,23 +16,7 @@ export const PlacesTabPanel = ({
     viewMode,
 }: PlacesTabPanelProps) => {
     if (places.length === 0) {
-        return (
-            <div
-                className={
-                    viewMode === 'feed'
-                        ? styles.mockFeedGrid
-                        : styles.mockList
-                }
-            >
-                {MOCK_PLACES.map(place =>
-                    viewMode === 'feed' ? (
-                        <PlaceCardFeed key={place.id} place={place} />
-                    ) : (
-                        <PlaceCardList key={place.id} place={place} />
-                    )
-                )}
-            </div>
-        )
+        return <PlacesEmptyState addPlaceHref={addPlaceHref} />
     }
 
     return (

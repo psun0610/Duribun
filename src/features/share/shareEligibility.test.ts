@@ -50,24 +50,37 @@ const shareTypesSource = readFileSync(
 describe('share eligibility', () => {
     it('allows active couple members to toggle couple place sharing', () => {
         expect(placeActionsSource).toContain('updateCouplePlaceSharing')
-        expect(placeActionsSource).toContain(".update({ is_public: isPublic })")
+        expect(placeActionsSource).toContain('.update({ is_public: isPublic })')
         expect(placeActionsSource).toContain("couple.status !== 'active'")
         expect(reviewDetailPanelSource).toContain('updateCouplePlaceSharing')
-        expect(reviewDetailCopySource).toContain("shareTitle: '어디까지 보여줄까요?'")
+        expect(reviewDetailCopySource).toContain(
+            "sharePrivateTitle: '지금은 우리끼리만 봐요'"
+        )
+        expect(reviewDetailCopySource).toContain(
+            "sharePublicTitle: '지금은 밖에도 보여요'"
+        )
     })
 
     it('keeps public visibility gated by completed reviews and public photos', () => {
-        expect(initialSchemaSql).toContain('public.is_couple_place_public_ready')
-        expect(initialSchemaSql).toContain('public.couple_place_review_count(cp.id) = 2')
-        expect(initialSchemaSql).toContain('public.couple_place_has_public_photo(cp.id)')
+        expect(initialSchemaSql).toContain(
+            'public.is_couple_place_public_ready'
+        )
+        expect(initialSchemaSql).toContain(
+            'public.couple_place_review_count(cp.id) = 2'
+        )
+        expect(initialSchemaSql).toContain(
+            'public.couple_place_has_public_photo(cp.id)'
+        )
         expect(initialSchemaSql).toContain("rp.kind = 'place_food'")
-        expect(initialSchemaSql).toContain("and cp.is_public")
+        expect(initialSchemaSql).toContain('and cp.is_public')
         expect(initialSchemaSql).toContain("and c.status = 'active'")
     })
 
     it('exposes only public summary fields and place-food photo paths', () => {
         expect(publicSummaryMigrationSql).toContain('public_photo_paths')
-        expect(publicSummaryMigrationSql).toContain("filter (where rp.kind = 'place_food')")
+        expect(publicSummaryMigrationSql).toContain(
+            "filter (where rp.kind = 'place_food')"
+        )
         expect(shareActionsSource).toContain('getFriendCouplePlaceSummaries')
         expect(shareActionsSource).toContain('getExploreCouplePlaceSummaries')
         expect(shareTypesSource).toContain('averageRating')
@@ -84,8 +97,12 @@ describe('share eligibility', () => {
             'create policy "review photo objects select visible"'
         )
         expect(initialSchemaSql).toContain("rp.kind = 'place_food'")
-        expect(initialSchemaSql).toContain('public.is_couple_place_public_ready(cp.id)')
-        expect(initialSchemaSql).toContain('public.is_couple_place_explore_ready(cp.id)')
+        expect(initialSchemaSql).toContain(
+            'public.is_couple_place_public_ready(cp.id)'
+        )
+        expect(initialSchemaSql).toContain(
+            'public.is_couple_place_explore_ready(cp.id)'
+        )
         expect(initialSchemaSql).toContain('public.are_friend_couples')
     })
 })

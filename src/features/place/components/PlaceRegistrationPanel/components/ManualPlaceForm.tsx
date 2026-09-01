@@ -15,7 +15,6 @@ export const ManualPlaceForm = ({
 }: ManualPlaceFormProps) => {
     return (
         <form action={registerManualAction} className={styles.manualForm}>
-            <h3>{PLACE_REGISTRATION_COPY.manualTitle}</h3>
             <TextField
                 disabled={isRegisteringManualPlace}
                 label={PLACE_REGISTRATION_COPY.manualNameLabel}

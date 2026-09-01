@@ -1,7 +1,3 @@
-import { Star } from 'lucide-react'
-
-import { Badge, Pill } from '@/components/ui'
-
 import {
     REVIEW_DETAIL_COPY,
     REVIEW_PHOTO_KIND_LABEL,
@@ -20,48 +16,38 @@ export const ReviewCard = ({
     return (
         <article className={styles.reviewCard}>
             <div className={styles.reviewHeader}>
-                <div>
-                    <p className={styles.reviewLabel}>
-                        {isMine
-                            ? REVIEW_DETAIL_COPY.myReview
-                            : REVIEW_DETAIL_COPY.partnerReview}
-                    </p>
-                    <p className={styles.reviewMeta}>
-                        {REVIEW_DETAIL_COPY.ratingLabel}{' '}
-                        {formatRating(review.rating)}
-                    </p>
-                </div>
-                <Pill
-                    className={styles.ratingPill}
-                    icon={<Star aria-hidden="true" size={14} />}
-                    tone="rating"
-                >
+                <p className={styles.reviewLabel}>
+                    {isMine
+                        ? REVIEW_DETAIL_COPY.myReview
+                        : REVIEW_DETAIL_COPY.partnerReview}
+                </p>
+                <span className={styles.reviewScore}>
                     {formatRating(review.rating)}
-                </Pill>
+                </span>
             </div>
 
             <p className={styles.oneLineReview}>{review.oneLineReview}</p>
 
-            {review.ratings.length > 0 ? (
-                <div className={styles.ratingBreakdown}>
-                    {review.ratings.map(rating => (
-                        <div
-                            className={styles.ratingBreakdownItem}
-                            key={rating.key}
-                        >
-                            <span>{rating.label}</span>
-                            <strong>{formatRating(rating.score)}</strong>
-                        </div>
+            {review.tags.length > 0 ? (
+                <div className={styles.tagList}>
+                    {review.tags.map(tag => (
+                        <span className={styles.tagChip} key={tag}>
+                            {tag}
+                        </span>
                     ))}
                 </div>
             ) : null}
 
-            {review.tags.length > 0 ? (
-                <div className={styles.tagList}>
-                    {review.tags.map(tag => (
-                        <Badge key={tag} variant="outline">
-                            {tag}
-                        </Badge>
+            {review.ratings.length > 0 ? (
+                <div className={styles.ratingBreakdown}>
+                    {review.ratings.map(rating => (
+                        <span
+                            className={styles.ratingBreakdownItem}
+                            key={rating.key}
+                        >
+                            {rating.label}
+                            <strong>{formatRating(rating.score)}</strong>
+                        </span>
                     ))}
                 </div>
             ) : null}
@@ -69,20 +55,13 @@ export const ReviewCard = ({
             {review.photos.length > 0 ? (
                 <div className={styles.photoGrid}>
                     {review.photos.map(photo => (
-                        <figure
-                            className={styles.photoCard}
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                            alt={`${REVIEW_PHOTO_KIND_LABEL[photo.kind]} 사진`}
+                            className={styles.photo}
                             key={photo.storagePath}
-                        >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                alt={`${REVIEW_PHOTO_KIND_LABEL[photo.kind]} 사진`}
-                                className={styles.photo}
-                                src={photo.signedUrl}
-                            />
-                            <figcaption className={styles.photoCaption}>
-                                {REVIEW_PHOTO_KIND_LABEL[photo.kind]}
-                            </figcaption>
-                        </figure>
+                            src={photo.signedUrl}
+                        />
                     ))}
                 </div>
             ) : null}

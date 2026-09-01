@@ -107,12 +107,10 @@ const parseRating = (value: FormDataEntryValue | null) => {
 
     const rating = Number(normalizedValue)
 
-    return (
-        Number.isFinite(rating) &&
+    return Number.isFinite(rating) &&
         rating >= 0.5 &&
         rating <= 5 &&
         Number.isInteger(rating * 2)
-    )
         ? rating
         : null
 }
@@ -457,7 +455,10 @@ export const submitReview = async (
             successMessage: '리뷰를 남겼어요.',
         }
     } catch (error) {
-        if (error instanceof Error && error.message === 'Authentication required') {
+        if (
+            error instanceof Error &&
+            error.message === 'Authentication required'
+        ) {
             return {
                 ...INITIAL_REVIEW_STATE,
                 errorMessage: '로그인 세션이 필요해요.',
@@ -540,11 +541,17 @@ export const getCouplePlaceReviewDetailsMap = async (
         })
     }
 
-    const tagsByReviewId = new Map<string, Array<{ label: string; sort_order: number }>>()
+    const tagsByReviewId = new Map<
+        string,
+        Array<{ label: string; sort_order: number }>
+    >()
 
     for (const tagRow of tagResult.data ?? []) {
         const reviewId = tagRow.review_id as string
-        const tag = tagRow.tags as { label?: string; sort_order?: number } | null
+        const tag = tagRow.tags as {
+            label?: string
+            sort_order?: number
+        } | null
 
         if (!tag?.label) {
             continue
@@ -573,13 +580,38 @@ export const getCouplePlaceReviewDetailsMap = async (
         ratingsByReviewId.set(reviewId, nextRatings)
     }
 
-    for (const photoRow of photoResult.data ?? []) {
-        const { data: signedUrlResult, error: signedUrlError } =
+    // 사진마다 한 번씩 서명 URL을 만들면 사진 수만큼 왕복이 늘어납니다.
+    // createSignedUrls로 한 번에 받습니다.
+    const photoRows = photoResult.data ?? []
+    const storagePaths = photoRows.map(
+        photoRow => photoRow.storage_path as string
+    )
+    const signedUrlByPath = new Map<string, string>()
+
+    if (storagePaths.length > 0) {
+        const { data: signedUrlResults, error: signedUrlError } =
             await supabase.storage
                 .from('review-photos')
-                .createSignedUrl(photoRow.storage_path as string, 60 * 60)
+                .createSignedUrls(storagePaths, 60 * 60)
 
-        if (signedUrlError || !signedUrlResult?.signedUrl) {
+        if (signedUrlError) {
+            console.error('Failed to sign review photo urls', {
+                message: signedUrlError.message,
+            })
+        }
+
+        for (const result of signedUrlResults ?? []) {
+            if (result.path && result.signedUrl) {
+                signedUrlByPath.set(result.path, result.signedUrl)
+            }
+        }
+    }
+
+    for (const photoRow of photoRows) {
+        const storagePath = photoRow.storage_path as string
+        const signedUrl = signedUrlByPath.get(storagePath)
+
+        if (!signedUrl) {
             continue
         }
 
@@ -587,8 +619,8 @@ export const getCouplePlaceReviewDetailsMap = async (
         const nextPhotos = photosByReviewId.get(reviewId) ?? []
         nextPhotos.push({
             kind: photoRow.kind as ReviewDetailPhoto['kind'],
-            signedUrl: signedUrlResult.signedUrl,
-            storagePath: photoRow.storage_path as string,
+            signedUrl,
+            storagePath,
         })
         photosByReviewId.set(reviewId, nextPhotos)
     }
@@ -596,7 +628,8 @@ export const getCouplePlaceReviewDetailsMap = async (
     const reviewsByPlaceId = new Map<string, ReviewDetailItem[]>()
 
     for (const reviewRow of reviewRows) {
-        const nextReviews = reviewsByPlaceId.get(reviewRow.couple_place_id) ?? []
+        const nextReviews =
+            reviewsByPlaceId.get(reviewRow.couple_place_id) ?? []
         const sortedTags = (tagsByReviewId.get(reviewRow.id) ?? []).sort(
             (left, right) => left.sort_order - right.sort_order
         )

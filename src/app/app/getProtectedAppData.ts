@@ -8,7 +8,10 @@ import {
     getExploreCouplePlaceSummaries,
     getFriendCouplePlaceSummaries,
 } from '@/features/share/actions'
-import { createServerSupabaseClient, getServerUser } from '@/lib/supabase/server'
+import {
+    createServerSupabaseClient,
+    getServerUser,
+} from '@/lib/supabase/server'
 
 export interface ReadyProtectedAppData {
     coupleId: string
@@ -46,16 +49,40 @@ export interface ReadyProtectedAppDataResult {
 }
 
 export type ProtectedAppDataResult =
-    | ReadyProtectedAppDataResult
-    | DisconnectPendingProtectedAppData
+    ReadyProtectedAppDataResult | DisconnectPendingProtectedAppData
 
-interface ProtectedAppSearchParams {
-    disconnectError?: string
+/**
+ * 탭마다 쓰는 데이터가 다릅니다. 전부 불러오면 둘러보기 탭이
+ * 쓰지도 않는 장소 목록과 리뷰 상세까지 기다리게 됩니다.
+ */
+export type ProtectedAppDataSection = 'places' | 'friends' | 'explore'
+
+interface ProtectedAppDataOptions {
+    searchParams?: {
+        disconnectError?: string
+    }
+    sections?: ProtectedAppDataSection[]
 }
 
-export const getProtectedAppData = async (
-    searchParams?: ProtectedAppSearchParams
-): Promise<ProtectedAppDataResult> => {
+const EMPTY_SECTIONS = {
+    exploreRecommendations: [],
+    friendCouples: [],
+    friendRecommendations: [],
+    places: [],
+    reviewDetailsByPlaceId: {},
+} satisfies Pick<
+    ReadyProtectedAppData,
+    | 'exploreRecommendations'
+    | 'friendCouples'
+    | 'friendRecommendations'
+    | 'places'
+    | 'reviewDetailsByPlaceId'
+>
+
+export const getProtectedAppData = async ({
+    searchParams,
+    sections = ['places', 'friends', 'explore'],
+}: ProtectedAppDataOptions = {}): Promise<ProtectedAppDataResult> => {
     const supabase = await createServerSupabaseClient()
     const user = await getServerUser(supabase)
 
@@ -63,27 +90,29 @@ export const getProtectedAppData = async (
         redirect('/login')
     }
 
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('display_name, email')
-        .eq('id', user.id)
-        .maybeSingle()
+    // 프로필과 커플 소속은 서로 기다릴 이유가 없습니다.
+    const [{ data: profile }, { data: membership }] = await Promise.all([
+        supabase
+            .from('profiles')
+            .select('display_name, email')
+            .eq('id', user.id)
+            .maybeSingle(),
+        supabase
+            .from('couple_members')
+            .select('couple_id')
+            .eq('user_id', user.id)
+            .maybeSingle(),
+    ])
 
     if (!profile) {
         redirect('/profile/setup')
     }
 
-    const userLabel = profile.display_name || profile.email
-    const { data: membership } = await supabase
-        .from('couple_members')
-        .select('couple_id')
-        .eq('user_id', user.id)
-        .maybeSingle()
-
     if (!membership) {
         redirect('/couple/connect')
     }
 
+    const userLabel = profile.display_name || profile.email
     const { data: couple } = await supabase
         .from('couples')
         .select(
@@ -117,47 +146,68 @@ export const getProtectedAppData = async (
         }
     }
 
-    const { count: memberCount } = await supabase
-        .from('couple_members')
-        .select('user_id', { count: 'exact', head: true })
-        .eq('couple_id', couple.id)
+    const wantsPlaces = sections.includes('places')
+    const wantsFriends = sections.includes('friends')
+    const wantsExplore = sections.includes('explore')
+
+    // 아래 넷은 서로 의존하지 않습니다. 한 번에 보냅니다.
+    const [
+        { count: memberCount },
+        memberProfilesResult,
+        places,
+        friendCouples,
+    ] = await Promise.all([
+        supabase
+            .from('couple_members')
+            .select('user_id', { count: 'exact', head: true })
+            .eq('couple_id', couple.id),
+        // 목록 상단에 "상대 이름 ♥ 내 이름"을 보여주기 위해 두 사람 이름을 읽습니다.
+        supabase.from('couple_member_profiles').select('display_name, is_me'),
+        wantsPlaces ? getCouplePlaces(couple.id) : EMPTY_SECTIONS.places,
+        wantsFriends ? getFriendCoupleFilters() : EMPTY_SECTIONS.friendCouples,
+    ])
 
     if ((memberCount ?? 0) < 2) {
         redirect('/couple/connect')
     }
 
-    // 목록 상단에 "상대 이름 ♥ 내 이름"을 보여주기 위해 두 사람 이름을 읽습니다.
-    const { data: memberProfiles } = await supabase
-        .from('couple_member_profiles')
-        .select('display_name, is_me')
-
+    const memberProfiles = memberProfilesResult.data
     const partnerName =
         memberProfiles?.find(member => !member.is_me)?.display_name ?? ''
     const myName =
         memberProfiles?.find(member => member.is_me)?.display_name ?? userLabel
 
-    const places = await getCouplePlaces(couple.id)
-    const reviewDetailsByPlaceId = await getCouplePlaceReviewDetailsMap(
-        places.map(place => place.couplePlaceId),
-        user.id
-    )
-    const friendCouples = await getFriendCoupleFilters()
-    const friendRecommendations = await getFriendCouplePlaceSummaries()
-    const exploreRecommendations = await getExploreCouplePlaceSummaries({
-        sort: 'recommended',
-    })
+    // 리뷰 상세만 장소 목록을 기다립니다. 나머지는 함께 갑니다.
+    const [
+        reviewDetailsByPlaceId,
+        friendRecommendations,
+        exploreRecommendations,
+    ] = await Promise.all([
+        wantsPlaces && places.length > 0
+            ? getCouplePlaceReviewDetailsMap(
+                  places.map(place => place.couplePlaceId),
+                  user.id
+              )
+            : EMPTY_SECTIONS.reviewDetailsByPlaceId,
+        wantsFriends
+            ? getFriendCouplePlaceSummaries()
+            : EMPTY_SECTIONS.friendRecommendations,
+        wantsExplore
+            ? getExploreCouplePlaceSummaries({ sort: 'recommended' })
+            : EMPTY_SECTIONS.exploreRecommendations,
+    ])
 
     return {
         data: {
             coupleId: couple.id,
             coupleName: coupleSummary.name,
-            myName,
-            partnerName,
             currentUserId: user.id,
             exploreRecommendations,
             friendCode: coupleSummary.friendCode,
             friendCouples,
             friendRecommendations,
+            myName,
+            partnerName,
             places,
             publicPlaceCount: places.filter(place => place.isPublic).length,
             reviewDetailsByPlaceId,
