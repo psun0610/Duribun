@@ -31,17 +31,36 @@ const mapPublicSummaryRows = async (
 ): Promise<PublicCouplePlaceSummary[]> => {
     const supabase = await createServerSupabaseClient()
 
+    // 사진마다 따로 서명하면 사진 수만큼 왕복이 늘어납니다.
+    // 모든 경로를 모아 한 번에 서명하고 경로로 되찾습니다.
+    const storagePaths = Array.from(
+        new Set(rows.flatMap(row => row.public_photo_paths ?? []))
+    )
+    const signedUrlByPath = new Map<string, string>()
+
+    if (storagePaths.length > 0) {
+        const { data: signedUrlResults, error } = await supabase.storage
+            .from(REVIEW_PHOTOS_BUCKET)
+            .createSignedUrls(storagePaths, 60 * 60)
+
+        if (error) {
+            console.error('Failed to sign shared photo urls', {
+                message: error.message,
+            })
+        }
+
+        for (const result of signedUrlResults ?? []) {
+            if (result.path && result.signedUrl) {
+                signedUrlByPath.set(result.path, result.signedUrl)
+            }
+        }
+    }
+
     return Promise.all(
         rows.map(async row => {
-            const photos = await Promise.all(
-                (row.public_photo_paths ?? []).map(async storagePath => {
-                    const { data } = await supabase.storage
-                        .from(REVIEW_PHOTOS_BUCKET)
-                        .createSignedUrl(storagePath, 60 * 60)
-
-                    return data?.signedUrl ?? ''
-                })
-            )
+            const photos = (row.public_photo_paths ?? [])
+                .map(storagePath => signedUrlByPath.get(storagePath) ?? '')
+                .filter(Boolean)
 
             return {
                 address: row.address ?? '',
@@ -49,7 +68,7 @@ const mapPublicSummaryRows = async (
                 category: row.category,
                 coupleName: row.couple_name,
                 couplePlaceId: row.couple_place_id,
-                photos: photos.filter(Boolean),
+                photos,
                 placeName: row.place_name,
                 reviewCount: row.review_count ?? 0,
                 roadAddress: row.road_address ?? '',

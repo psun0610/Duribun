@@ -5,7 +5,9 @@ import { SettingsPanel } from '@/features/place/components/CouplePlaceApp/compon
 import { getProtectedAppData } from '@/app/app/getProtectedAppData'
 
 const AppSettingsPage = async () => {
-    const appState = await getProtectedAppData()
+    const appState = await getProtectedAppData({
+        sections: ['places', 'friends'],
+    })
 
     if (appState.kind === 'disconnect-pending') {
         return (

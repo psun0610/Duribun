@@ -24,7 +24,10 @@ const ReviewDetailPage = async ({
     const resolvedParams = await params
     const resolvedSearchParams = await searchParams
     const appState = await getProtectedAppData({
-        disconnectError: resolvedSearchParams?.disconnectError,
+        searchParams: {
+            disconnectError: resolvedSearchParams?.disconnectError,
+        },
+        sections: ['places'],
     })
 
     if (appState.kind === 'disconnect-pending') {
@@ -53,12 +56,16 @@ const ReviewDetailPage = async ({
         isPublic: targetPlace.isPublic,
         name: targetPlace.name,
     }
-    const detail = appState.data.reviewDetailsByPlaceId[targetPlace.couplePlaceId]
-        ?? getFallbackReviewDetail(place)
+    const detail =
+        appState.data.reviewDetailsByPlaceId[targetPlace.couplePlaceId] ??
+        getFallbackReviewDetail(place)
 
     return (
         <>
-            <PlacesRouteBackground appData={appState.data} viewMode={viewMode} />
+            <PlacesRouteBackground
+                appData={appState.data}
+                viewMode={viewMode}
+            />
             <ReviewDetailRoutePanel
                 currentUserId={appState.data.currentUserId}
                 detail={detail}

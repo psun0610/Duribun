@@ -23,7 +23,10 @@ const ReviewWriterPage = async ({
     const resolvedParams = await params
     const resolvedSearchParams = await searchParams
     const appState = await getProtectedAppData({
-        disconnectError: resolvedSearchParams?.disconnectError,
+        searchParams: {
+            disconnectError: resolvedSearchParams?.disconnectError,
+        },
+        sections: ['places'],
     })
 
     if (appState.kind === 'disconnect-pending') {
@@ -54,7 +57,10 @@ const ReviewWriterPage = async ({
 
     return (
         <>
-            <PlacesRouteBackground appData={appState.data} viewMode={viewMode} />
+            <PlacesRouteBackground
+                appData={appState.data}
+                viewMode={viewMode}
+            />
             <ReviewWriterRoutePanel place={reviewTargetPlace} />
         </>
     )

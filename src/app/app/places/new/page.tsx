@@ -17,7 +17,10 @@ const PlaceRegistrationPage = async ({
 }: PlaceRegistrationPageProps) => {
     const resolvedSearchParams = await searchParams
     const appState = await getProtectedAppData({
-        disconnectError: resolvedSearchParams?.disconnectError,
+        searchParams: {
+            disconnectError: resolvedSearchParams?.disconnectError,
+        },
+        sections: ['places'],
     })
 
     if (appState.kind === 'disconnect-pending') {
@@ -35,7 +38,10 @@ const PlaceRegistrationPage = async ({
 
     return (
         <>
-            <PlacesRouteBackground appData={appState.data} viewMode={viewMode} />
+            <PlacesRouteBackground
+                appData={appState.data}
+                viewMode={viewMode}
+            />
             <PlaceRegistrationRoutePanel />
         </>
     )
