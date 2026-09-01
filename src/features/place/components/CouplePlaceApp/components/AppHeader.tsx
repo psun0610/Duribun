@@ -15,6 +15,7 @@ export const AppHeader = ({
     viewMode,
 }: AppHeaderProps) => {
     const isPlacesTab = activeTab === 'places'
+    const shouldShowToolbar = isPlacesTab && placeCount > 0
 
     return (
         <header className={styles.appHeader}>
@@ -37,7 +38,7 @@ export const AppHeader = ({
                 </button>
             </div>
 
-            {isPlacesTab ? (
+            {shouldShowToolbar ? (
                 <div className={styles.placesToolbar}>
                     <span className={styles.placeCount}>
                         {placeCount}

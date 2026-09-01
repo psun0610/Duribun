@@ -9,7 +9,6 @@ import type { FriendCoupleFilterSummary } from '@/features/friend/types/friendRe
 
 import type {
     ActiveTab,
-    CouplePlace,
     ReviewDetailTargetPlace,
     ViewMode,
 } from './couplePlaceApp.types'
@@ -36,11 +35,8 @@ export interface EmptyTabProps {
     title: string
 }
 
-export interface MockPlaceCardProps {
-    place: CouplePlace
-}
-
 export interface PlacesTabPanelProps {
+    addPlaceHref: string
     onOpenReviewDetail: (place: ReviewDetailTargetPlace) => string
     onOpenReviewWriter: (place: ReviewTargetPlace) => string
     places: CouplePlaceListItem[]

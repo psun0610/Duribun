@@ -110,10 +110,7 @@ export const PlaceRegistrationPanel = ({
                     </IconButton>
                 </div>
                 <div className={styles.titleArea}>
-                    <h2
-                        className={styles.title}
-                        id="place-registration-title"
-                    >
+                    <h2 className={styles.title} id="place-registration-title">
                         {PLACE_REGISTRATION_COPY.panelTitle}
                     </h2>
                     <div className={styles.registrationTabs} role="tablist">
@@ -149,7 +146,11 @@ export const PlaceRegistrationPanel = ({
                 <div ref={sheetBodyRef} className={styles.sheetBody}>
                     <div
                         ref={searchSectionRef}
-                        className={styles.searchSection}
+                        className={
+                            isManualFormOpen
+                                ? styles.searchSectionHidden
+                                : styles.searchSection
+                        }
                         style={
                             {
                                 '--search-offset': isSearchLayoutActive
@@ -185,9 +186,7 @@ export const PlaceRegistrationPanel = ({
                         <div
                             aria-hidden={!isContentShown}
                             className={`${styles.contentInner} ${
-                                isContentShown
-                                    ? styles.contentInnerVisible
-                                    : ''
+                                isContentShown ? styles.contentInnerVisible : ''
                             }`}
                         >
                             {searchState.errorMessage ? (
@@ -202,10 +201,17 @@ export const PlaceRegistrationPanel = ({
                                         <Search aria-hidden="true" size={30} />
                                     </span>
                                     <div className={styles.promptManualArea}>
-                                        <span>
-                                            {
-                                                PLACE_REGISTRATION_COPY.manualHint
-                                            }
+                                        <span className={styles.manualHintCopy}>
+                                            <strong>
+                                                {
+                                                    PLACE_REGISTRATION_COPY.manualHint
+                                                }
+                                            </strong>
+                                            <span>
+                                                {
+                                                    PLACE_REGISTRATION_COPY.manualHintSub
+                                                }
+                                            </span>
                                         </span>
                                         <Button
                                             onClick={handleOpenManualForm}
@@ -222,14 +228,15 @@ export const PlaceRegistrationPanel = ({
                             searchState.results.length === 0 &&
                             !isSearching ? (
                                 <p className={styles.emptyText}>
-                                    {
-                                        PLACE_REGISTRATION_COPY.noSearchResults
-                                    }
+                                    {PLACE_REGISTRATION_COPY.noSearchResults}
                                 </p>
                             ) : null}
 
                             {searchState.results.length > 0 ? (
                                 <>
+                                    <p className={styles.resultsLabel}>
+                                        {PLACE_REGISTRATION_COPY.resultsLabel}
+                                    </p>
                                     <div className={styles.results}>
                                         {searchState.results.map(place => (
                                             <KakaoPlaceResultRow
@@ -281,8 +288,15 @@ export const PlaceRegistrationPanel = ({
 
                             {!shouldShowSearchPrompt && !isManualFormOpen ? (
                                 <div className={styles.manualArea}>
-                                    <span>
-                                        {PLACE_REGISTRATION_COPY.manualHint}
+                                    <span className={styles.manualHintCopy}>
+                                        <strong>
+                                            {PLACE_REGISTRATION_COPY.manualHint}
+                                        </strong>
+                                        <span>
+                                            {
+                                                PLACE_REGISTRATION_COPY.manualHintSub
+                                            }
+                                        </span>
                                     </span>
                                     <Button
                                         onClick={handleOpenManualForm}

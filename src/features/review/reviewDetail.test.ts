@@ -61,7 +61,10 @@ const reviewDetailCopySource = readFileSync(
     'utf8'
 )
 const reviewStatusCopySource = readFileSync(
-    path.resolve(process.cwd(), 'src/features/review/const/reviewStatus.const.ts'),
+    path.resolve(
+        process.cwd(),
+        'src/features/review/const/reviewStatus.const.ts'
+    ),
     'utf8'
 )
 const couplePlaceAppCopySource = readFileSync(
@@ -76,7 +79,9 @@ describe('review detail', () => {
     it('loads review detail data for protected couple places', () => {
         expect(appDataSource).toContain('getCouplePlaceReviewDetailsMap')
         expect(appDataSource).toContain('reviewDetailsByPlaceId')
-        expect(reviewDetailPageSource).toContain('currentUserId={appState.data.currentUserId}')
+        expect(reviewDetailPageSource).toContain(
+            'currentUserId={appState.data.currentUserId}'
+        )
     })
 
     it('opens a private detail panel with review state copy', () => {
@@ -85,7 +90,8 @@ describe('review detail', () => {
         expect(registeredPlaceCardsSource).toContain(
             'getReviewDetailTargetPlace'
         )
-        expect(reviewDetailPanelSource).toContain(
+        // 줄바꿈은 포맷터가 정하므로 공백을 지우고 비교합니다.
+        expect(reviewDetailPanelSource.replace(/\s+/g, '')).toContain(
             'REVIEW_STATUS_MESSAGE[detail.reviewStatus]'
         )
     })
@@ -125,7 +131,9 @@ describe('review detail', () => {
         expect(reviewCardSource).toContain('REVIEW_PHOTO_KIND_LABEL')
         expect(reviewActionsSource).toContain('review_ratings')
         expect(reviewDetailCopySource).toContain("myReview: '내가 남긴 말'")
-        expect(reviewDetailCopySource).toContain("partnerReview: '상대가 남긴 말'")
+        expect(reviewDetailCopySource).toContain(
+            "partnerReview: '상대가 남긴 말'"
+        )
     })
 
     it('keeps completed review state aligned with average rating and photo visibility rules', () => {
@@ -146,7 +154,9 @@ describe('review detail', () => {
         expect(registeredPlaceCardsSource).toContain('cardTitleRow')
         expect(registeredPlaceCardsSource).toContain('getRegisteredPlaceTags')
         // 공개 여부와 다녀온 날짜는 목록에 표시하지 않습니다.
-        expect(registeredPlaceCardsSource).not.toContain('COUPLE_PLACE_APP_COPY.public')
+        expect(registeredPlaceCardsSource).not.toContain(
+            'COUPLE_PLACE_APP_COPY.public'
+        )
         expect(registeredPlaceCardsSource).not.toContain('visitDate')
         expect(registeredPlaceCardsSource).not.toContain('CATEGORY_LABEL')
     })

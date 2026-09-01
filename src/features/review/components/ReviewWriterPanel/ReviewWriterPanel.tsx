@@ -7,9 +7,10 @@ import {
     useState,
     type ChangeEvent,
 } from 'react'
-import { Save, X } from 'lucide-react'
+import { Star, X } from 'lucide-react'
 
-import { Button, FieldMessage, IconButton, TextareaField } from '@/components/ui'
+import { Button, FieldMessage, IconButton } from '@/components/ui'
+import { CATEGORY_LABEL } from '@/features/place/components/CouplePlaceApp/const/couplePlaceApp.const'
 import { submitReview } from '@/features/review/actions'
 import {
     DEFAULT_REVIEW_PHOTO_KIND,
@@ -37,6 +38,8 @@ const INITIAL_REVIEW_STATE = {
 }
 
 const MAX_PHOTO_ROWS = 10
+const ONE_LINE_MAX_LENGTH = 40
+const RATING_ARIA_LABEL = (label: string) => label + ' 평점 선택'
 
 const createPhotoPreviewId = (file: File, index: number) => {
     if (crypto.randomUUID) {
@@ -54,6 +57,7 @@ export const ReviewWriterPanel = ({
     const fileInputRef = useRef<HTMLInputElement | null>(null)
     const previewUrlSetRef = useRef<Set<string>>(new Set())
     const [isClosing, setIsClosing] = useState(false)
+    const [oneLineLength, setOneLineLength] = useState(0)
     const [ratingScores, setRatingScores] = useState<
         Record<string, number | null>
     >({})
@@ -61,6 +65,16 @@ export const ReviewWriterPanel = ({
         ReviewPhotoPreviewItem[]
     >([])
     const ratingOptions = REVIEW_RATING_OPTIONS[place.category]
+    const scoredRatings = ratingOptions
+        .map(option => ratingScores[option.key])
+        .filter((score): score is number => typeof score === 'number')
+    const averageRating =
+        scoredRatings.length > 0
+            ? (
+                  scoredRatings.reduce((sum, score) => sum + score, 0) /
+                  scoredRatings.length
+              ).toFixed(1)
+            : null
 
     const submitReviewWithPhotos = async (
         previousState: typeof INITIAL_REVIEW_STATE,
@@ -193,14 +207,22 @@ export const ReviewWriterPanel = ({
                         <h2 className={styles.title} id="review-writer-title">
                             {REVIEW_WRITER_COPY.panelTitle}
                         </h2>
-                        <p className={styles.subtitle}>
-                            &quot;{place.name}&quot;
-                        </p>
                     </div>
                     <span aria-hidden="true" className={styles.headerSpacer} />
                 </div>
 
                 <div className={styles.content}>
+                    <div className={styles.placeSummary}>
+                        <span
+                            aria-hidden="true"
+                            className={styles.placeThumb}
+                        />
+                        <span className={styles.placeSummaryBody}>
+                            <strong>{place.name}</strong>
+                            <span>{CATEGORY_LABEL[place.category]}</span>
+                        </span>
+                    </div>
+
                     <form action={submitReviewAction} className={styles.form}>
                         <input
                             name="couplePlaceId"
@@ -211,11 +233,17 @@ export const ReviewWriterPanel = ({
                         <div className={styles.fieldGroup}>
                             <span className={styles.label}>
                                 {REVIEW_WRITER_COPY.ratingLabel}
+                                {averageRating ? (
+                                    <span className={styles.averagePill}>
+                                        <Star aria-hidden="true" size={13} />
+                                        {averageRating}
+                                    </span>
+                                ) : null}
                             </span>
                             <p className={styles.helpText}>
                                 {REVIEW_WRITER_COPY.ratingHelp}
                             </p>
-                            <div className={styles.ratingList}>
+                            <div className={styles.ratingCard}>
                                 {ratingOptions.map(option => {
                                     const score =
                                         ratingScores[option.key] ?? null
@@ -225,20 +253,17 @@ export const ReviewWriterPanel = ({
                                             className={styles.ratingRow}
                                             key={option.key}
                                         >
-                                            <div
+                                            <span
                                                 className={
-                                                    styles.ratingRowHeader
+                                                    styles.ratingRowLabel
                                                 }
                                             >
-                                                <span>{option.label}</span>
-                                                <strong>
-                                                    {score === null
-                                                        ? '선택 전'
-                                                        : `${score}점`}
-                                                </strong>
-                                            </div>
+                                                {option.label}
+                                            </span>
                                             <ReviewRatingControl
-                                                ariaLabel={`${option.label} 평점 선택`}
+                                                ariaLabel={RATING_ARIA_LABEL(
+                                                    option.label
+                                                )}
                                                 onChange={nextScore =>
                                                     handleRatingChange(
                                                         option.key,
@@ -247,6 +272,17 @@ export const ReviewWriterPanel = ({
                                                 }
                                                 value={score}
                                             />
+                                            <span
+                                                className={
+                                                    score === null
+                                                        ? styles.ratingRowScoreEmpty
+                                                        : styles.ratingRowScore
+                                                }
+                                            >
+                                                {score === null
+                                                    ? '-'
+                                                    : score.toFixed(1)}
+                                            </span>
                                             <input
                                                 name="ratingKey"
                                                 type="hidden"
@@ -270,7 +306,10 @@ export const ReviewWriterPanel = ({
 
                         <div className={styles.fieldGroup}>
                             <span className={styles.label}>
-                                {REVIEW_WRITER_COPY.tagLabel}
+                                <span className={styles.labelWithHint}>
+                                    {REVIEW_WRITER_COPY.tagLabel}
+                                    <small>{REVIEW_WRITER_COPY.tagsHelp}</small>
+                                </span>
                             </span>
                             <div className={styles.tagGrid}>
                                 {REVIEW_TAG_OPTIONS[place.category].map(
@@ -291,24 +330,41 @@ export const ReviewWriterPanel = ({
                             </div>
                         </div>
 
-                        <TextareaField
-                            label={REVIEW_WRITER_COPY.oneLineLabel}
-                            maxLength={40}
-                            name="oneLineReview"
-                            placeholder="이 장소를 한 줄로 적어주세요."
-                            required
-                        />
+                        <div className={styles.fieldGroup}>
+                            <span className={styles.label}>
+                                {REVIEW_WRITER_COPY.oneLineLabel}
+                                <span className={styles.counter}>
+                                    {oneLineLength} / {ONE_LINE_MAX_LENGTH}
+                                </span>
+                            </span>
+                            <textarea
+                                className={styles.oneLineInput}
+                                maxLength={ONE_LINE_MAX_LENGTH}
+                                name="oneLineReview"
+                                onChange={event =>
+                                    setOneLineLength(event.target.value.length)
+                                }
+                                placeholder={
+                                    REVIEW_WRITER_COPY.oneLinePlaceholder
+                                }
+                                required
+                            />
+                        </div>
 
                         <div className={styles.fieldGroup}>
-                            <div className={styles.photoHeader}>
-                                <span className={styles.label}>
+                            <span className={styles.label}>
+                                <span className={styles.labelWithHint}>
                                     {REVIEW_WRITER_COPY.photoLabel}
-                                    <small>{REVIEW_WRITER_COPY.photoLimitHelp}</small>
+                                    <small>
+                                        {REVIEW_WRITER_COPY.photoLimitHelp}
+                                    </small>
                                 </span>
-                            </div>
+                                <span className={styles.counter}>
+                                    {selectedPhotos.length} / {MAX_PHOTO_ROWS}
+                                </span>
+                            </span>
                             <p className={styles.helpText}>
-                                {REVIEW_WRITER_COPY.photoHelp}{' '}
-                                {REVIEW_WRITER_COPY.photoLimitHelp}
+                                {REVIEW_WRITER_COPY.photoHelp}
                             </p>
                             <ReviewPhotoGrid
                                 fileInputRef={fileInputRef}
@@ -333,13 +389,14 @@ export const ReviewWriterPanel = ({
                             </FieldMessage>
                         ) : null}
 
-                        <Button
-                            leftIcon={<Save aria-hidden="true" size={16} />}
-                            size="lg"
-                            type="submit"
-                        >
-                            {REVIEW_WRITER_COPY.save}
-                        </Button>
+                        <div className={styles.saveBar}>
+                            <Button size="lg" type="submit">
+                                {REVIEW_WRITER_COPY.save}
+                            </Button>
+                            <p className={styles.saveNote}>
+                                {REVIEW_WRITER_COPY.saveNote}
+                            </p>
+                        </div>
                     </form>
                 </div>
             </div>

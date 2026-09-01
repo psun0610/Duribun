@@ -12,60 +12,7 @@ import {
     type LucideIcon,
 } from 'lucide-react'
 
-import type {
-    ActiveTab,
-    CouplePlace,
-    PlaceCategory,
-} from '../types/couplePlaceApp.types'
-
-export const MOCK_PLACES: CouplePlace[] = [
-    {
-        category: 'cafe',
-        id: 'place-1',
-        isPublic: true,
-        name: '오션뷰 브런치 카페',
-        photoUrl:
-            'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&auto=format&fit=crop',
-        rating: 4.5,
-        reviewStatus: 'complete',
-        tags: ['분위기', '사진 명소', '뷰'],
-        visitDate: '2026.05.12',
-    },
-    {
-        category: 'restaurant',
-        id: 'place-2',
-        isPublic: false,
-        name: '숲속 산책길',
-        photoUrl:
-            'https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&auto=format&fit=crop',
-        rating: 4.7,
-        reviewStatus: 'partner-waiting',
-        tags: ['분위기', '사진 명소'],
-        visitDate: '2026.05.03',
-    },
-    {
-        category: 'activity',
-        id: 'place-3',
-        isPublic: true,
-        name: '노을 맛집 루프탑',
-        photoUrl:
-            'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&auto=format&fit=crop',
-        rating: 4.8,
-        reviewStatus: 'waiting-partner',
-        tags: ['뷰', '데이트 추천'],
-        visitDate: '2026.04.28',
-    },
-    {
-        category: 'cafe',
-        id: 'place-4',
-        isPublic: false,
-        name: '감성 독립서점',
-        photoUrl:
-            'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=900&auto=format&fit=crop',
-        reviewStatus: 'none',
-        visitDate: '2026.04.20',
-    },
-]
+import type { ActiveTab, PlaceCategory } from '../types/couplePlaceApp.types'
 
 export const SETTINGS_COPY = {
     menuLabel: '설정 메뉴',
@@ -78,9 +25,17 @@ export const SETTINGS_COPY = {
     shareGuideDescription:
         '보여주기로 한 곳만 친구와 둘러보기에 나와요. 보여줘도 한 줄 리뷰와 각자 평점은 밖으로 나가지 않아요.',
     publicTitle: '밖에도 보여요',
-    publicPoints: ['둘러보기에 나와요', '친구에게도 보여요', '장소·음식 사진만 나가요'],
+    publicPoints: [
+        '둘러보기에 나와요',
+        '친구에게도 보여요',
+        '장소·음식 사진만 나가요',
+    ],
     privateTitle: '우리끼리만',
-    privatePoints: ['둘러보기에 안 나와요', '친구에게도 안 보여요', '기본값이 여기예요'],
+    privatePoints: [
+        '둘러보기에 안 나와요',
+        '친구에게도 안 보여요',
+        '기본값이 여기예요',
+    ],
     dataLabel: '내 정보',
     myData: '내 정보 관리',
     faq: '궁금한 점',
@@ -96,8 +51,7 @@ export const COUPLE_PLACE_APP_COPY = {
     addPlace: '장소 담기',
     appTitle: '두리번',
     exploreDescription: '다른 커플이 좋았다고 남긴 곳들이에요.',
-    exploreEmptyDescription:
-        '다른 조건으로 찾아보거나, 조금만 기다려 주세요.',
+    exploreEmptyDescription: '다른 조건으로 찾아보거나, 조금만 기다려 주세요.',
     exploreEmptyTitle: '아직 보여드릴 곳이 없어요',
     exploreRegionAll: '어디든',
     exploreSearchPlaceholder: '가고 싶은 동네나 이름으로 찾기',
@@ -116,8 +70,7 @@ export const COUPLE_PLACE_APP_COPY = {
     friendCodeTitle: '우리 코드',
     friendDescription:
         '친구와 코드를 나누면, 서로 보여주기로 한 곳만 볼 수 있어요.',
-    friendEmptyDescription:
-        '친구를 더하거나 필터를 켜면 여기에 보여요.',
+    friendEmptyDescription: '친구를 더하거나 필터를 켜면 여기에 보여요.',
     friendEmptyTitle: '아직 보여드릴 곳이 없어요',
     friendTitle: '친구가 다녀온 곳',
     listView: '목록으로 보기',
@@ -125,6 +78,10 @@ export const COUPLE_PLACE_APP_COPY = {
     logout: '로그아웃',
     manualExplorePending: '확인 중이에요',
     notification: '알림',
+    placesEmptyAction: '첫 장소 담기',
+    placesEmptyDescription:
+        '좋았던 곳이 떠오르면 하나씩 담아보세요.\n둘만 볼 수 있는 곳부터 시작하면 돼요.',
+    placesEmptyTitle: '아직 아무 곳도 없어요',
     placesTitle: '우리가 다녀온 곳',
     private: '우리끼리만',
     public: '밖에도 보여요',

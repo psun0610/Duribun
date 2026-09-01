@@ -44,119 +44,212 @@
 }
 
 .hero {
-    aspect-ratio: 16 / 10;
+    align-items: center;
     background:
-        linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.18)),
-        url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&auto=format&fit=crop')
-            center / cover;
+        linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.22)),
+        linear-gradient(
+            168deg,
+            #cfe4ee 0%,
+            #a9cadd 40%,
+            #d7e0d6 41%,
+            #eef1ea 100%
+        );
+    background-position: center;
+    background-size: cover;
+    display: flex;
     flex-shrink: 0;
+    height: 18rem;
+    justify-content: center;
     position: relative;
 }
 
-.heroClose {
-    background: rgba(255, 255, 255, 0.86);
-    box-shadow: $shadow-soft;
-    left: 0.8rem;
-    position: absolute;
-    top: 0.8rem;
+.heroPlaceholder {
+    color: rgba(255, 255, 255, 0.75);
 }
 
-.header {
-    background: $color-surface;
+.heroClose {
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: $shadow-soft;
+    left: 1rem;
+    position: absolute;
+    top: 1rem;
+}
+
+.content {
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.contentBody {
     display: grid;
+    gap: 1.125rem;
+    padding: 0 1rem 1.875rem;
+}
+
+// 히어로 위로 겹쳐 올려서 사진과 제목을 한 덩어리로 읽히게 합니다.
+.titleCard {
+    align-items: flex-start;
+    background: $color-surface;
+    border-radius: 1.75rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    display: flex;
     gap: 0.75rem;
-    padding: 1rem 1.05rem 0;
+    margin-top: -1.5rem;
+    padding: 1.25rem;
+    position: relative;
 }
 
 .titleWrap {
     display: grid;
-    gap: 0.35rem;
+    gap: 0.4375rem;
+    flex-grow: 1;
+    min-width: 0;
 }
 
 .title {
     color: $color-text;
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: $weight-black;
+    letter-spacing: -0.03em;
     line-height: 1.25;
     margin: 0;
 }
 
 .subtitle {
     color: $color-muted;
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.78125rem;
     margin: 0;
 }
 
-.content {
-    display: grid;
-    gap: 1rem;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 1rem 1.05rem 1.2rem;
-}
-
-.metaRow {
+.titleRating {
     align-items: center;
-    display: flex;
-    gap: 0.5rem;
+    background: $color-primary;
+    border-radius: $radius-pill;
+    color: $color-primary-foreground;
+    display: inline-flex;
+    flex-shrink: 0;
+    font-size: 0.84375rem;
+    font-weight: $weight-bold;
+    gap: 0.3125rem;
+    height: 2rem;
+    padding: 0 0.8125rem;
 
-    > span:last-child {
-        color: $color-muted;
-        font-size: 0.75rem;
-        font-weight: 500;
+    svg {
+        fill: currentcolor;
     }
 }
 
 .reviewStatusBox {
-    background: rgba($color-primary, 0.08);
-    border: 1px solid rgba($color-primary, 0.2);
-    border-radius: $radius-control;
+    background: #fff7fa;
+    border-radius: 1.5rem;
     display: grid;
-    gap: 0.75rem;
-    padding: 0.9rem;
+    gap: 0.5rem;
+    padding: 1.125rem 1rem;
 
     h3 {
         color: $color-text;
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
         font-weight: $weight-bold;
+        letter-spacing: -0.02em;
         margin: 0;
     }
 }
 
 .statusMessage {
-    color: $color-text;
+    color: $color-primary-deep;
     font-size: 0.9375rem;
     font-weight: $weight-bold;
-    margin: -0.25rem 0 0;
+    margin: 0;
 }
 
 .statusCards {
     display: grid;
-    gap: 0.65rem;
+    gap: 0.625rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.375rem;
 }
 
 .statusCardMine,
 .statusCardPartner {
     align-items: center;
     background: $color-surface;
-    border: 1px solid $color-line;
-    border-radius: $radius-block;
-    display: grid;
-    gap: 0.2rem 0.55rem;
-    grid-template-columns: auto auto 1fr;
+    border-radius: 1.125rem;
+    display: flex;
+    gap: 0.5625rem;
     padding: 0.75rem;
+}
 
-    span {
-        align-items: center;
-        background: linear-gradient(135deg, $color-primary, $color-secondary);
-        border-radius: $radius-pill;
-        color: $color-primary-foreground;
-        display: inline-flex;
-        height: 2.1rem;
-        justify-content: center;
-        width: 2.1rem;
+.statusAvatar,
+.statusAvatarPartner {
+    align-items: center;
+    border-radius: $radius-pill;
+    display: inline-flex;
+    flex-shrink: 0;
+    height: 1.875rem;
+    justify-content: center;
+    width: 1.875rem;
+
+    svg {
+        fill: currentcolor;
+        stroke: none;
     }
+}
+
+.statusAvatar {
+    background: linear-gradient(135deg, #ff8fb5, #ffb26b);
+    color: $color-primary-foreground;
+}
+
+.statusAvatarPartner {
+    background: #ffe3ec;
+    color: $color-primary;
+}
+
+.statusCardBody {
+    display: grid;
+    gap: 0.125rem;
+    min-width: 0;
+
+    small {
+        color: $color-muted;
+        font-size: 0.75rem;
+    }
+
+    strong {
+        color: $color-text;
+        font-size: 0.78125rem;
+        font-weight: $weight-bold;
+    }
+}
+
+// 공개 여부는 리뷰를 다 읽은 뒤에 정하도록 맨 아래에 둡니다.
+.shareBox {
+    align-items: center;
+    background: $color-surface;
+    border: 1px solid $color-line;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    display: grid;
+    gap: 0.8125rem;
+    grid-template-columns: auto 1fr auto;
+    padding: 1rem;
+}
+
+.shareIcon {
+    align-items: center;
+    background: $color-muted-surface;
+    border-radius: $radius-block;
+    color: $color-text;
+    display: inline-flex;
+    height: 2.625rem;
+    justify-content: center;
+    width: 2.625rem;
+}
+
+.shareText {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
 
     strong {
         color: $color-text;
@@ -164,74 +257,28 @@
         font-weight: $weight-bold;
     }
 
-    p {
-        color: $color-primary;
-        font-size: 0.75rem;
-        font-weight: $weight-bold;
-        margin: 0;
-        text-align: right;
-    }
-}
-
-.shareBox {
-    align-items: center;
-    background: $color-surface;
-    border: 1px solid $color-line;
-    border-radius: $radius-control;
-    display: grid;
-    gap: 0.75rem;
-    grid-template-columns: auto 1fr auto;
-    padding: 0.85rem;
-}
-
-.shareIcon {
-    align-items: center;
-    background: $color-muted-surface;
-    border-radius: $radius-pill;
-    color: $color-text;
-    display: inline-flex;
-    height: 2.3rem;
-    justify-content: center;
-    width: 2.3rem;
-}
-
-.shareText {
-    display: grid;
-    gap: 0.2rem;
-    min-width: 0;
-
-    strong {
-        color: $color-text;
-        font-size: 0.75rem;
-        font-weight: $weight-bold;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-}
-
-.shareTitle {
-    color: $color-muted;
-    font-size: 0.71875rem;
-    font-weight: 500;
-}
-
-.privacyNotice {
-    align-items: center;
-    background: linear-gradient(90deg, rgba($color-primary, 0.13), rgba($color-secondary, 0.13));
-    border-radius: $radius-block;
-    color: $color-primary;
-    display: grid;
-    gap: 0.65rem;
-    grid-template-columns: auto 1fr;
-    padding: 0.85rem;
-
-    p {
-        color: $color-text;
-        font-size: 0.75rem;
-        font-weight: 500;
+    small {
+        color: $color-muted;
+        font-size: 0.71875rem;
         line-height: 1.45;
-        margin: 0;
+    }
+}
+
+.shareAction {
+    background: $color-primary-tint;
+    border: 0;
+    border-radius: $radius-pill;
+    color: $color-primary-deep;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: inherit;
+    font-size: 0.78125rem;
+    font-weight: $weight-bold;
+    height: 2.125rem;
+    padding: 0 0.875rem;
+
+    &:hover {
+        background: rgba($color-primary, 0.2);
     }
 }
 
@@ -241,110 +288,95 @@
 }
 
 .reviewCard {
-    background: $color-surface;
     border: 1px solid $color-line;
-    border-radius: $radius-control;
-    box-shadow: $shadow-soft;
+    border-radius: 1.5rem;
     display: grid;
-    gap: 0.8rem;
-    padding: 0.9rem;
+    gap: 0.875rem;
+    padding: 1.125rem 1rem;
 }
 
 .reviewHeader {
-    align-items: flex-start;
+    align-items: center;
     display: flex;
-    gap: 0.75rem;
     justify-content: space-between;
 }
 
 .reviewLabel {
     color: $color-text;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     font-weight: $weight-bold;
+    letter-spacing: -0.02em;
     margin: 0;
 }
 
-.reviewMeta {
-    color: $color-muted;
-    font-size: 0.71875rem;
-    font-weight: 500;
-    margin: 0.18rem 0 0;
-}
-
-.ratingPill {
-    flex-shrink: 0;
+.reviewScore {
+    align-items: center;
+    background: $color-primary-tint;
+    border-radius: $radius-pill;
+    color: $color-primary-deep;
+    display: inline-flex;
+    font-size: 0.75rem;
+    font-weight: $weight-bold;
+    height: 1.625rem;
+    padding: 0 0.625rem;
 }
 
 .oneLineReview {
     color: $color-text;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.55;
+    font-size: 0.90625rem;
+    line-height: 1.7;
     margin: 0;
-}
-
-.ratingBreakdown {
-    display: grid;
-    gap: 0.45rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.ratingBreakdownItem {
-    align-items: center;
-    background: rgba($color-muted-surface, 0.72);
-    border: 1px solid $color-line;
-    border-radius: $radius-block;
-    display: flex;
-    justify-content: space-between;
-    min-width: 0;
-    padding: 0.5rem 0.6rem;
-
-    span {
-        color: $color-muted;
-        font-size: 0.71875rem;
-        font-weight: 700;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    strong {
-        color: $color-primary;
-        font-size: 0.75rem;
-        font-weight: $weight-black;
-    }
 }
 
 .tagList {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
+    gap: 0.4375rem;
+}
+
+.tagChip {
+    align-items: center;
+    background: $color-muted-surface;
+    border-radius: $radius-pill;
+    color: #525252;
+    display: inline-flex;
+    font-size: 0.78125rem;
+    font-weight: $weight-medium;
+    height: 1.875rem;
+    padding: 0 0.8125rem;
+}
+
+// 별점을 어떻게 매겼는지는 조용히 한 줄로만 보여줍니다.
+.ratingBreakdown {
+    color: $color-muted;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.71875rem;
+    gap: 0.25rem 0.75rem;
+}
+
+.ratingBreakdownItem {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.25rem;
+
+    strong {
+        color: $color-text;
+        font-weight: $weight-bold;
+    }
 }
 
 .photoGrid {
-    display: grid;
-    gap: 0.55rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.photoCard {
-    display: grid;
-    gap: 0.35rem;
-    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .photo {
-    aspect-ratio: 1;
-    background: $color-muted-surface;
-    border-radius: $radius-block;
+    border-radius: 1.125rem;
+    height: 4.625rem;
     object-fit: cover;
-    width: 100%;
-}
-
-.photoCaption {
-    color: $color-muted;
-    font-size: 0.71875rem;
-    font-weight: 500;
+    width: 4.625rem;
 }
 
 .emptyState {
