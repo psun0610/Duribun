@@ -145,19 +145,19 @@
         padding: 0 0.1rem 5.5rem;
     }
 
+    // 네 카드가 공유하는 기본값입니다. Link 기본 밑줄을 여기서 지웁니다.
     .mockFeedCard,
     .registeredFeedCard,
     .registeredListCard,
     .mockListCard {
-        align-items: center;
         background: transparent;
         border: 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 0;
-        display: grid;
-        gap: 0.6875rem;
-        grid-template-columns: auto 1fr;
-        padding: 0.6875rem 0;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        padding: 0;
+        text-align: left;
+        text-decoration: none;
     }
 
     .mockFeedCard,
