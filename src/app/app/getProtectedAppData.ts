@@ -10,7 +10,7 @@ import {
 } from '@/features/share/actions'
 import {
     createServerSupabaseClient,
-    getServerUser,
+    getServerUserId,
 } from '@/lib/supabase/server'
 
 export interface ReadyProtectedAppData {
@@ -84,23 +84,27 @@ export const getProtectedAppData = async ({
     sections = ['places', 'friends', 'explore'],
 }: ProtectedAppDataOptions = {}): Promise<ProtectedAppDataResult> => {
     const supabase = await createServerSupabaseClient()
-    const user = await getServerUser(supabase)
+    // 미들웨어가 이미 세션을 갱신했습니다. 여기서는 네트워크 없이 검증만 합니다.
+    const userId = await getServerUserId(supabase)
 
-    if (!user) {
+    if (!userId) {
         redirect('/login')
     }
 
-    // 프로필과 커플 소속은 서로 기다릴 이유가 없습니다.
-    const [{ data: profile }, { data: membership }] = await Promise.all([
+    // couples의 RLS가 is_couple_member_any_status라, 필터 없이 조회하면
+    // 내 커플 한 건만 돌아옵니다. 소속을 따로 물어볼 필요가 없습니다.
+    // 예전에는 프로필 → 소속 → 커플을 차례로 물어 왕복이 두 번 쌓였습니다.
+    const [{ data: profile }, { data: couple }] = await Promise.all([
         supabase
             .from('profiles')
             .select('display_name, email')
-            .eq('id', user.id)
+            .eq('id', userId)
             .maybeSingle(),
         supabase
-            .from('couple_members')
-            .select('couple_id')
-            .eq('user_id', user.id)
+            .from('couples')
+            .select(
+                'id, name, invite_code, friend_code, status, disconnect_requested_at, delete_after'
+            )
             .maybeSingle(),
     ])
 
@@ -108,23 +112,11 @@ export const getProtectedAppData = async ({
         redirect('/profile/setup')
     }
 
-    if (!membership) {
-        redirect('/couple/connect')
-    }
-
-    const userLabel = profile.display_name || profile.email
-    const { data: couple } = await supabase
-        .from('couples')
-        .select(
-            'id, name, invite_code, friend_code, status, disconnect_requested_at, delete_after'
-        )
-        .eq('id', membership.couple_id)
-        .maybeSingle()
-
     if (!couple) {
         redirect('/couple/connect')
     }
 
+    const userLabel = profile.display_name || profile.email
     const coupleSummary: CoupleSummary = {
         friendCode: couple.friend_code,
         id: couple.id,
@@ -150,28 +142,20 @@ export const getProtectedAppData = async ({
     const wantsFriends = sections.includes('friends')
     const wantsExplore = sections.includes('explore')
 
-    // 아래 넷은 서로 의존하지 않습니다. 한 번에 보냅니다.
-    const [
-        { count: memberCount },
-        memberProfilesResult,
-        places,
-        friendCouples,
-    ] = await Promise.all([
-        supabase
-            .from('couple_members')
-            .select('user_id', { count: 'exact', head: true })
-            .eq('couple_id', couple.id),
-        // 목록 상단에 "상대 이름 ♥ 내 이름"을 보여주기 위해 두 사람 이름을 읽습니다.
+    // 서로 의존하지 않습니다. 한 번에 보냅니다.
+    // 인원 수는 따로 세지 않습니다. 이 뷰가 돌려주는 행 수가 곧 인원입니다.
+    const [memberProfilesResult, places, friendCouples] = await Promise.all([
         supabase.from('couple_member_profiles').select('display_name, is_me'),
         wantsPlaces ? getCouplePlaces(couple.id) : EMPTY_SECTIONS.places,
         wantsFriends ? getFriendCoupleFilters() : EMPTY_SECTIONS.friendCouples,
     ])
 
-    if ((memberCount ?? 0) < 2) {
+    const memberProfiles = memberProfilesResult.data
+
+    if ((memberProfiles?.length ?? 0) < 2) {
         redirect('/couple/connect')
     }
 
-    const memberProfiles = memberProfilesResult.data
     const partnerName =
         memberProfiles?.find(member => !member.is_me)?.display_name ?? ''
     const myName =
@@ -186,7 +170,7 @@ export const getProtectedAppData = async ({
         wantsPlaces && places.length > 0
             ? getCouplePlaceReviewDetailsMap(
                   places.map(place => place.couplePlaceId),
-                  user.id
+                  userId
               )
             : EMPTY_SECTIONS.reviewDetailsByPlaceId,
         wantsFriends
@@ -201,7 +185,7 @@ export const getProtectedAppData = async ({
         data: {
             coupleId: couple.id,
             coupleName: coupleSummary.name,
-            currentUserId: user.id,
+            currentUserId: userId,
             exploreRecommendations,
             friendCode: coupleSummary.friendCode,
             friendCouples,
