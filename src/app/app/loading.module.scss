@@ -1,0 +1,109 @@
+@use '../../styles/variables' as *;
+
+/**
+ * 화면을 옮기는 동안 잠깐 보이는 자리표시입니다.
+ * 이게 없으면 서버가 응답할 때까지 이전 화면이 그대로 멈춰 있어서,
+ * 눌러도 아무 일이 없는 것처럼 보입니다.
+ */
+.loading {
+    background:
+        $wash-top no-repeat top / 100% $wash-top-height,
+        $color-background;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8125rem;
+    margin: 0 auto;
+    max-width: 28rem;
+    min-height: 100vh;
+    padding: clamp(1rem, 4vw, 1.25rem) $space-page-inline 0;
+}
+
+.headerBar {
+    align-items: center;
+    display: flex;
+    height: 2.625rem;
+    justify-content: center;
+}
+
+.toolbarRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0 0.5rem;
+}
+
+.grid {
+    display: grid;
+    gap: 0.8125rem 0.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card {
+    display: grid;
+    gap: 0.44rem;
+}
+
+.block {
+    background: $color-muted-surface;
+    border-radius: $radius-block;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        animation: shimmer 1.2s ease-in-out infinite;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.75),
+            transparent
+        );
+        content: '';
+        inset: 0;
+        position: absolute;
+    }
+}
+
+.photo {
+    aspect-ratio: 1;
+}
+
+.titleLine {
+    height: 0.75rem;
+    width: 80%;
+}
+
+.tagLine {
+    height: 0.6875rem;
+    width: 55%;
+}
+
+.headerLine {
+    height: 1rem;
+    width: 8.75rem;
+}
+
+.countLine {
+    height: 0.75rem;
+    width: 2.5rem;
+}
+
+.toggleLine {
+    height: 1.25rem;
+    width: 3.5rem;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .block::after {
+        animation: none;
+        display: none;
+    }
+}
